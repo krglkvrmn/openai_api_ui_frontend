@@ -1,0 +1,12 @@
+#system-prompt-selection-sidebar {
+    position: fixed;
+    width: 20%;
+    height: 100%;
+    right: 0;
+    justify-self: right;
+    background-color: rgb(29, 26, 26);
+}
+
+.system-prompt-selection-instance {
+    color: white;
+}

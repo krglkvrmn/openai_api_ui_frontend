@@ -1,0 +1,27 @@
+#chat-history-sidebar {
+    position: fixed;
+    width: 20%;
+    height: 100%;
+    background-color: rgb(29, 26, 26);
+}
+
+#main-content-wrapper {
+    display: flex;
+    justify-content: center;
+}
+
+#main-content {
+    margin-left: 10%;
+    margin-right: 10%;
+    display: flex;
+    justify-self: center;
+    flex-flow: column;
+    width: 40%;
+}
+
+#chat-controller {
+    display: flex;
+    flex-flow: column;
+    align-self: flex-end;
+    justify-content: space-between;
+}
