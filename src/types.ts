@@ -1,0 +1,28 @@
+export type MessageAuthor = "user" | "system" | "function" | "assistant";
+
+export type MessageType = {
+    id?: number,
+    author: MessageAuthor,
+    content: string,
+    created_at?: Date | null,
+}
+
+export interface ChatTypeFields {
+    id?: number,
+    model?: string,
+    title?: string,
+    created_at?: Date | null,
+    last_updated?: Date | null,
+    messages?: MessageType[]
+}
+
+export interface ChatType extends ChatTypeFields {
+    model: string,
+    title: string,
+    messages: MessageType[]
+}
+
+export type ChatsActionType = {type: string, payload: any}
+
+export type ChatIdCallbackType = (chat_id: number) => void;
+export type ChatIdNameCallbackType = (chat_id: number, name: string) => void;

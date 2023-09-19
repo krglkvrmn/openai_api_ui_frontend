@@ -1,27 +1,51 @@
-#chat-history-sidebar {
-    position: fixed;
-    width: 20%;
-    height: 100%;
-    background-color: rgb(29, 26, 26);
-}
-
-#main-content-wrapper {
-    display: flex;
-    justify-content: center;
-}
-
-#main-content {
-    margin-left: 10%;
-    margin-right: 10%;
-    display: flex;
-    justify-self: center;
-    flex-flow: column;
-    width: 40%;
+#app-content {
 }
 
 #chat-controller {
+}
+
+#control-sidebar {
+    z-index: 10;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 15%;
+    background-color: rgb(26, 24, 24);
+    color: white;
+}
+
+#chat-history-sidebar-container {
     display: flex;
-    flex-flow: column;
-    align-self: flex-end;
+    flex-direction: column;
+}
+
+#new-chat-button {
+    justify-self: start;
+}
+
+.chat-history-record-container {
+    display: flex;
     justify-content: space-between;
+}
+
+#chat-content {
+    display: flex;
+    justify-content: center;
+    padding-left: 15%;
+}
+
+#prompt-footer {
+    z-index: 0;
+    display: flex;
+    justify-content: center;
+    padding-bottom: 2em;
+    padding-top: 2em;
+    padding-left: 15%;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background-color: rgb(244, 244, 241);
+    width: 100%;
 }

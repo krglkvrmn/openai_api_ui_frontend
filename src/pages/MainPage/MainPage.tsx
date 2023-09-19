@@ -1,12 +1,11 @@
+import React from "react";
+import ChatController from "../../components/chat/ChatController";
 import "./style.css";
-import ChatController from "../../components/ChatController/ChatController";
 
-function MainPage() {
+export default function MainPage() {
     return (
-        <div id="application">
-            <ChatController />
+        <div id="app-content">
+            <ChatController/>
         </div>
-    );
+    )
 }
-
-export default MainPage;
