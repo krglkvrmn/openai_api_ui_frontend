@@ -4,6 +4,18 @@
 #chat-controller {
 }
 
+#model-selector-container {
+
+}
+
+#model-selector {
+
+}
+
+.model-selector-option {
+    text-align: center;
+}
+
 #control-sidebar {
     z-index: 10;
     position: fixed;
@@ -31,8 +43,20 @@
 
 #chat-content {
     display: flex;
+    flex-direction: column;
+    align-items: center;
     justify-content: center;
     padding-left: 15%;
+}
+
+#prompt-selection-sidebar {
+    position: fixed;
+    background-color: rgb(26, 24, 24);
+    color: white;
+    width: 15%;
+    top: 0;
+    bottom: 0;
+    right: 0;
 }
 
 #prompt-footer {
@@ -47,5 +71,4 @@
     bottom: 0;
     right: 0;
     background-color: rgb(244, 244, 241);
-    width: 100%;
 }

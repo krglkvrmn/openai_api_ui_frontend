@@ -54,7 +54,7 @@ function ChatHistoryRecord(
             <b className="chat-history-record-title"
                ref={contentRef}
                onClick={funcClosureOrUndefined(chatActivationHandler)}
-               onBlur={e => {e.preventDefault(); onEditEnd()}}
+               onBlur={(e) => {if (isEditing && e.relatedTarget?.className !== 'save-chat-button') {onEditEnd()} }}
                onKeyDown={(e) => {if (isEditing && e.key === 'Enter') onEditEnd()}}>{title}</b>
             <div className="chat-history-record-controls">
                 {!isEditing ? 

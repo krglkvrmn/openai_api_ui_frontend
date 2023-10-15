@@ -1,9 +1,25 @@
-import { CHATS_ACTIONS, createDefaultChat } from "./ChatController";
-
 import { useState, useReducer, useEffect } from "react";
 import useFetch from "../../hooks/useFetch";
-import { ChatType, ChatsActionType, MessageType, ChatTypeFields, ChatIdCallbackType, MessageAuthor, ChatIdNameCallbackType } from "../../types";
-import { title } from "process";
+import { ChatsActionType, MessageType, ChatTypeFields, ChatIdCallbackType, MessageAuthor, ChatIdNameCallbackType, ChatType } from "../../types";
+
+
+export const CHATS_ACTIONS = {
+    SET_CHATS: "set-chats",
+    CREATE_CHAT: "create-chat",
+    UPDATE_CHAT: "update-chat",
+    RENAME_CHAT: "rename-chat",
+    DELETE_CHAT: "delete-chat"
+};
+
+export function createDefaultChat(): ChatType {
+    return {
+        model: "gpt-3.5-turbo",
+        title: "New chat",
+        messages: [],
+        created_at: null,
+        last_updated: null
+    };
+}
 
 
 export type TuseChatsDispatchers = {
@@ -11,6 +27,7 @@ export type TuseChatsDispatchers = {
     activateChat: ChatIdCallbackType;
     deleteChat: ChatIdCallbackType;
     renameChat: ChatIdNameCallbackType;
+    switchModel: (newModel: string) => void;
 };
 
 export type TuseChatsReturn = {
@@ -23,7 +40,7 @@ export type TuseChatsReturn = {
 };
 
 export function useChats(): TuseChatsReturn {
-    const { data, error, loading } = useFetch('http://localhost:8000/api/v1/chats/all', { method: "GET" });
+    const { data, error, loading } = useFetch<ChatType[]>('http://localhost:8000/api/v1/chats/all', { method: "GET" });
     const [activeChatId, setActiveChatId] = useState<number>(0);
     const [chats, chatsDispatch] = useReducer((prevChats: ChatType[], action: ChatsActionType) => {
         const prevChatsCopy = prevChats.slice();
@@ -97,6 +114,11 @@ export function useChats(): TuseChatsReturn {
     function renameChat(chat_id: number, name: string) {
         updateChat(chat_id, {title: name});
     }
+
+    function switchModel(newModel: string) {
+        console.log(newModel);
+        updateChat(activeChatId, {model: newModel});
+    }
     
 
     return {
@@ -108,7 +130,10 @@ export function useChats(): TuseChatsReturn {
             addMessage: addMessage,
             activateChat: activateChat,
             deleteChat: deleteChat,
-            renameChat: renameChat
+            renameChat: renameChat,
+            switchModel: switchModel
         }
     };
 }
+
+

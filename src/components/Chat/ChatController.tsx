@@ -1,37 +1,22 @@
 import Chat from "./Chat";
-import { ChatType } from "../../types";
 import { SystemPrompt, UserPrompt } from "../control/Prompt";
 import ChatHistory from "../control/ChatHistrory";
 import { useChats } from "./useChats";
 import ControlSidebar from "../layout/ControlSidebar";
 import PromptFooter from "../layout/PromptFooter";
-
-
-export const CHATS_ACTIONS = {
-    SET_CHATS: "set-chats",
-    CREATE_CHAT: "create-chat",
-    UPDATE_CHAT: "update-chat",
-    RENAME_CHAT: "rename-chat",
-    DELETE_CHAT: "delete-chat"
-}
-
-export function createDefaultChat(): ChatType {
-    return {
-        model: "gpt-3.5-turbo",
-        title: "New chat",
-        messages: [],
-        created_at: null,
-        last_updated: null
-
-    };
-}
+import ModelSelector from "../control/ModelSelector";
+import PromptSelectionSidebar from "../layout/PromptSelectionSidebar";
+import PromptSelector from "../control/PromptSelector";
+import { useState } from "react";
 
 
 export default function ChatController() {
+    const [systemPromptValue, setSystemPromptValue] = useState<string>("");
     const { chats, activeChatId, chatsLoadingError, chatsLoadingComplete, dispatchers } = useChats();
-    const {addMessage, activateChat, deleteChat, renameChat} = dispatchers;
+    const {addMessage, activateChat, deleteChat, renameChat, switchModel} = dispatchers;
 
     const activeChat = chats[activeChatId];
+    console.log(systemPromptValue);
 
     console.log("ChatController render", chats);
     return (
@@ -39,16 +24,24 @@ export default function ChatController() {
             <ControlSidebar>
                 <ChatHistory chats={chats}
                              chatActivationHandler={activateChat}
-                             chatDeleteHandler={deleteChat}/>
+                             chatDeleteHandler={deleteChat}
+                             chatRenameHandler={renameChat}/>
             </ControlSidebar>
             <div id="chat-content">
+                <ModelSelector activeModel={activeChat.model}
+                               modelSwitchHandler={switchModel}/>
                 {activeChat.messages.length === 0 && 
-                <SystemPrompt submitHandler={prompt => addMessage('system', prompt)}/>}
+                <SystemPrompt promptValue={systemPromptValue}
+                              promptValueChangeHandler={setSystemPromptValue}
+                              submitHandler={prompt => addMessage('system', prompt)}/>}
                 <Chat messages={activeChat.messages}/>
                 <PromptFooter>
                     <UserPrompt submitHandler={prompt => addMessage('user', prompt)}/>
                 </PromptFooter>
             </div>
+            <PromptSelectionSidebar>
+                <PromptSelector promptSelectionCallback={setSystemPromptValue}/>
+            </PromptSelectionSidebar>
         </div>
     )
 }

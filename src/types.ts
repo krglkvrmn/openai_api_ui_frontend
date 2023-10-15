@@ -7,6 +7,13 @@ export type MessageType = {
     created_at?: Date | null,
 }
 
+
+export type PromptType = {
+    id?: number;
+    popularity: number;
+    content: string
+}
+
 export interface ChatTypeFields {
     id?: number,
     model?: string,

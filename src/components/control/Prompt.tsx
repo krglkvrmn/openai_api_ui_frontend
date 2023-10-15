@@ -1,4 +1,5 @@
 import { useRef } from "react"
+import { funcClosureOrUndefined } from "../../utils/functional";
 
 
 type PromptSubmitHandler = (text: string) => void;
@@ -6,6 +7,8 @@ type PromptSubmitHandler = (text: string) => void;
 
 type BasePromptProps = {
     promptType: "system" | "user",
+    promptValue?: string,
+    promptValueChangeHandler?: (prompt: string) => void,
     placeholder?: string,
     promptInputRef?: React.RefObject<HTMLInputElement>,
     onSubmit?: () => void,
@@ -13,16 +16,20 @@ type BasePromptProps = {
 }
 
 interface TypedPromptProps {
+    promptValue?: string,
+    promptValueChangeHandler?: (prompt: string) => void,
     submitHandler: PromptSubmitHandler
 }
 
 
 export function UserPrompt(
-    {submitHandler}: TypedPromptProps
+    {promptValue, promptValueChangeHandler, submitHandler}: TypedPromptProps
 ) {
     const [promptInputRef, onPromptSubmit] = usePromptInputSubmitRef(undefined, submitHandler);
     return (
         <BasePrompt promptType="user"
+                    promptValue={promptValue}
+                    promptValueChangeHandler={promptValueChangeHandler}
                     placeholder="Enter your prompt here"
                     promptInputRef={promptInputRef}
                     onSubmit={onPromptSubmit}/>
@@ -30,7 +37,7 @@ export function UserPrompt(
 }
 
 export function SystemPrompt(
-    {submitHandler}: TypedPromptProps
+    {promptValue, promptValueChangeHandler, submitHandler}: TypedPromptProps
 ) {
     const [promptInputRef, onPromptSubmit] = usePromptInputSubmitRef(ref => {
         if (ref.current !== null && ref.current.parentElement !== null) {
@@ -39,6 +46,8 @@ export function SystemPrompt(
     }, submitHandler);
     return (
         <BasePrompt promptType="system"
+                    promptValue={promptValue}
+                    promptValueChangeHandler={promptValueChangeHandler}
                     placeholder="Enter your system prompt here"
                     promptInputRef={promptInputRef}
                     onSubmit={onPromptSubmit}/>
@@ -47,7 +56,7 @@ export function SystemPrompt(
 
 
 function BasePrompt(
-    {promptType, placeholder, promptInputRef, onSubmit, children}: BasePromptProps
+    {promptValue, promptValueChangeHandler, promptType, placeholder, promptInputRef, onSubmit, children}: BasePromptProps
     ) {
     
     return (
@@ -57,6 +66,8 @@ function BasePrompt(
                    id={`${promptType}-prompt-input`}
                    placeholder={placeholder}
                    ref={promptInputRef}
+                   value={promptValue}
+                   onChange={e => promptValueChangeHandler === undefined ? undefined : promptValueChangeHandler(e.target.value)}
                    onKeyDown={e => {if (onSubmit !== undefined && e.key === 'Enter') {onSubmit()}}}/>
             {children}
             <button type="submit"
