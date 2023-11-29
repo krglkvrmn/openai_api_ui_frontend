@@ -4,9 +4,9 @@ export type MessageType = {
     id?: number,
     author: MessageAuthor,
     content: string,
+    status?: "awaiting" | "generating" | "complete",
     created_at?: Date | null,
 }
-
 
 export type PromptType = {
     id?: number;

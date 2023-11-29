@@ -12,13 +12,12 @@ import { useState } from "react";
 
 export default function ChatController() {
     const [systemPromptValue, setSystemPromptValue] = useState<string>("");
-    const { chats, activeChatId, chatsLoadingError, chatsLoadingComplete, dispatchers } = useChats();
+    const { chats, streamingMessage, activeChatId, chatsLoadingError, chatsLoadingComplete, dispatchers } = useChats();
     const {addMessage, activateChat, deleteChat, renameChat, switchModel} = dispatchers;
 
     const activeChat = chats[activeChatId];
-    console.log(systemPromptValue);
 
-    console.log("ChatController render", chats);
+    console.debug("ChatController render with following chats:", chats);
     return (
         <div id="chat-controller">
             <ControlSidebar>
@@ -34,7 +33,7 @@ export default function ChatController() {
                 <SystemPrompt promptValue={systemPromptValue}
                               promptValueChangeHandler={setSystemPromptValue}
                               submitHandler={prompt => addMessage('system', prompt)}/>}
-                <Chat messages={activeChat.messages}/>
+                <Chat messages={[...activeChat.messages, streamingMessage]}/>
                 <PromptFooter>
                     <UserPrompt submitHandler={prompt => addMessage('user', prompt)}/>
                 </PromptFooter>

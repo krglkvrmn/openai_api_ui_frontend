@@ -1,6 +1,8 @@
 import { useState, useReducer, useEffect } from "react";
 import useFetch from "../../hooks/useFetch";
 import { ChatsActionType, MessageType, ChatTypeFields, ChatIdCallbackType, MessageAuthor, ChatIdNameCallbackType, ChatType } from "../../types";
+import askModelStream, { useStreamingMessage } from "../../services/completions_api";
+import { createNewChatRequest, deleteChatRequest, updateChatRequest } from "../../services/backend";
 
 
 export const CHATS_ACTIONS = {
@@ -8,7 +10,9 @@ export const CHATS_ACTIONS = {
     CREATE_CHAT: "create-chat",
     UPDATE_CHAT: "update-chat",
     RENAME_CHAT: "rename-chat",
-    DELETE_CHAT: "delete-chat"
+    DELETE_CHAT: "delete-chat",
+    ADD_MESSAGE: "add-message",
+    SWITCH_MODEL: "switch-model",
 };
 
 export function createDefaultChat(): ChatType {
@@ -32,6 +36,7 @@ export type TuseChatsDispatchers = {
 
 export type TuseChatsReturn = {
     chats: ChatType[];
+    streamingMessage: MessageType,
     activeChatId: number;
     chatsLoadingError: unknown;
     chatsLoadingComplete: boolean;
@@ -41,7 +46,9 @@ export type TuseChatsReturn = {
 
 export function useChats(): TuseChatsReturn {
     const { data, error, loading } = useFetch<ChatType[]>('http://localhost:8000/api/v1/chats/all', { method: "GET" });
+    const [streamingMessage, isMessageStreaming, setIsMessageStreaming, streamMessage, resetStreamingMessage] = useStreamingMessage();
     const [activeChatId, setActiveChatId] = useState<number>(0);
+    const [syncActionsQueue, setSyncActionsQueue] = useState<Array<any>>([]);
     const [chats, chatsDispatch] = useReducer((prevChats: ChatType[], action: ChatsActionType) => {
         const prevChatsCopy = prevChats.slice();
         switch (action.type) {
@@ -60,6 +67,20 @@ export function useChats(): TuseChatsReturn {
                 prevChatsCopy.splice(action.payload.chat_id, 1);
                 return prevChatsCopy;
             }
+            case CHATS_ACTIONS.ADD_MESSAGE: {
+                return prevChatsCopy.map((chat, index) => 
+                    index === action.payload.chat_id ?
+                    {...chat, messages: [...chat.messages, {...action.payload.message, chat_id: chat.id}]} : chat
+                );
+            }
+            case CHATS_ACTIONS.RENAME_CHAT: {
+                prevChatsCopy[action.payload.chat_id].title = action.payload.title;
+                return prevChatsCopy;
+            }
+            case CHATS_ACTIONS.SWITCH_MODEL: {
+                prevChatsCopy[action.payload.chat_id].model = action.payload.model;
+                return prevChatsCopy;
+            }
             default: {
                 throw new Error(`Unknown action for chat: ${action.type}`);
             }
@@ -72,29 +93,81 @@ export function useChats(): TuseChatsReturn {
         }
     }, [data]);
 
-    function createChat(initialMessage: MessageType) {
+    useEffect(() => {
+        if (isMessageStreaming) {
+            streamMessage(chats[activeChatId]).then().catch(error => {
+                resetStreamingMessage();
+                console.error('An error occured while recieving streamed message:', error)
+            }).finally(() => setIsMessageStreaming(false))
+        } else if (!isMessageStreaming && streamingMessage.status === "complete") {
+            chatsDispatch({type: CHATS_ACTIONS.ADD_MESSAGE, payload: {chat_id: activeChatId, message: streamingMessage}});
+            resetStreamingMessage();
+            setSyncActionsQueue(prev => [...prev, {type: CHATS_ACTIONS.UPDATE_CHAT, chat_id: activeChatId}]);
+        }
+    }, [isMessageStreaming]);
+
+    useEffect(() => {
+        const syncAction = syncActionsQueue[0];
+        try {
+            switch (syncAction?.type) {
+                case CHATS_ACTIONS.CREATE_CHAT: {
+                    createNewChatRequest(chats[syncAction.chat_id]).then(chat => {
+                        console.debug('Created chat object in a database:', chat);
+                        chatsDispatch({type: CHATS_ACTIONS.UPDATE_CHAT, payload: {chat_id: syncAction.chat_id, chat: chat}});
+                    }).catch(error => console.error("Error:", error));
+                    break;
+                }
+                case CHATS_ACTIONS.UPDATE_CHAT: {
+                    updateChatRequest(chats[syncAction.chat_id]).then(chat => {
+                        console.debug('Updated chat object in a database:', chat);
+                        chatsDispatch({type: CHATS_ACTIONS.UPDATE_CHAT, payload: {chat_id: syncAction.chat_id, chat: chat}});
+                    });
+                    break;
+                }
+                case CHATS_ACTIONS.DELETE_CHAT: {
+                    deleteChatRequest(syncAction.chat_id).then(response => console.log(response)).catch(error => console.error('Error:', error));
+                    break;
+                }
+                default:
+                    break;
+            }
+            if (syncActionsQueue.length >= 1) {
+                setSyncActionsQueue(syncActionsQueue.slice(1));
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }, [syncActionsQueue]);
+
+    function createChat(initialMessages: MessageType[]) {
         if (chats[0].messages.length == 0) {
-            const chat = { ...chats[0], messages: [initialMessage], created_at: new Date(), last_updated: new Date() };
+            const chat = { ...chats[0], messages: initialMessages, created_at: new Date(), last_updated: new Date() };
             chatsDispatch({ type: CHATS_ACTIONS.CREATE_CHAT, payload: { chat: chat } });
             setActiveChatId(1);
+            setSyncActionsQueue(prev => [...prev, {type: CHATS_ACTIONS.CREATE_CHAT, chat_id: 1}]);
         } else {
             throw new Error('Chat is not empty');
         }
     }
 
-    function updateChat(chat_id: number, chatParams: ChatTypeFields) {
-        const updatedChat = { ...chats[chat_id], ...chatParams };
-        chatsDispatch({ type: CHATS_ACTIONS.UPDATE_CHAT, payload: { chat_id: chat_id, chat: updatedChat } });
-    }
-
     function addMessage(author: MessageAuthor, text: string) {
-        const newMessage: MessageType = { author: author, content: text, created_at: new Date() };
+        const userMessage: MessageType = { author: author, content: text, created_at: new Date() };
+        
         if (activeChatId === 0) {
-            createChat(newMessage);
+            createChat([userMessage]);
         } else if (activeChatId > 0) {
-            updateChat(activeChatId, { messages: [...chats[activeChatId].messages, newMessage] });
+            chatsDispatch({type: CHATS_ACTIONS.ADD_MESSAGE, payload: {chat_id: activeChatId, message: userMessage}});
+            setSyncActionsQueue(prev => [...prev, {type: CHATS_ACTIONS.UPDATE_CHAT, chat_id: activeChatId}]);
         } else {
             throw new Error(`Invalid active chat - ${activeChatId}`);
+        }
+        
+    }
+
+    function addMessageWithReply(author: MessageAuthor, text: string) {
+        addMessage(author, text);
+        if (author !== "system") {
+            setIsMessageStreaming(true);
         }
     }
 
@@ -109,25 +182,30 @@ export function useChats(): TuseChatsReturn {
         } else if  (chat_id < activeChatId) {
             setActiveChatId(prevChatId => prevChatId - 1);
         }
+        setSyncActionsQueue(prev => [...prev, {type: CHATS_ACTIONS.DELETE_CHAT, chat_id: chats[chat_id].id}]);
     }
 
     function renameChat(chat_id: number, name: string) {
-        updateChat(chat_id, {title: name});
+        chatsDispatch({type: CHATS_ACTIONS.RENAME_CHAT, payload: {chat_id: chat_id, title: name}});
+        setSyncActionsQueue(prev => [...prev, {type: CHATS_ACTIONS.UPDATE_CHAT, chat_id: chat_id}]);
     }
 
     function switchModel(newModel: string) {
-        console.log(newModel);
-        updateChat(activeChatId, {model: newModel});
+        chatsDispatch({type: CHATS_ACTIONS.SWITCH_MODEL, payload: {chat_id: activeChatId, model: newModel}});
+        if (activeChatId !== 0) {
+            setSyncActionsQueue(prev => [...prev, {type: CHATS_ACTIONS.UPDATE_CHAT, chat_id: activeChatId}]);
+        }
     }
     
 
     return {
         chats: chats,
+        streamingMessage: streamingMessage,
         activeChatId: activeChatId,
         chatsLoadingError: error,
         chatsLoadingComplete: !loading,
         dispatchers: {
-            addMessage: addMessage,
+            addMessage: addMessageWithReply,
             activateChat: activateChat,
             deleteChat: deleteChat,
             renameChat: renameChat,

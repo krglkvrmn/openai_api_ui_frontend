@@ -9,7 +9,9 @@ export default function Chat(
         <div id="chat-container">
             {
                 messages.map((message, index) => {
-                    return <Message key={index} author={message.author} content={message.content}/>
+                    if (message.status !== "awaiting") {
+                        return <Message key={index} author={message.author} content={message.content}/>
+                    }
                 })
             }
         </div>
