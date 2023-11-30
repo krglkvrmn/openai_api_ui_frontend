@@ -7,11 +7,13 @@ import PromptFooter from "../layout/PromptFooter";
 import ModelSelector from "../control/ModelSelector";
 import PromptSelectionSidebar from "../layout/PromptSelectionSidebar";
 import PromptSelector from "../control/PromptSelector";
-import { useState } from "react";
+import { useSignalState } from "../../hooks/useSignalState";
+
+
 
 
 export default function ChatController() {
-    const [systemPromptValue, setSystemPromptValue] = useState<string>("");
+    const [systemPromptValue, setSystemPromptValue] = useSignalState<string>("");
     const { chats, streamingMessage, activeChatId, chatsLoadingError, chatsLoadingComplete, dispatchers } = useChats();
     const {addMessage, activateChat, deleteChat, renameChat, switchModel} = dispatchers;
 

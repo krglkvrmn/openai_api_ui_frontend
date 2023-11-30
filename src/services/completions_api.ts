@@ -42,7 +42,7 @@ export function useStreamingMessage(): TuseModelStreamingMessageReturn {
 
     async function streamMessage(chat: ChatType) {
         let chunkContent: string;
-        for await (const chunk of askModelStream(chat, false)) {
+        for await (const chunk of askModelStream(chat, true)) {
             chunkContent = chunk.choices[0].delta.content === undefined ? "" : chunk.choices[0].delta.content;
             streamingMessage.value = {
                 ...streamingMessage.value,

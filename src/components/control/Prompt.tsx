@@ -1,5 +1,6 @@
 import { useRef } from "react"
 import { funcClosureOrUndefined } from "../../utils/functional";
+import { Signal } from "@preact/signals-react";
 
 
 type PromptSubmitHandler = (text: string) => void;
@@ -7,7 +8,7 @@ type PromptSubmitHandler = (text: string) => void;
 
 type BasePromptProps = {
     promptType: "system" | "user",
-    promptValue?: string,
+    promptValue?: Signal<string> | string,
     promptValueChangeHandler?: (prompt: string) => void,
     placeholder?: string,
     promptInputRef?: React.RefObject<HTMLInputElement>,
@@ -16,7 +17,7 @@ type BasePromptProps = {
 }
 
 interface TypedPromptProps {
-    promptValue?: string,
+    promptValue?: Signal<string> | string,
     promptValueChangeHandler?: (prompt: string) => void,
     submitHandler: PromptSubmitHandler
 }
@@ -66,7 +67,7 @@ function BasePrompt(
                    id={`${promptType}-prompt-input`}
                    placeholder={placeholder}
                    ref={promptInputRef}
-                   value={promptValue}
+                   value={typeof promptValue === "string" || typeof promptValue === "undefined" ? promptValue : promptValue.value}
                    onChange={e => promptValueChangeHandler === undefined ? undefined : promptValueChangeHandler(e.target.value)}
                    onKeyDown={e => {if (onSubmit !== undefined && e.key === 'Enter') {onSubmit()}}}/>
             {children}
