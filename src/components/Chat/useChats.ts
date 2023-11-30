@@ -2,7 +2,7 @@ import { useState, useReducer, useEffect } from "react";
 import useFetch from "../../hooks/useFetch";
 import { ChatsActionType, MessageType, ChatIdCallbackType, MessageAuthor, ChatIdNameCallbackType, ChatType } from "../../types";
 import { useStreamingMessage } from "../../services/completions_api";
-import { createNewChatRequest, deleteChatRequest, updateChatRequest } from "../../services/backend";
+import { createNewChatRequest, deleteChatRequest, updateChatRequest } from "../../services/backend_api";
 import { Signal } from "@preact/signals-react";
 
 
