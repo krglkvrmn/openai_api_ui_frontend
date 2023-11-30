@@ -3,6 +3,7 @@ import useFetch from "../../hooks/useFetch";
 import { ChatsActionType, MessageType, ChatIdCallbackType, MessageAuthor, ChatIdNameCallbackType, ChatType } from "../../types";
 import { useStreamingMessage } from "../../services/completions_api";
 import { createNewChatRequest, deleteChatRequest, updateChatRequest } from "../../services/backend";
+import { Signal } from "@preact/signals-react";
 
 
 export const CHATS_ACTIONS = {
@@ -36,7 +37,7 @@ export type TuseChatsDispatchers = {
 
 export type TuseChatsReturn = {
     chats: ChatType[];
-    streamingMessage: MessageType,
+    streamingMessage: Signal<MessageType>,
     activeChatId: number;
     chatsLoadingError: unknown;
     chatsLoadingComplete: boolean;
@@ -99,8 +100,8 @@ export function useChats(): TuseChatsReturn {
                 resetStreamingMessage();
                 console.error('An error occured while recieving streamed message:', error)
             }).finally(() => setIsMessageStreaming(false))
-        } else if (!isMessageStreaming && streamingMessage.status === "complete") {
-            chatsDispatch({type: CHATS_ACTIONS.ADD_MESSAGE, payload: {chat_id: activeChatId, message: streamingMessage}});
+        } else if (!isMessageStreaming && streamingMessage.value.status === "complete") {
+            chatsDispatch({type: CHATS_ACTIONS.ADD_MESSAGE, payload: {chat_id: activeChatId, message: streamingMessage.value}});
             resetStreamingMessage();
             setSyncActionsQueue(prev => [...prev, {type: CHATS_ACTIONS.UPDATE_CHAT, chat_id: activeChatId}]);
         }

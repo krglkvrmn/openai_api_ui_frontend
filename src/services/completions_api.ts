@@ -1,3 +1,4 @@
+import { Signal, useSignal } from "@preact/signals-react";
 import { useRef, useState } from "react";
 import { ChatType, MessageType } from "../types";
 import fetchEvents from "../utils/network";
@@ -26,35 +27,38 @@ export default async function* askModelStream(chat: ChatType, debug: boolean = t
 }
 
 type TuseModelStreamingMessageReturn = [
-    MessageType,
+    Signal<MessageType>,
     boolean,
     React.Dispatch<React.SetStateAction<boolean>>,
     (chat: ChatType) => Promise<void>,
     () => void
 ]
 
+const streamingMessageDefaultState: MessageType = {author: "assistant", content: "", status: "awaiting"};
+
 export function useStreamingMessage(): TuseModelStreamingMessageReturn {
-    const [forceUpdate, setForceUpdate] = useState<boolean>(false);
+    const streamingMessage = useSignal<MessageType>(streamingMessageDefaultState);
     const [isMessageStreaming, setIsMessageStreaming] = useState<boolean>(false);
-    const [streamingMessage, setStreamingMessage] = useState<MessageType>({author: "assistant", content: "", status: "awaiting"});
 
     async function streamMessage(chat: ChatType) {
         let chunkContent: string;
-        let streamingMessageStateless: MessageType = {...streamingMessage};
         for await (const chunk of askModelStream(chat, false)) {
             chunkContent = chunk.choices[0].delta.content === undefined ? "" : chunk.choices[0].delta.content;
-            streamingMessageStateless.content += chunkContent;
-            streamingMessageStateless.status = "generating";
-            setStreamingMessage(prev => streamingMessageStateless);
-            setForceUpdate(prev => !prev);
+            streamingMessage.value = {
+                ...streamingMessage.value,
+                content: streamingMessage.value.content + chunkContent,
+                status: "generating"
+            }
         }
-        streamingMessageStateless.status = "complete";
-        streamingMessageStateless.created_at = new Date();
-        setStreamingMessage(prev => streamingMessageStateless);
+        streamingMessage.value = {
+            ...streamingMessage.value,
+            status: "complete",
+            created_at: new Date()
+        }
     }
 
     function reset() {
-        setStreamingMessage({...streamingMessage, content: "", status: "awaiting"});
+        streamingMessage.value = streamingMessageDefaultState;
     }
     return [streamingMessage, isMessageStreaming, setIsMessageStreaming, streamMessage, reset];
 

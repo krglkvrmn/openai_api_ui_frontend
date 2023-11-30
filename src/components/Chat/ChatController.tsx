@@ -33,7 +33,7 @@ export default function ChatController() {
                 <SystemPrompt promptValue={systemPromptValue}
                               promptValueChangeHandler={setSystemPromptValue}
                               submitHandler={prompt => addMessage('system', prompt)}/>}
-                <Chat messages={[...activeChat.messages, streamingMessage]}/>
+                <Chat messages={activeChat.messages} activeMessage={streamingMessage}/>
                 <PromptFooter>
                     <UserPrompt submitHandler={prompt => addMessage('user', prompt)}/>
                 </PromptFooter>

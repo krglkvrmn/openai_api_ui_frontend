@@ -8,6 +8,9 @@ function CodeBlockComponent(
     ) {
     const {children, className, node, ...rest} = props;
     const match = /language-(\w+)/.exec(className || '');
+    if (typeof rest.inline === "boolean") {
+        rest.inline = rest.inline.toString();
+    }
     return match ? (
         <SyntaxHighlighter
             style={dark}
@@ -17,7 +20,7 @@ function CodeBlockComponent(
             {...rest}/>
             
         ) : (
-            <code {...rest} className={className}>
+            <code className={className} {...rest}>
                 {children}
             </code>
         )

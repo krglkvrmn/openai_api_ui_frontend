@@ -10,7 +10,6 @@ export async function createNewChatRequest(chat: ChatType): Promise<ChatType> {
 }
 
 export async function updateChatRequest(chat: ChatType): Promise<ChatType> {
-    console.log(chat);
     return fetch('http://localhost:8000/api/v1/chats/updateChat', {
         method: "PUT",
         headers: {"Content-Type": "application/json"},
