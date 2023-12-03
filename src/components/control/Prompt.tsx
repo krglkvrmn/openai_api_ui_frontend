@@ -1,5 +1,4 @@
 import { useRef } from "react"
-import { funcClosureOrUndefined } from "../../utils/functional";
 import { Signal } from "@preact/signals-react";
 
 

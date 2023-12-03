@@ -8,7 +8,7 @@ export default function useFetch<T>(url: string, options: RequestInit) {
   useEffect(() => {
     const controller = new AbortController();
 
-    fetch(url, {signal: controller.signal, ...options}).then(response => {
+    fetch(url, {signal: controller.signal, credentials: "include", ...options}).then(response => {
         if (!response.ok) throw new Error('Network response was not ok');
         return response.json();
     }).then(result => {

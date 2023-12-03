@@ -1,8 +1,10 @@
 import { UUID } from "crypto";
+import axios from "axios";
 
 export type SignupFormDataType = {
     email: string,
-    password: string
+    password: string,
+    is_guest?: boolean
 }
 
 export type LoginFormDataType = {
@@ -24,6 +26,7 @@ export type RequestDetails = {
 
 export type SignupResponse = UserSchema & RequestDetails;
 export type LoginResponse = RequestDetails;
+export type LogoutResponse = RequestDetails;
 
 export async function signup(formData: SignupFormDataType): Promise<SignupResponse> {
     return fetch('http://localhost:8000/auth/register', {
@@ -37,11 +40,31 @@ export async function login(formData: LoginFormDataType): Promise<LoginResponse>
     return fetch('http://localhost:8000/auth/jwt/login', {
         method: "POST",
         headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-        body: new URLSearchParams(formData)
+        body: new URLSearchParams(formData),
+        credentials: "include"
     }).then(response => {
         if (response.status >= 300) {
             return response.json();
         }
         return {};
     });
+}
+
+export async function logout(): Promise<LogoutResponse> {
+    return fetch('http://localhost:8000/auth/jwt/logout', {
+        method: "POST",
+        credentials: "include"
+    }).then(response => {
+        if (response.status == 401) {
+            return response.json();
+        }
+        return {};
+    });
+}
+
+export async function getCurrentUser(): Promise<SignupResponse> {
+    return fetch('http://localhost:8000/users/me', {
+        method: "GET",
+        credentials: "include"
+    }).then(response => response.json());
 }

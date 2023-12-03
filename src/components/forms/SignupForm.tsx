@@ -2,7 +2,7 @@ import { FormEvent, useRef, useState } from "react";
 import { ValidatorType, useForm } from "../../hooks/useForm";
 import { SignupFormDataType, signup } from "../../services/auth";
 import { Navigate, useNavigate } from "react-router-dom";
-import { useAuth } from "../../contexts/auth";
+import { useAuth } from "../../hooks/useAuth";
 
 type TuseSignupFormReturn = [
     string[],
@@ -25,23 +25,19 @@ const validators: ValidatorType[] = [
 ];
 
 export function useSignupForm(): TuseSignupFormReturn {
-    const [user, signIn, signOut] = useAuth();
+    const {authDispatchers} = useAuth();
+    const {signUp} = authDispatchers;
     const [errors, setErrors, onFormSubmit] = useForm(validators);
     const navigate = useNavigate();
 
     function submitHandler(formData: any) {
-        const data = {email: formData.email, password: formData.password};
-        signup(data).then(user => {
-            console.log(user);
-            if (user.detail === "REGISTER_USER_ALREADY_EXISTS") {
-                setErrors(prev => [...prev, "User already exists"]);
-            } else if (user.id !== undefined) {
-                signIn({email: user.email});
-                navigate("/");
+        const data = {email: formData.username, password: formData.password};
+        signUp(data).then(errors => {
+            if (errors.length === 0) {
+                navigate('/login');
             }
-        }).catch(error => {
-            setErrors(prev => [...prev, "An error occured during registration"])
-        })
+            setErrors(errors);
+        });
     }
 
     const onFormSubmitWithCallback = (event: FormEvent<HTMLFormElement>) => onFormSubmit(event, submitHandler);
@@ -58,10 +54,9 @@ export function SignupForm() {
             <form onSubmit={onFormSubmit}>
                 <label htmlFor="signup-email-input">Email:</label>
                 <input id="signup-email-input" 
-                       name="email"
+                       name="username"
                        type="email"
-                       placeholder="Enter your email"
-                       autoComplete="new-password" required />
+                       placeholder="Enter your email" required />
                 <br/>
                 <label htmlFor="signup-password-input">Password:</label>
                 <input id="signup-password-input"

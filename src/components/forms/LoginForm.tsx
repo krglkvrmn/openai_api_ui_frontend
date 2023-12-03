@@ -2,7 +2,7 @@ import { FormEvent } from "react";
 import { ValidatorType, useForm } from "../../hooks/useForm";
 import { useNavigate } from "react-router-dom";
 import { login } from "../../services/auth";
-import { useAuth } from "../../contexts/auth";
+import { useAuth } from "../../hooks/useAuth";
 
 
 type TuseLoginFormReturn = [
@@ -13,22 +13,19 @@ type TuseLoginFormReturn = [
 const validators: ValidatorType[] = [];
 
 export function useLoginForm(): TuseLoginFormReturn {
-    const [user, signIn, signOut] = useAuth();
+    const {authDispatchers} = useAuth();
+    const {signIn} = authDispatchers;
     const [errors, setErrors, onFormSubmit] = useForm(validators);
     const navigate = useNavigate();
 
     function submitHandler(formData: any) {
         const data = {username: formData.username, password: formData.password};
-        login(data).then(loginInfo => {
-            if (loginInfo.detail === "LOGIN_BAD_CREDENTIALS") {
-                setErrors(prev => [...prev, "Incorrect email or password"])
-            } else {
-                signIn({email: data.username});
+        signIn(data).then(errors => {
+            if (errors.length === 0) {
                 navigate('/');
             }
-        }).catch(error => {
-            setErrors(prev => [...prev, "An error occured during login"])
-        })
+            setErrors(errors);
+        });
     }
 
     const onFormSubmitWithCallback = (event: FormEvent<HTMLFormElement>) => onFormSubmit(event, submitHandler);

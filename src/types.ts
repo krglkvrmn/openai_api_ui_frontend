@@ -33,3 +33,5 @@ export type ChatsActionType = {type: string, payload: any}
 
 export type ChatIdCallbackType = (chat_id: number) => void;
 export type ChatIdNameCallbackType = (chat_id: number, name: string) => void;
+
+export type UserErrors = string[];

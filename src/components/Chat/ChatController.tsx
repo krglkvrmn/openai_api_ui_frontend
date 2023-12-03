@@ -8,18 +8,23 @@ import ModelSelector from "../control/ModelSelector";
 import PromptSelectionSidebar from "../layout/PromptSelectionSidebar";
 import PromptSelector from "../control/PromptSelector";
 import { useSignalState } from "../../hooks/useSignalState";
-
-
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../../hooks/useAuth";
+import { signal } from "@preact/signals-react";
 
 
 export default function ChatController() {
+    const navigate = useNavigate();
+    const {authState, authDispatchers} = useAuth();
+    const {signOut} = authDispatchers;
     const [systemPromptValue, setSystemPromptValue] = useSignalState<string>("");
     const { chats, streamingMessage, activeChatId, chatsLoadingError, chatsLoadingComplete, dispatchers } = useChats();
     const {addMessage, activateChat, deleteChat, renameChat, switchModel} = dispatchers;
 
     const activeChat = chats[activeChatId];
 
-    console.debug("ChatController render with following chats:", chats);
+    console.log("ChatController render with following chats:", chats);
+    console.log(authState);
     return (
         <div id="chat-controller">
             <ControlSidebar>
@@ -27,6 +32,15 @@ export default function ChatController() {
                              chatActivationHandler={activateChat}
                              chatDeleteHandler={deleteChat}
                              chatRenameHandler={renameChat}/>
+                <div>
+                    {!authState.isAuthenticated ?
+                        <Link to="/login"><button>Log In</button></Link> :
+                        <>
+                            <p>{`You are already logged in as ${authState.user?.email}`}</p>
+                            <button onClick={signOut}>Log out</button>
+                        </>
+                    }
+                </div>
             </ControlSidebar>
             <div id="chat-content">
                 <ModelSelector activeModel={activeChat.model}
