@@ -7,14 +7,13 @@ import { useState } from "react";
 
 
 type TuseGuestLoginReturn = {
-    errors: UserErrors,
+    error: string | null;
     loginAsGuest: () => Promise<void>
 }
 
 export function useGuestLogin(): TuseGuestLoginReturn {
-    const [errors, setErrors] = useState<string[]>([]);
-    const { authDispatchers } = useAuth();
-    const { signUp, signIn } = authDispatchers;
+    const { authDispatchers, logInError, signUpError } = useAuth();
+    const { signUp, logIn } = authDispatchers;
 
     function createGuestUserData(): [string, string] {
         const username = `Guest@${uuidv4()}.private`;
@@ -24,14 +23,10 @@ export function useGuestLogin(): TuseGuestLoginReturn {
 
     async function loginAsGuest() {
         const [username, password] = createGuestUserData();
-        const signUpErrors = await signUp({email: username, password: password, is_guest: true});
-        if (signUpErrors.length > 0) {
-            setErrors(signUpErrors)
-            return;
-        }
-        const signinErrors = await signIn({username, password});
-        setErrors(signinErrors)
+        await signUp({email: username, password: password, is_guest: true});
+        await logIn({username, password});
     }
 
-    return {errors, loginAsGuest};
+    const error = logInError || signUpError ? "Error occured while logging as a guest" : null;
+    return {error, loginAsGuest};
 }

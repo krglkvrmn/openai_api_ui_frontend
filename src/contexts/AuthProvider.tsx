@@ -1,118 +1,91 @@
+import axios, { AxiosError } from "axios";
 import React, { useEffect, useState } from "react";
-import { LoginFormDataType, SignupFormDataType, UserSchema, getCurrentUser, login, logout, signup } from "../services/auth";
+import { useQuery, useMutation, UseMutateAsyncFunction } from 'react-query';
+import { LoginFormDataType, LoginResponse, ResponseDetails, SignupFormDataType, SignupResponse, UserSchema, getCurrentUser, login, logout, refresh, signup } from "../services/auth";
 import { UserErrors } from "../types";
+import { queryClient } from "../App";
+import { error } from "console";
+import { parseLogInError, parseLogOutError, parseSignUpError } from "../utils/errorsParsers";
 
 
 type AuthProviderUserSchema = {
     email: string,
-} | null;
+};
 
 type AuthStateType = {
-    isAuthenticated: boolean,
+    loginVerified: boolean,
     user?: AuthProviderUserSchema
-}
+};
 
 type AuthContextValue = {
+    isAuthenticated: boolean,
     authState: AuthStateType,
+    logInError: string | null,
+    logOutError: string | null,
+    signUpError: string | null,
     authDispatchers: {
-        signIn: (formData: LoginFormDataType) => Promise<UserErrors>,
-        signOut: () => Promise<UserErrors>,
-        signUp: (formData: SignupFormDataType) => Promise<UserErrors>,
+        logIn: (formData: LoginFormDataType) => Promise<LoginResponse>,
+        logOut: () => Promise<ResponseDetails>,
+        signUp: (formData: SignupFormDataType) => Promise<SignupResponse>,
     }
 } | null;
+
+
 
 export const AuthContext = React.createContext<AuthContextValue>(null);
 
 export function AuthProvider({ children }: {children: React.ReactElement}) {
-    const [authState, setAuthState] = useState<AuthStateType>({isAuthenticated: false});
-
-    useEffect(() => {
-        if (!authState.isAuthenticated) {
-            verifyUser().then();
+    const [logInError, setLogInError] = useState<string | null>(null);
+    const [logOutError, setLogOutError] = useState<string | null>(null);
+    const [signUpError, setSignUpError] = useState<string | null>(null);
+    const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+    const { data, isFetched } = useQuery({
+        queryKey: ["authData"],
+        queryFn: getCurrentUser,
+        retry: false,
+        onSuccess: () => setIsAuthenticated(true),
+        onError: () => {
+            setIsAuthenticated(false);
+            refreshMutation.mutate();
         }
-    }, []);
+    });
 
-    async function signIn(formData: LoginFormDataType): Promise<UserErrors> {
-        const errors: string[] = [];
-        try {
-            const loginInfo = await login(formData);
-            if (loginInfo.detail === undefined) {
-                console.log('Successfully logged in:', formData.username);
-                verifyUser();
-            } else if (loginInfo.detail === "LOGIN_BAD_CREDENTIALS") {
-                errors.push("Incorrect email or password");
-            } else {
-                errors.push("An error occured during login");
-            }
-        } catch (error) {
-            console.error(error);
-            errors.push("An error occured during login");
-        }
-        return errors;
-    }
+    const logInMutation = useMutation({
+        mutationFn: login,
+        onSuccess: () => queryClient.invalidateQueries('authData'),
+        onError: error => setLogInError(parseLogInError(error))
+    });
 
-    async function signOut(): Promise<UserErrors> {
-        const errors: string[] = [];
-        try {
-            const logoutInfo = await logout();
-            if (logoutInfo.detail === undefined) {
-                console.log('Successfully logged out');
-                setAuthState({isAuthenticated: false});
-            } else if (logoutInfo.detail === "Unauthorized") {
-                errors.push("You are already logged out");
-            } else {
-                errors.push("An error occured during logging out");
-            }
-        } catch (error) {
-            console.error(error);
-            errors.push("An error occured during logging out");
-        }
-        return errors;
-    }
+    const logOutMutation = useMutation({
+        mutationFn: logout,
+        onSuccess: () => queryClient.invalidateQueries('authData'),
+        onError: error => setLogOutError(parseLogOutError(error))
+    });
 
-    async function signUp(formData: SignupFormDataType): Promise<UserErrors> {
-        const errors: string[] = [];
-        try {
-            const signupInfo = await signup(formData);
-            console.log(signupInfo);
-            if (signupInfo.detail === undefined && signupInfo.email !== undefined) {
-                console.log('Successfully registered:', signupInfo);
-            } else if (signupInfo.detail === "REGISTER_USER_ALREADY_EXISTS") {
-                errors.push("User already exists");
-            } else {
-                errors.push("An error occured during registration");
-            }
-        } catch (error) {
-            console.error(error);
-            errors.push("An error occured during registration");
-        }
-        return errors;
-    }
+    const signUpMutation = useMutation({
+        mutationFn: signup,
+        onError: error => setSignUpError(parseSignUpError(error))
+    });
 
-    async function verifyUser(): Promise<UserErrors> {
-        const errors: string[] = [];
-        try {
-            const userInfo = await getCurrentUser();
-            if (userInfo.detail === undefined) {
-                console.log('Successfully fetched user info:', userInfo);
-                setAuthState({isAuthenticated: true, user: userInfo});
-            } else if (userInfo.detail == "Unauthorized") {
-                errors.push('You must be authorized to fetch user information');
-            } else {
-                errors.push("An error occured during fetching user");
-            }
-        } catch (error) {
-            console.error(error);
-            errors.push("An error occured during fetching user");
-        }
-        if (errors.length > 0) {
-            setAuthState({isAuthenticated: false})
-        }
-        return errors;
+    const refreshMutation = useMutation({
+        mutationFn: refresh,
+        onSuccess: () => queryClient.invalidateQueries('authData'),
+    });
 
-    }
     return (
-        <AuthContext.Provider value={{authState, authDispatchers: {signIn, signOut, signUp}}}>
+        <AuthContext.Provider value={{
+            isAuthenticated,
+            authState: {
+                loginVerified: isFetched,
+                user: data
+            },
+            logInError, logOutError, signUpError,
+            authDispatchers: {
+                logIn: logInMutation.mutateAsync,
+                logOut: logOutMutation.mutateAsync,
+                signUp: signUpMutation.mutateAsync
+            }
+        }}>
             {children}
         </AuthContext.Provider>
     );

@@ -1,6 +1,8 @@
+import { useQuery } from "react-query";
 import useFetch from "../../hooks/useFetch";
 import { PromptType } from "../../types";
 import { funcClosureOrUndefined } from "../../utils/functional";
+import { getPopularSystemPrompts } from "../../services/backend_api";
 
 type PromptSelectorProps = {
     promptSelectionCallback?: (prompt: string) => void;
@@ -14,16 +16,20 @@ type PromptSelectionRecordProps = {
 
 
 export default function PromptSelector({promptSelectionCallback}: PromptSelectorProps) {
-    const {data, error, loading} = useFetch<PromptType[]>('http://localhost:8000/api/v1/prompt/system/popular', {method: "GET"});
+    const { data, isLoading, isError, isSuccess } = useQuery({
+        queryKey: ['prompts'],
+        queryFn: getPopularSystemPrompts 
+    });
 
     return (
         <div id="prompt-selector-container">
             {
-                data === null ? "Loading prompts list..." :
-                data.map((prompt, index) => {
+                isLoading ? "Loading prompts list..." 
+                : isError ? "Error occured while loading prompts"
+                : isSuccess ? ( data.map((prompt, index) => {
                     return <PromptSelectorRecord key={index} prompt={prompt.content}
                                                  promptSelectionCallback={funcClosureOrUndefined(promptSelectionCallback, prompt.content)}/>
-                })
+                })) : null
             }
         </div>
     );

@@ -1,23 +1,21 @@
-import { Navigate, Outlet } from "react-router-dom";
+import { Navigate, Outlet, redirect, useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
 import { useEffect, useRef, useState } from "react";
 import { useSignal } from "@preact/signals-react";
 
 
 export function RequireAuth() {
-    const { authState } = useAuth();
-    const [isFirstRender, setIsFirstRender] = useState<boolean>(true);
-    const [allowRender, setAllowRender] = useState<boolean>(false);
-
-    useEffect(() => {
-        if (isFirstRender) {
-            setIsFirstRender(false);
-            return;
-        }
-        setAllowRender(true);
-    }, [authState.isAuthenticated]);
+    const { isAuthenticated, authState } = useAuth();
 
     return (
-        allowRender ? (authState.isAuthenticated ? <Outlet /> : <Navigate to="/login" />) : null
+        authState.loginVerified ? (isAuthenticated ? <Outlet /> : <Navigate to="/login" />) : null
+    );
+}
+
+export function RequireNoAuth() {
+    const { isAuthenticated, authState } = useAuth();
+
+    return (
+        authState.loginVerified ? (isAuthenticated ? <Navigate to="/" /> : <Outlet />) : null
     );
 }

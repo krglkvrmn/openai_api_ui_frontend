@@ -13,58 +13,51 @@ export type LoginFormDataType = {
 };
 
 export type UserSchema = {
-    id: UUID,
+    id?: UUID,
     email: string,
-    is_active: boolean,
-    is_superuser: boolean,
-    is_verified: boolean
+    is_active?: boolean,
+    is_superuser?: boolean,
+    is_verified?: boolean
 };
 
-export type RequestDetails = {
+export type ResponseDetails = {
     detail?: string
 };
 
-export type SignupResponse = UserSchema & RequestDetails;
-export type LoginResponse = RequestDetails;
-export type LogoutResponse = RequestDetails;
+export type SignupResponse = UserSchema & ResponseDetails;
+export type LoginResponse = ResponseDetails;
+export type LogoutResponse = ResponseDetails;
+
 
 export async function signup(formData: SignupFormDataType): Promise<SignupResponse> {
-    return fetch('http://localhost:8000/auth/register', {
-        method: "POST",
+    const response = await axios.post('http://localhost:8000/auth/register', formData, {
         headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify(formData)
-    }).then(response => response.json());
+        withCredentials: true
+    })
+    return response.data;
 }
 
 export async function login(formData: LoginFormDataType): Promise<LoginResponse> {
-    return fetch('http://localhost:8000/auth/jwt/login', {
-        method: "POST",
-        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-        body: new URLSearchParams(formData),
-        credentials: "include"
-    }).then(response => {
-        if (response.status >= 300) {
-            return response.json();
-        }
-        return {};
-    });
+    const response = await axios.post(
+        'http://localhost:8000/auth/jwt/login', formData, {
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            withCredentials: true
+        },
+    )
+    return response.data;
 }
 
 export async function logout(): Promise<LogoutResponse> {
-    return fetch('http://localhost:8000/auth/jwt/logout', {
-        method: "POST",
-        credentials: "include"
-    }).then(response => {
-        if (response.status == 401) {
-            return response.json();
-        }
-        return {};
-    });
+    const response = await axios.post('http://localhost:8000/auth/jwt/logout', {}, {withCredentials: true});
+    return response.data;
 }
 
-export async function getCurrentUser(): Promise<SignupResponse> {
-    return fetch('http://localhost:8000/users/me', {
-        method: "GET",
-        credentials: "include"
-    }).then(response => response.json());
+export async function refresh(): Promise<undefined> {
+    const response = await axios.post('http://localhost:8000/refresh', {}, {withCredentials: true});
+    return response.data;
+}
+
+export async function getCurrentUser(): Promise<UserSchema> {
+    const response = await axios.get('http://localhost:8000/users/me', {withCredentials: true});
+    return response.data;
 }

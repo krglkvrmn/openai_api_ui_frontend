@@ -15,8 +15,8 @@ import { signal } from "@preact/signals-react";
 
 export default function ChatController() {
     const navigate = useNavigate();
-    const {authState, authDispatchers} = useAuth();
-    const {signOut} = authDispatchers;
+    const { isAuthenticated, authState, authDispatchers } = useAuth();
+    const { logOut } = authDispatchers;
     const [systemPromptValue, setSystemPromptValue] = useSignalState<string>("");
     const { chats, streamingMessage, activeChatId, chatsLoadingError, chatsLoadingComplete, dispatchers } = useChats();
     const {addMessage, activateChat, deleteChat, renameChat, switchModel} = dispatchers;
@@ -33,11 +33,11 @@ export default function ChatController() {
                              chatDeleteHandler={deleteChat}
                              chatRenameHandler={renameChat}/>
                 <div>
-                    {!authState.isAuthenticated ?
+                    {!isAuthenticated ?
                         <Link to="/login"><button>Log In</button></Link> :
                         <>
-                            <p>{`You are already logged in as ${authState.user?.email}`}</p>
-                            <button onClick={signOut}>Log out</button>
+                            <p>{`You are already logged in as ${authState ? authState?.user?.email : authState}`}</p>
+                            <button onClick={logOut}>Log out</button>
                         </>
                     }
                 </div>

@@ -3,27 +3,23 @@ import { LoginForm } from "../../components/forms/LoginForm";
 import { useGuestLogin } from "../../hooks/useGuestLogin";
 
 export default function LoginPage() {
-    const { errors, loginAsGuest } = useGuestLogin();
+    const { error, loginAsGuest } = useGuestLogin();
 
-    function refresh() {
-        fetch('http://localhost:8000/refresh', {
-            method: "POST",
-            credentials: "include"
-        }).then();
+    function login() {
+        loginAsGuest().then(() => {
+            console.log('Successfully logged in as a guest')}
+        ).catch(error => {
+            console.error('An error occured while logging as a guest:', error)
+        })
     }
 
     return (
         <div>
             <LoginForm />
-            {
-                errors.length === 0 ?
-                    <button onClick={() => loginAsGuest().then()}>Continue as guest</button>
-                    : errors.map((error, index) => {
-                        return <p key={index}>{error}</p>
-                    })
-            } 
+            <button onClick={login}>Continue as guest</button>
+            {error}
+
             <Link to="/register">Not registered yet?</Link>
-            <button onClick={refresh}>Refresh</button>
         </div>
     );
 }

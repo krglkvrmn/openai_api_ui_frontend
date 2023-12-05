@@ -6,9 +6,9 @@ import LoginPage from './pages/LoginPage/LoginPage';
 import { AuthProvider } from './contexts/AuthProvider';
 import { HomePage } from './pages/HomePage/HomePage';
 import ChatPage from './pages/ChatPage/ChatPage';
-import { RequireAuth } from "./components/control/RequireAuth";
+import { RequireAuth, RequireNoAuth } from "./components/control/RequireAuth";
 
-const queryClient = new QueryClient();
+export const queryClient = new QueryClient();
 
 function App() {
   return (
@@ -20,8 +20,10 @@ function App() {
               <Route path='/' element={<HomePage />}/>
               <Route path='/chat' element={<ChatPage />}/>
             </Route>
-            <Route path='/register' element={<RegisterPage />}/>
-            <Route path='/login' element={<LoginPage />}/>
+            <Route path="/" element={<RequireNoAuth />}>
+              <Route path='/register' element={<RegisterPage />}/>
+              <Route path='/login' element={<LoginPage />}/>
+            </Route>
           </Routes>
         </AuthProvider>
       </BrowserRouter>

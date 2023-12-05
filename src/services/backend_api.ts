@@ -1,4 +1,12 @@
+import axios from "axios";
 import { ChatType } from "../types";
+
+
+type SystemPromptBackendResponse = {
+    content: string,
+    popularity: number
+};
+
 
 export async function createNewChatRequest(chat: ChatType): Promise<ChatType> {
     return fetch('http://localhost:8000/api/v1/chats/newChat', {
@@ -26,4 +34,9 @@ export async function deleteChatRequest(chat_id: number) {
         credentials: "include"
     }).then(response => response.json())
       .catch(error => console.error('Error:', error));
+}
+
+export async function getPopularSystemPrompts(): Promise<SystemPromptBackendResponse[]> {
+    const response = await axios.get('http://localhost:8000/api/v1/prompt/system/popular', {withCredentials: true})
+    return response.data;
 }
