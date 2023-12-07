@@ -1,11 +1,11 @@
 import { funcClosureOrUndefined  } from "../../utils/functional";
-import { ChatType, ChatIdCallbackType, ChatIdNameCallbackType } from "../../types";
+import { ChatType, ChatIdCallbackType, ChatIdNameCallbackType, ChatOverviewType } from "../../types";
 import { useRef, useState } from "react";
 import { resetSelections, selectElementContent } from "../../utils/elements";
 
 
 type ChatHistoryProps = {
-    chats: ChatType[]
+    chats: ChatOverviewType[]
     chatActivationHandler?: ChatIdCallbackType,
     chatDeleteHandler?: ChatIdCallbackType,
     chatRenameHandler?: ChatIdNameCallbackType,
@@ -28,19 +28,18 @@ export default function ChatHistory(
     return (
         <div id="chat-history-sidebar-container">
             <button id="new-chat-button"
-                    onClick={funcClosureOrUndefined(chatActivationHandler, 0)}>New chat</button>
+                    onClick={funcClosureOrUndefined(chatActivationHandler, null)}>New chat</button>
             {chats.map((chat, index) => {
-                if (index !== 0) {
                     return (
                         <ChatHistoryRecord key={index}
                                            title={chat.title}
                                            chatActivationHandler={funcClosureOrUndefined(chatActivationHandler, index)}
                                            chatDeleteHandler={funcClosureOrUndefined(chatDeleteHandler, index)}
                                            chatRenameHandler={chatRenameHandler === undefined ? undefined : 
-                                                              (name: string) => chatRenameHandler(index, name)}/>
+                                                              (name: string) => chatRenameHandler({chat_id: index, name: name})}/>
                     );
                 }
-            })}
+            )}
         </div>
     )
 }

@@ -14,6 +14,20 @@ export type PromptType = {
     content: string
 }
 
+export type DefaultChatType = {
+    id: null,
+    title: string,
+    model: string
+}
+
+export type ChatOverviewType = {
+    id: number,
+    title: string,
+    model: string,
+    created_at: Date,
+    last_updated: Date
+}
+
 export interface ChatTypeFields {
     id?: number,
     model?: string,
@@ -32,6 +46,6 @@ export interface ChatType extends ChatTypeFields {
 export type ChatsActionType = {type: string, payload: any}
 
 export type ChatIdCallbackType = (chat_id: number) => void;
-export type ChatIdNameCallbackType = (chat_id: number, name: string) => void;
+export type ChatIdNameCallbackType = ({chat_id, name}: {chat_id: number, name: string}) => void;
 
 export type UserErrors = string[];
