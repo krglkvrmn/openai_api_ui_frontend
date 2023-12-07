@@ -48,8 +48,7 @@ export default function ChatController() {
                 </div>
             </ControlSidebar>
             <div id="chat-content">
-                {/*<ModelSelector activeModel={activeChat.model}
-                               modelSwitchHandler={switchModel}/>
+                {/*
                 {activeChat.messages.length === 0 && 
                 <SystemPrompt promptValue={systemPromptValue}
                               promptValueChangeHandler={setSystemPromptValue}
