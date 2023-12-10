@@ -1,12 +1,72 @@
+// Main data types
+
+// Chat
+export type ChatBaseType = {
+    title: string,
+    model: string,
+    created_at?: Date,
+    last_updated?: Date
+
+}
+
+export type DefaultChatType = {
+    id: null,
+} & ChatBaseType;
+
+export type ChatOverviewType = {
+    id: number,
+} & ChatBaseType;
+
+
+export type ChatType = {
+    id: number | null,
+    messages: MessageType[],
+} & ChatBaseType;
+
+export type ChatExistingType = ChatType & {id: number};
+
+export type ChatCreateType = {
+    messages: MessageCreateType[],
+} & ChatBaseType;
+
+// export type ChatAnyType = ChatOverviewType | ChatType;
+export type ChatsStateType = ChatType[] | undefined;
+export type ChatPropType = ChatOverviewType | DefaultChatType;
+export type ChatStateType = ChatType | undefined;
+
+// export type ChatWithMessagesOverviewType = ChatPropType & {messages: MessageOverviewType[]}
+// export type ChatWithMessagesOverviewStateType = ChatWithMessagesOverviewType | undefined;
+
+// Message
 export type MessageAuthor = "user" | "system" | "function" | "assistant";
 
-export type MessageType = {
+export type MessageOverviewType = {
+    id?: number,
+    author: MessageAuthor,
+    created_at?: Date | null,
+}
+export type MessageOverviewExistingType = MessageOverviewType & {id: number};
+
+export type MessageCreateType = {
+    author: MessageAuthor,
+    content: string,
+    chat_id?: number,
+    created_at?: Date | null,
+}
+
+export type MessageType = MessageOverviewType & {content?: string}
+export type MessageExistingType = MessageType & {id: number}
+
+export type StreamingMessageType = {
     id?: number,
     author: MessageAuthor,
     content: string,
-    status?: "awaiting" | "generating" | "complete",
+    status: "awaiting" | "generating" | "complete",
     created_at?: Date | null,
 }
+
+
+// Prompt
 
 export type PromptType = {
     id?: number;
@@ -14,19 +74,8 @@ export type PromptType = {
     content: string
 }
 
-export type DefaultChatType = {
-    id: null,
-    title: string,
-    model: string
-}
 
-export type ChatOverviewType = {
-    id: number,
-    title: string,
-    model: string,
-    created_at: Date,
-    last_updated: Date
-}
+
 
 export interface ChatTypeFields {
     id?: number,
@@ -35,12 +84,6 @@ export interface ChatTypeFields {
     created_at?: Date | null,
     last_updated?: Date | null,
     messages?: MessageType[]
-}
-
-export interface ChatType extends ChatTypeFields {
-    model: string,
-    title: string,
-    messages: MessageType[]
 }
 
 export type ChatsActionType = {type: string, payload: any}

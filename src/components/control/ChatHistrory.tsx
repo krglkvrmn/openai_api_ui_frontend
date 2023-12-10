@@ -5,7 +5,7 @@ import { resetSelections, selectElementContent } from "../../utils/elements";
 
 
 type ChatHistoryProps = {
-    chats: ChatOverviewType[]
+    chats: ChatType[]
     chatActivationHandler?: ChatIdCallbackType,
     chatDeleteHandler?: ChatIdCallbackType,
     chatRenameHandler?: ChatIdNameCallbackType,

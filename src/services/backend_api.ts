@@ -1,5 +1,5 @@
 import axios from "axios";
-import { ChatType, MessageType } from "../types";
+import { ChatCreateType, ChatOverviewType, ChatType, MessageCreateType, MessageType } from "../types";
 
 
 export type ChatOverviewBackendResponse = {
@@ -35,17 +35,15 @@ export async function getChatRequest(chat_id: number): Promise<ChatBackendRespon
 }
 
 
-export async function createNewChatRequest(chat: ChatType): Promise<ChatType> {
-    return fetch('http://localhost:8000/api/v1/chats/newChat', {
-        method: "POST",
+export async function createNewChatRequest(chat: ChatCreateType): Promise<ChatBackendResponse> {
+    const response = await axios.post('http://localhost:8000/api/v1/chats/newChat', chat, {
         headers: {"Content-Type": "application/json"},
-        body: JSON.stringify(chat),
-        credentials: "include"
-    }).then(response => response.json())
-      .catch(error => console.error('Error:', error));
+        withCredentials: true
+    })
+    return response.data;
 }
 
-export async function updateChatRequest(chat: ChatOverviewBackendResponse): Promise<ChatOverviewBackendResponse> {
+export async function updateChatRequest(chat: ChatOverviewType): Promise<ChatOverviewBackendResponse> {
     const response = await axios.put('http://localhost:8000/api/v1/chats/updateChat', chat, {
         headers: {"Content-Type": "application/json"},
         withCredentials: true
@@ -57,6 +55,20 @@ export async function deleteChatRequest(chat_id: number): Promise<ChatOverviewBa
     const response = await axios.delete(`http://localhost:8000/api/v1/chats/deleteChat/${chat_id}`, { withCredentials: true });
     return response.data;
 }
+
+// Messages
+
+export async function getMessageRequest(message_id: number): Promise<MessageType> {
+    const response = await axios.get(`http://localhost:8000/api/v1/messages/${message_id}`, { withCredentials: true });
+    return response.data;
+}
+
+export async function createMessageRequest(message: MessageCreateType): Promise<MessageType> {
+    const response = await axios.post('http://localhost:8000/api/v1/messages/newMessage', message, { withCredentials: true });
+    return response.data;
+}
+
+// Prompts
 
 export async function getPopularSystemPromptsRequest(): Promise<SystemPromptBackendResponse[]> {
     const response = await axios.get('http://localhost:8000/api/v1/prompt/system/popular', { withCredentials: true })

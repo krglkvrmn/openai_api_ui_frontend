@@ -11,19 +11,20 @@ import { useSignalState } from "../../hooks/useSignalState";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
 import { signal } from "@preact/signals-react";
+import { ActiveChatIdProvider } from "../../contexts/ActiveChatIdProvider";
 
 
 export default function ChatController() {
+    const [systemPromptValue, setSystemPromptValue] = useSignalState<string>("");
     const navigate = useNavigate();
     const { isAuthenticated, authState, authDispatchers } = useAuth();
     const { logOut } = authDispatchers;
-    const [systemPromptValue, setSystemPromptValue] = useSignalState<string>("");
     const { activeChat, chats, isChatsLoading, isChatsError, isChatsSuccess, dispatchers } = useChats();
     const { activateChat, deleteChat, renameChat  } = dispatchers;
 
 
-    console.log("ChatController render with following chats:", chats);
-    console.log("Active chat:", activeChat);
+    // console.log("ChatController render with following chats:", chats);
+    // console.log("Active chat:", activeChat);
     return (
         <div id="chat-controller">
             <ControlSidebar>
@@ -48,15 +49,8 @@ export default function ChatController() {
                 </div>
             </ControlSidebar>
             <div id="chat-content">
-                {/*
-                {activeChat.messages.length === 0 && 
-                <SystemPrompt promptValue={systemPromptValue}
-                              promptValueChangeHandler={setSystemPromptValue}
-                submitHandler={prompt => addMessage('system', prompt)}/>}*/}
-                <Chat chat={activeChat}/>
-                {/* <PromptFooter>
-                    <UserPrompt submitHandler={prompt => addMessage('user', prompt)}/>
-                </PromptFooter> */}
+                <Chat chat={activeChat} systemPromptParams={{systemPromptValue, setSystemPromptValue}} />
+                
             </div>
             <PromptSelectionSidebar>
                 <PromptSelector promptSelectionCallback={setSystemPromptValue}/>
