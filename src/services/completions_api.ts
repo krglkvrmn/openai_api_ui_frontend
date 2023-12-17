@@ -28,8 +28,8 @@ export default async function* askModelStream(chat: ChatType, debug: boolean = t
 
 type TuseModelStreamingMessageReturn = [
     Signal<StreamingMessageType>,
-    boolean,
-    React.Dispatch<React.SetStateAction<boolean>>,
+    // boolean,
+    // React.Dispatch<React.SetStateAction<boolean>>,
     (chat: ChatType) => Promise<void>,
     () => void
 ]
@@ -38,7 +38,6 @@ const streamingMessageDefaultState: StreamingMessageType = {author: "assistant",
 
 export function useStreamingMessage(): TuseModelStreamingMessageReturn {
     const streamingMessage = useSignal<StreamingMessageType>(streamingMessageDefaultState);
-    const [isMessageStreaming, setIsMessageStreaming] = useState<boolean>(false);
 
     async function streamMessage(chat: ChatType) {
         let chunkContent: string;
@@ -60,6 +59,6 @@ export function useStreamingMessage(): TuseModelStreamingMessageReturn {
     function reset() {
         streamingMessage.value = streamingMessageDefaultState;
     }
-    return [streamingMessage, isMessageStreaming, setIsMessageStreaming, streamMessage, reset];
+    return [streamingMessage, streamMessage, reset];
 
 }

@@ -22,7 +22,7 @@ export function optimisticQueryUpdateConstructor<QS, SS, MD>(
             sideEffectsRecover && sideEffectsRecover(context?.sideEffectsPrevState);
         },
         onSettled: async () => {
-            queryClient.invalidateQueries(queryKey);
+            await queryClient.invalidateQueries(queryKey);
         }
     };
 

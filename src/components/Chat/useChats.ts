@@ -9,16 +9,6 @@ import { useActiveChatId } from "../../hooks/useActiveChatId";
 import { optimisticQueryUpdateConstructor } from "../../utils/optimisticUpdates";
 
 
-export const CHATS_ACTIONS = {
-    SET_CHATS: "set-chats",
-    CREATE_CHAT: "create-chat",
-    UPDATE_CHAT: "update-chat",
-    RENAME_CHAT: "rename-chat",
-    DELETE_CHAT: "delete-chat",
-    ADD_MESSAGE: "add-message",
-    SWITCH_MODEL: "switch-model",
-};
-
 export function createDefaultChat(): DefaultChatType {
     return {
         id: null,
@@ -29,11 +19,9 @@ export function createDefaultChat(): DefaultChatType {
 
 
 export type TuseChatsDispatchers = {
-    // addMessage: (author: MessageAuthor, text: string) => void;
     activateChat: ChatIdCallbackType;
     deleteChat: ChatIdCallbackType;
     renameChat: ChatIdNameCallbackType;
-    // switchModel: (newModel: string) => void;
 };
 
 export type TuseChatsReturn = {
@@ -42,11 +30,6 @@ export type TuseChatsReturn = {
     isChatsLoading: boolean,
     isChatsError: boolean,
     isChatsSuccess: boolean,
-    // chats: ChatType[];
-    // streamingMessage: Signal<MessageType>,
-    // activeChatId: number;
-    // chatsLoadingError: unknown;
-    // chatsLoadingComplete: boolean;
     dispatchers: TuseChatsDispatchers;
 
 };
@@ -127,9 +110,7 @@ export function useChats(): TuseChatsReturn {
         onSettled: renameChatOptimisticConfig.onSettled
     });
     
-
-    const activeChat = activeChatId === null ? defaultChat : (isSuccess ? data[activeChatId] : defaultChat);
-    
+    const activeChat = activeChatId === null ? defaultChat : (data !== undefined ? data[activeChatId] : defaultChat);
 
     return {
         activeChat,
@@ -137,16 +118,10 @@ export function useChats(): TuseChatsReturn {
         isChatsLoading: isLoading,
         isChatsError: isError,
         isChatsSuccess: isSuccess,
-        // streamingMessage: streamingMessage,
-        // activeChatId: activeChatId,
-        // chatsLoadingError: error,
-        // chatsLoadingComplete: !loading,
         dispatchers: {
-            // addMessage: addMessageWithReply,
             activateChat: activateChat,
             deleteChat: deleteChatMutation.mutate,
             renameChat: renameChatMutation.mutate,
-            // switchModel: switchModelMutation.mutate
         }
     };
 }

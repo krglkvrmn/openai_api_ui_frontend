@@ -1,17 +1,12 @@
 import Chat from "./Chat";
-import { SystemPrompt, UserPrompt } from "../control/Prompt";
 import ChatHistory from "../control/ChatHistrory";
 import { useChats } from "./useChats";
 import ControlSidebar from "../layout/ControlSidebar";
-import PromptFooter from "../layout/PromptFooter";
-import ModelSelector from "../control/ModelSelector";
 import PromptSelectionSidebar from "../layout/PromptSelectionSidebar";
 import PromptSelector from "../control/PromptSelector";
 import { useSignalState } from "../../hooks/useSignalState";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
-import { signal } from "@preact/signals-react";
-import { ActiveChatIdProvider } from "../../contexts/ActiveChatIdProvider";
 
 
 export default function ChatController() {
@@ -21,7 +16,6 @@ export default function ChatController() {
     const { logOut } = authDispatchers;
     const { activeChat, chats, isChatsLoading, isChatsError, isChatsSuccess, dispatchers } = useChats();
     const { activateChat, deleteChat, renameChat  } = dispatchers;
-
 
     // console.log("ChatController render with following chats:", chats);
     // console.log("Active chat:", activeChat);

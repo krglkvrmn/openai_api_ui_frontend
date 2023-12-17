@@ -38,9 +38,6 @@ export function MessageList(
                 <Message key={index} author={query.data.author} content={query.data.content}/> : null
             })
         }
-        {/* {activeMessage.value.status !== "awaiting" &&
-            <Message key="active-message" author={activeMessage.value.author} content={activeMessage.value.content} />
-        } */}
         </>
     );
 }
