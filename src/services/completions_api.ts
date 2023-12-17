@@ -1,6 +1,6 @@
 import { Signal, useSignal } from "@preact/signals-react";
 import { useRef, useState } from "react";
-import { ChatType, MessageType } from "../types";
+import { ChatType, MessageType, StreamingMessageType } from "../types";
 import fetchEvents from "../utils/network";
 
 
@@ -27,18 +27,17 @@ export default async function* askModelStream(chat: ChatType, debug: boolean = t
 }
 
 type TuseModelStreamingMessageReturn = [
-    Signal<MessageType>,
-    boolean,
-    React.Dispatch<React.SetStateAction<boolean>>,
+    Signal<StreamingMessageType>,
+    // boolean,
+    // React.Dispatch<React.SetStateAction<boolean>>,
     (chat: ChatType) => Promise<void>,
     () => void
 ]
 
-const streamingMessageDefaultState: MessageType = {author: "assistant", content: "", status: "awaiting"};
+const streamingMessageDefaultState: StreamingMessageType = {author: "assistant", content: "", status: "awaiting"};
 
 export function useStreamingMessage(): TuseModelStreamingMessageReturn {
-    const streamingMessage = useSignal<MessageType>(streamingMessageDefaultState);
-    const [isMessageStreaming, setIsMessageStreaming] = useState<boolean>(false);
+    const streamingMessage = useSignal<StreamingMessageType>(streamingMessageDefaultState);
 
     async function streamMessage(chat: ChatType) {
         let chunkContent: string;
@@ -60,6 +59,6 @@ export function useStreamingMessage(): TuseModelStreamingMessageReturn {
     function reset() {
         streamingMessage.value = streamingMessageDefaultState;
     }
-    return [streamingMessage, isMessageStreaming, setIsMessageStreaming, streamMessage, reset];
+    return [streamingMessage, streamMessage, reset];
 
 }

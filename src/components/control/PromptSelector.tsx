@@ -2,7 +2,7 @@ import { useQuery } from "react-query";
 import useFetch from "../../hooks/useFetch";
 import { PromptType } from "../../types";
 import { funcClosureOrUndefined } from "../../utils/functional";
-import { getPopularSystemPrompts } from "../../services/backend_api";
+import { getPopularSystemPromptsRequest } from "../../services/backend_api";
 
 type PromptSelectorProps = {
     promptSelectionCallback?: (prompt: string) => void;
@@ -18,7 +18,7 @@ type PromptSelectionRecordProps = {
 export default function PromptSelector({promptSelectionCallback}: PromptSelectorProps) {
     const { data, isLoading, isError, isSuccess } = useQuery({
         queryKey: ['prompts'],
-        queryFn: getPopularSystemPrompts 
+        queryFn: getPopularSystemPromptsRequest 
     });
 
     return (

@@ -7,6 +7,8 @@ import { AuthProvider } from './contexts/AuthProvider';
 import { HomePage } from './pages/HomePage/HomePage';
 import ChatPage from './pages/ChatPage/ChatPage';
 import { RequireAuth, RequireNoAuth } from "./components/control/RequireAuth";
+import { ReactQueryDevtools } from 'react-query/devtools'
+
 
 export const queryClient = new QueryClient();
 
@@ -27,6 +29,7 @@ function App() {
           </Routes>
         </AuthProvider>
       </BrowserRouter>
+      <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   );
 }
