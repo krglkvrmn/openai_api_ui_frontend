@@ -11,6 +11,7 @@ export type ChatBaseType = {
 
 export type DefaultChatType = {
     id: null,
+    messages: MessageType[]
 } & ChatBaseType;
 
 export type ChatOverviewType = {
@@ -31,7 +32,7 @@ export type ChatCreateType = {
 
 // export type ChatAnyType = ChatOverviewType | ChatType;
 export type ChatsStateType = ChatType[] | undefined;
-export type ChatPropType = ChatOverviewType | DefaultChatType;
+export type ChatPropType = ChatType | undefined;
 export type ChatStateType = ChatType | undefined;
 
 // export type ChatWithMessagesOverviewType = ChatPropType & {messages: MessageOverviewType[]}

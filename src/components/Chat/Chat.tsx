@@ -1,5 +1,5 @@
 import { Signal } from "@preact/signals-react";
-import { ChatPropType, ChatStateType, ChatType, ChatsStateType, MessageAuthor, MessageType } from "../../types";
+import { ChatPropType, ChatStateType, ChatType, ChatsStateType, DefaultChatType, MessageAuthor, MessageType } from "../../types";
 import Message from "./Message";
 import { useMutation, useQuery } from "react-query";
 import { createMessageRequest, createNewChatRequest, getChatRequest, updateChatRequest } from "../../services/backend_api";
@@ -21,23 +21,36 @@ function assembleChat(chat: ChatType) {
     return {...chat, messages: messages};
 }
 
+export function createDefaultChat(): DefaultChatType {
+    return {
+        id: null,
+        model: "gpt-3.5-turbo",
+        title: "New chat",
+        messages: []
+    };
+}
+
 
 function useChat(chat: ChatPropType) {
     // Chat with id === null is not synchronized with a backend
+    const [defaultChat, setDefaultChat] = useState<DefaultChatType>(createDefaultChat());
+
+    const activeChat = chat === undefined ? defaultChat : chat;
+
     const [activeChatId, setActiveChatId] = useActiveChatId();
     const [readyToStream, setReadyToStream] = useState(false);
     const [streamingMessage, streamMessage, resetStreamingMessage] = useStreamingMessage();
     const { data: queryData, isLoading, isError, isSuccess, isRefetching } = useQuery({
-        queryKey: ['chats', chat.id],
+        queryKey: ['chats', activeChat.id],
         queryFn: async ({ queryKey }) => {
             return await getChatRequest(queryKey[1] as number) as ChatType;
         },
-        enabled: chat.id !== null
+        enabled: activeChat.id !== null
     });
-    const data = chat.id === null ? {
+    const data = activeChat.id === null ? {
         created_at: new Date(),
         last_updated: new Date(),
-        messages: [], ...chat
+        ...activeChat
     } as ChatType : queryData;
 
    async function switchModel(newModel: string) {
@@ -62,7 +75,7 @@ function useChat(chat: ChatPropType) {
     }
 
     const switchModelOptimisticConfig = optimisticQueryUpdateConstructor({
-        queryKey: ['chats', chat.id],
+        queryKey: ['chats', activeChat.id],
         stateUpdate: (newModel: string, prevChat: ChatStateType) => {
             if (prevChat !== undefined) {
                 return {...prevChat, model: newModel};
@@ -70,8 +83,8 @@ function useChat(chat: ChatPropType) {
             throw new Error('State is not loaded yet');
         },
         sideEffectsUpdate: (mutateData) => {
-            if (data !== undefined) {
-                data.model = mutateData;
+            if (activeChat.id === null) {
+                setDefaultChat(prev => {return {...prev, model: mutateData}});
             }
         }
     })
@@ -81,8 +94,8 @@ function useChat(chat: ChatPropType) {
             if (prevChats !== undefined) {
                 return [{
                     id: null,
-                    title: data === undefined ? chat.title : data.title,
-                    model: data === undefined ? chat.model : data.model,
+                    title: data === undefined ? activeChat.title : data.title,
+                    model: data === undefined ? activeChat.model : data.model,
                     messages: [{author: mutateData.author, content: mutateData.text, created_at: new Date() }]
                 }, ...prevChats]
             }
@@ -101,7 +114,7 @@ function useChat(chat: ChatPropType) {
     });
 
     const addMessageOptimisticConfig = optimisticQueryUpdateConstructor({
-        queryKey: ['chats', chat.id],
+        queryKey: ['chats', activeChat.id],
         stateUpdate: (mutateData: {author: MessageAuthor, text: string}, prevChat: ChatStateType) => {
             if (prevChat !== undefined) {
                 return {...prevChat, messages: [...prevChat.messages, {
@@ -114,8 +127,8 @@ function useChat(chat: ChatPropType) {
     const switchModelMutation = useMutation({
         mutationFn: switchModel,
         onMutate: switchModelOptimisticConfig.onMutate,
-        onError: chat.id !== null ? switchModelOptimisticConfig.onError : undefined,
-        onSettled: chat.id !== null ? switchModelOptimisticConfig.onSettled : undefined
+        onError: activeChat.id !== null ? switchModelOptimisticConfig.onError : undefined,
+        onSettled: activeChat.id !== null ? switchModelOptimisticConfig.onSettled : undefined
     });
 
     const addMessageMutation = useMutation({
@@ -142,7 +155,7 @@ function useChat(chat: ChatPropType) {
     });
 
     function onMessageSubmit(mutateData: {author: MessageAuthor, text: string}) {
-        chat.id === null ? createChatMutation.mutate(mutateData) : addMessageMutation.mutate(mutateData);
+        activeChat.id === null ? createChatMutation.mutate(mutateData) : addMessageMutation.mutate(mutateData);
         
     }
 
@@ -152,16 +165,16 @@ function useChat(chat: ChatPropType) {
             streamMessage(completeChat).then(() => {
                 return addMessage({author: streamingMessage.value.author, text: streamingMessage.value.content})
             }).then((message) => {
-                queryClient.setQueryData(['chats', chat.id], {
+                queryClient.setQueryData(['chats', activeChat.id], {
                     ...completeChat, messages: [...completeChat.messages, message]
                 });
             }).finally(() => {
-                queryClient.invalidateQueries(['chats', chat.id], { exact: true });
+                queryClient.invalidateQueries(['chats', activeChat.id], { exact: true });
                 resetStreamingMessage()
             });
             setReadyToStream(false);
         }
-    }, [readyToStream, isRefetching]);
+    }, [isRefetching]);
 
     return {
         data,

@@ -1,21 +1,12 @@
 import { useState, useReducer, useEffect } from "react";
 import useFetch from "../../hooks/useFetch";
-import { ChatsActionType, MessageType, ChatIdCallbackType, MessageAuthor, ChatIdNameCallbackType, ChatType, ChatOverviewType, DefaultChatType, ChatsStateType } from "../../types";
+import { ChatsActionType, MessageType, ChatIdCallbackType, MessageAuthor, ChatIdNameCallbackType, ChatType, ChatOverviewType, DefaultChatType, ChatsStateType, ChatExistingType } from "../../types";
 import { useStreamingMessage } from "../../services/completions_api";
 import { ChatOverviewBackendResponse, createNewChatRequest, deleteChatRequest, getAllChatsOverviewRequest, updateChatRequest } from "../../services/backend_api";
 import { Signal } from "@preact/signals-react";
 import { useMutation, useQuery } from "react-query";
 import { useActiveChatId } from "../../hooks/useActiveChatId";
 import { optimisticQueryUpdateConstructor } from "../../utils/optimisticUpdates";
-
-
-export function createDefaultChat(): DefaultChatType {
-    return {
-        id: null,
-        model: "gpt-3.5-turbo",
-        title: "New chat",
-    };
-}
 
 
 export type TuseChatsDispatchers = {
@@ -25,7 +16,7 @@ export type TuseChatsDispatchers = {
 };
 
 export type TuseChatsReturn = {
-    activeChat: DefaultChatType | ChatOverviewType,
+    activeChat?: ChatType,
     chats: ChatsStateType,
     isChatsLoading: boolean,
     isChatsError: boolean,
@@ -36,7 +27,6 @@ export type TuseChatsReturn = {
 
 
 export function useChats(): TuseChatsReturn {
-    const [defaultChat, setDefaultChat] = useState<DefaultChatType>(createDefaultChat());
     const { data, isSuccess, isLoading, isError } = useQuery({
         queryKey: ['chats'],
         queryFn: async () => await getAllChatsOverviewRequest() as ChatType[],
@@ -110,7 +100,7 @@ export function useChats(): TuseChatsReturn {
         onSettled: renameChatOptimisticConfig.onSettled
     });
     
-    const activeChat = activeChatId === null ? defaultChat : (data !== undefined ? data[activeChatId] : defaultChat);
+    const activeChat = activeChatId === null ? undefined : (data !== undefined ? data[activeChatId] : undefined);
 
     return {
         activeChat,
