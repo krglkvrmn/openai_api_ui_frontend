@@ -8,6 +8,7 @@ import { useSignalState } from "../../hooks/useSignalState";
 import { Link, useNavigate } from "react-router-dom";
 import { useAPIKey, useAuth } from "../../hooks/contextHooks";
 import { APIKeyForm } from "../forms/APIKeyForm";
+import { APIKeyProvider } from "../../contexts/APIKeyProvider";
 
 
 export default function ChatController() {
@@ -43,8 +44,10 @@ export default function ChatController() {
                 </div>
             </ControlSidebar>
             <div id="chat-content">
-                {/* <APIKeyForm /> */}
-                <Chat chat={activeChat} systemPromptParams={{systemPromptValue, setSystemPromptValue}} />
+                <APIKeyProvider><>
+                    <APIKeyForm />
+                    <Chat chat={activeChat} systemPromptParams={{systemPromptValue, setSystemPromptValue}} />
+                </></APIKeyProvider>
             </div>
             <PromptSelectionSidebar>
                 <PromptSelector promptSelectionCallback={setSystemPromptValue}/>

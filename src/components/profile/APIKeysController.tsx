@@ -1,7 +1,7 @@
 import { UseQueryResult, useMutation, useQuery } from "react-query";
 import { APIKeyForm } from "../forms/APIKeyForm";
 import { APIKeysList } from "./APIKeysList";
-import { APIKeysBackendResponse, deleteAPIKey, getAPIKeys } from "../../services/backend_api";
+import { APIKeysBackendResponse, deleteAPIKeyRequest, getAPIKeysRequest } from "../../services/backend_api";
 import { optimisticQueryUpdateConstructor } from "../../utils/optimisticUpdates";
 
 
@@ -15,7 +15,7 @@ type APIKeysStateType = APIKeysBackendResponse[] | undefined;
 function useAPIKeys(): TuseAPIKeysReturn {
     const apiKeysQuery = useQuery({
         queryKey: ['apiKeys'],
-        queryFn: getAPIKeys
+        queryFn: getAPIKeysRequest
     });
 
     const deleteKeyOptimisticConfig = optimisticQueryUpdateConstructor({
@@ -29,7 +29,7 @@ function useAPIKeys(): TuseAPIKeysReturn {
     });
 
     const deleteKeyMutation = useMutation({
-        mutationFn: deleteAPIKey,
+        mutationFn: deleteAPIKeyRequest,
         onMutate: deleteKeyOptimisticConfig.onMutate,
         onError: deleteKeyOptimisticConfig.onError,
         onSettled: deleteKeyOptimisticConfig.onSettled

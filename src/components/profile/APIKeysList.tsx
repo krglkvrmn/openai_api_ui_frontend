@@ -1,5 +1,5 @@
 import { useQuery } from "react-query";
-import { APIKeysBackendResponse, getAPIKeys } from "../../services/backend_api";
+import { APIKeysBackendResponse, getAPIKeysRequest } from "../../services/backend_api";
 import { funcClosureOrUndefined } from "../../utils/functional";
 
 
