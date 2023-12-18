@@ -1,7 +1,7 @@
 import { generate } from "generate-password-browser";
 import {v4 as uuidv4} from 'uuid';
 import { LoginFormDataType, SignupFormDataType } from "../services/auth";
-import { useAuth } from "./useAuth";
+import { useAuth } from "./contextHooks";
 import { UserErrors } from "../types";
 import { useState } from "react";
 

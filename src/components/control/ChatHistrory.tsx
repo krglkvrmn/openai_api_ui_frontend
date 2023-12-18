@@ -11,7 +11,7 @@ type ChatHistoryProps = {
     chatRenameHandler?: ChatIdNameCallbackType,
 }
 
-type ChatHistoryRecordProps = {
+type ChatHistoryRecordPropsType = {
     title: string,
     chatActivationHandler?: () => void,
     chatDeleteHandler?: () => void,
@@ -45,7 +45,7 @@ export default function ChatHistory(
 }
 
 function ChatHistoryRecord(
-    { title, chatActivationHandler, chatDeleteHandler, chatRenameHandler }: ChatHistoryRecordProps
+    { title, chatActivationHandler, chatDeleteHandler, chatRenameHandler }: ChatHistoryRecordPropsType
 ) {
     const [isEditing, contentRef, onEditStart, onEditEnd] = useEditableContentRef(chatRenameHandler);
     return (

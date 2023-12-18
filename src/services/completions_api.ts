@@ -2,6 +2,7 @@ import { Signal, useSignal } from "@preact/signals-react";
 import { useRef, useState } from "react";
 import { ChatType, MessageType, StreamingMessageType } from "../types";
 import fetchEvents from "../utils/network";
+import { useAPIKey } from "../hooks/contextHooks";
 
 
 export default async function* askModelStream(chat: ChatType, debug: boolean = true): AsyncGenerator<any> {
@@ -17,7 +18,8 @@ export default async function* askModelStream(chat: ChatType, debug: boolean = t
         const response = await fetch(apiEndpoint, {
             method: "POST",
             headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify(requestBody)
+            body: JSON.stringify(requestBody),
+            credentials: "include"
         });
 
         yield* fetchEvents(response);

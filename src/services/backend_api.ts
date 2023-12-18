@@ -1,5 +1,6 @@
 import axios from "axios";
 import { ChatCreateType, ChatOverviewType, ChatType, MessageCreateType, MessageType } from "../types";
+import { UUID } from "crypto";
 
 
 export type ChatOverviewBackendResponse = {
@@ -23,6 +24,7 @@ type SystemPromptBackendResponse = {
     popularity: number
 };
 
+// Chats
 
 export async function getAllChatsOverviewRequest(): Promise<ChatOverviewBackendResponse[]> {
     const response = await axios.get('http://localhost:8000/api/v1/chats/all', { withCredentials: true });
@@ -73,4 +75,26 @@ export async function createMessageRequest(message: MessageCreateType): Promise<
 export async function getPopularSystemPromptsRequest(): Promise<SystemPromptBackendResponse[]> {
     const response = await axios.get('http://localhost:8000/api/v1/prompt/system/popular', { withCredentials: true })
     return response.data;
+}
+
+// Keys
+
+export type APIKeysBackendResponse = {
+    id: UUID,
+    key: string
+}
+
+export async function saveAPIKey(token: string) {
+    const response = await axios.post('http://localhost:8000/api/v1/keys/save', { key: token }, { withCredentials: true });
+    return response.data;    
+}
+
+export async function getAPIKeys(): Promise<APIKeysBackendResponse[]> {
+    const response = await axios.get('http://localhost:8000/api/v1/keys/list', { withCredentials: true });
+    return response.data;    
+}
+
+export async function deleteAPIKey(keyId: string) {
+    const response = await axios.delete(`http://localhost:8000/api/v1/keys/delete/${keyId}`, { withCredentials: true });
+    return response.data;    
 }

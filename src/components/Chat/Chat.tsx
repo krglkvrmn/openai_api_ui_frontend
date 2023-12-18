@@ -10,8 +10,9 @@ import { MessageList } from "./MessageList";
 import { SystemPrompt, UserPrompt } from "../control/Prompt";
 import PromptFooter from "../layout/PromptFooter";
 import React, { useEffect, useState } from "react";
-import { useActiveChatId } from "../../hooks/useActiveChatId";
+import { useActiveChatId } from "../../hooks/contextHooks";
 import { useStreamingMessage } from "../../services/completions_api";
+import { APIKeyProvider } from "../../contexts/APIKeyProvider";
 
 
 function assembleChat(chat: ChatType) {
@@ -200,30 +201,30 @@ export default function Chat(
     const { switchModel, addMessage } = dispatchers;
     return (
         <div id="chat-container">
-            <ChatContext.Provider value={data !== undefined ? data : chat }>
-                {
-                    data !== undefined && data.messages.length === 0 && 
-                    <SystemPrompt promptValue={systemPromptParams?.systemPromptValue}
-                                  promptValueChangeHandler={systemPromptParams?.setSystemPromptValue}
-                                  submitHandler={prompt => addMessage({author: 'system', text: prompt})}/>
-                }
-                {
-                    isChatLoading ? "Loading chat contents..." :
-                    isChatError ? "Error occured while loading chat contents" :
-                    data !== undefined ? 
-                        <>
-                            <ModelSelector activeModel={data.model}
-                                           modelSwitchHandler={switchModel}/>
-                            <MessageList messages={data.messages} />
-                            {streamingMessage.value.status !== "awaiting" &&
-                                <Message key="active-message" author={streamingMessage.value.author} content={streamingMessage.value.content} />
-                            }
-                        </> : null
-                }
-                <PromptFooter>
-                    <UserPrompt submitHandler={prompt => addMessage({author: 'user', text: prompt})}/>
-                </PromptFooter>
-            </ChatContext.Provider>
+                <ChatContext.Provider value={data !== undefined ? data : chat }>
+                    {
+                        data !== undefined && data.messages.length === 0 && 
+                        <SystemPrompt promptValue={systemPromptParams?.systemPromptValue}
+                                    promptValueChangeHandler={systemPromptParams?.setSystemPromptValue}
+                                    submitHandler={prompt => addMessage({author: 'system', text: prompt})}/>
+                    }
+                    {
+                        isChatLoading ? "Loading chat contents..." :
+                        isChatError ? "Error occured while loading chat contents" :
+                        data !== undefined ? 
+                            <>
+                                <ModelSelector activeModel={data.model}
+                                            modelSwitchHandler={switchModel}/>
+                                <MessageList messages={data.messages} />
+                                {streamingMessage.value.status !== "awaiting" &&
+                                    <Message key="active-message" author={streamingMessage.value.author} content={streamingMessage.value.content} />
+                                }
+                            </> : null
+                    }
+                    <PromptFooter>
+                        <UserPrompt submitHandler={prompt => addMessage({author: 'user', text: prompt})}/>
+                    </PromptFooter>
+                </ChatContext.Provider>
         </div>
     )
 }

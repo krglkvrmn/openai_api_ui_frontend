@@ -1,5 +1,5 @@
 import { Navigate, Outlet, redirect, useNavigate } from "react-router-dom";
-import { useAuth } from "../../hooks/useAuth";
+import { useAuth } from "../../hooks/contextHooks";
 import { useEffect, useRef, useState } from "react";
 import { useSignal } from "@preact/signals-react";
 

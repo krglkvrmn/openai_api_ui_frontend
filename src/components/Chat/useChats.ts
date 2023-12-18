@@ -5,7 +5,7 @@ import { useStreamingMessage } from "../../services/completions_api";
 import { ChatOverviewBackendResponse, createNewChatRequest, deleteChatRequest, getAllChatsOverviewRequest, updateChatRequest } from "../../services/backend_api";
 import { Signal } from "@preact/signals-react";
 import { useMutation, useQuery } from "react-query";
-import { useActiveChatId } from "../../hooks/useActiveChatId";
+import { useActiveChatId } from "../../hooks/contextHooks";
 import { optimisticQueryUpdateConstructor } from "../../utils/optimisticUpdates";
 
 

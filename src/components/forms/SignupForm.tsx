@@ -1,8 +1,7 @@
-import { FormEvent, useRef, useState } from "react";
+import { FormEvent } from "react";
 import { ValidatorType, useForm } from "../../hooks/useForm";
-import { SignupFormDataType, signup } from "../../services/auth";
-import { Navigate, useNavigate } from "react-router-dom";
-import { useAuth } from "../../hooks/useAuth";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../hooks/contextHooks";
 import { UserErrors } from "../../types";
 
 type TuseSignupFormReturn = {

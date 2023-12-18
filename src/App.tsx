@@ -8,6 +8,7 @@ import { HomePage } from './pages/HomePage/HomePage';
 import ChatPage from './pages/ChatPage/ChatPage';
 import { RequireAuth, RequireNoAuth } from "./components/control/RequireAuth";
 import { ReactQueryDevtools } from 'react-query/devtools'
+import { ProfilePage } from './pages/ProfilePage/ProfilePage';
 
 
 export const queryClient = new QueryClient();
@@ -21,6 +22,7 @@ function App() {
             <Route path="/" element={<RequireAuth />}>
               <Route path='/' element={<HomePage />}/>
               <Route path='/chat' element={<ChatPage />}/>
+              <Route path='/profile' element={<ProfilePage />}/>
             </Route>
             <Route path="/" element={<RequireNoAuth />}>
               <Route path='/register' element={<RegisterPage />}/>

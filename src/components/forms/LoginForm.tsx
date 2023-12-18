@@ -2,7 +2,7 @@ import { FormEvent } from "react";
 import { ValidatorType, useForm } from "../../hooks/useForm";
 import { useNavigate } from "react-router-dom";
 import { login } from "../../services/auth";
-import { useAuth } from "../../hooks/useAuth";
+import { useAuth } from "../../hooks/contextHooks";
 import { UserErrors } from "../../types";
 
 

@@ -6,12 +6,12 @@ import PromptSelectionSidebar from "../layout/PromptSelectionSidebar";
 import PromptSelector from "../control/PromptSelector";
 import { useSignalState } from "../../hooks/useSignalState";
 import { Link, useNavigate } from "react-router-dom";
-import { useAuth } from "../../hooks/useAuth";
+import { useAPIKey, useAuth } from "../../hooks/contextHooks";
+import { APIKeyForm } from "../forms/APIKeyForm";
 
 
 export default function ChatController() {
     const [systemPromptValue, setSystemPromptValue] = useSignalState<string>("");
-    const navigate = useNavigate();
     const { isAuthenticated, authState, authDispatchers } = useAuth();
     const { logOut } = authDispatchers;
     const { activeChat, chats, isChatsLoading, isChatsError, isChatsSuccess, dispatchers } = useChats();
@@ -43,8 +43,8 @@ export default function ChatController() {
                 </div>
             </ControlSidebar>
             <div id="chat-content">
+                {/* <APIKeyForm /> */}
                 <Chat chat={activeChat} systemPromptParams={{systemPromptValue, setSystemPromptValue}} />
-                
             </div>
             <PromptSelectionSidebar>
                 <PromptSelector promptSelectionCallback={setSystemPromptValue}/>
