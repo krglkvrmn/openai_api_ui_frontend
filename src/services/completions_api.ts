@@ -1,17 +1,34 @@
 import { Signal, useSignal } from "@preact/signals-react";
-import { useRef, useState } from "react";
-import { ChatType, MessageType, StreamingMessageType } from "../types";
-import fetchEvents from "../utils/network";
+import { ChatType, MessageAuthor, MessageType, StreamingMessageType } from "../types";
 import { useAPIKey } from "../hooks/contextHooks";
+import axios from "axios";
+import { UUID } from "crypto";
 
 
-type AskModelStreamParamsType = {
+type RequestStreamingCompletionParamsType = {
     chat: ChatType,
     token?: string,
     debug: boolean
 }
 
-export default async function* askModelStream({chat, token, debug}: AskModelStreamParamsType): AsyncGenerator<any> {
+type RequestStreamingCompletionDataType = {
+    token: UUID,
+    expiry_data: Date
+}
+
+type RequestStreamingCompletionReturnType = {
+    location: string,
+    data: RequestStreamingCompletionDataType 
+}
+
+type CompletionEventDeltaType = {
+    role?: MessageAuthor,
+    content?: string
+}
+
+async function requestStreamingCompletion(
+    {chat, token, debug}: RequestStreamingCompletionParamsType
+): Promise<RequestStreamingCompletionReturnType> {
     const requestBody = {
         model: chat.model,
         messages: chat.messages.map(message => {
@@ -19,30 +36,23 @@ export default async function* askModelStream({chat, token, debug}: AskModelStre
         }),
         stream: true
     }
-    const apiEndpoint = `http://localhost:8000/api/v1/ai/createCompletion?debug=${debug}`;
     const additionalHeaders: any = {};
     if (token) {
         additionalHeaders['X-OpenAI-Auth-Token'] = token;
     }
-    try {
-        const response = await fetch(apiEndpoint, {
-            method: "POST",
-            headers: {'Content-Type': 'application/json', ...additionalHeaders},
-            body: JSON.stringify(requestBody),
-            credentials: "include"
-        });
-
-        yield* fetchEvents(response);
-    } catch (error) {
-        console.error('Error:', error);
-    }
+    const response = await axios.post(
+        `http://localhost:8000/api/v1/ai/requestStreamingCompletion?debug=${debug}`,
+        requestBody,
+        { withCredentials: true, headers: {'Content-Type': 'application/json', ...additionalHeaders}});
+    return { location: response.headers['location'], data: response.data };
 }
+
 
 type TuseModelStreamingMessageReturn = [
     Signal<StreamingMessageType>,
     // boolean,
     // React.Dispatch<React.SetStateAction<boolean>>,
-    (chat: ChatType) => Promise<void>,
+    (chat: ChatType) => Promise<StreamingMessageType>,
     () => void
 ]
 
@@ -53,20 +63,28 @@ export function useStreamingMessage(): TuseModelStreamingMessageReturn {
     const streamingMessage = useSignal<StreamingMessageType>(streamingMessageDefaultState);
 
     async function streamMessage(chat: ChatType) {
-        let chunkContent: string;
-        for await (const chunk of askModelStream({chat: chat, token: apiKey.value, debug: true})) {
-            chunkContent = chunk.choices[0].delta.content === undefined ? "" : chunk.choices[0].delta.content;
-            streamingMessage.value = {
-                ...streamingMessage.value,
-                content: streamingMessage.value.content + chunkContent,
-                status: "generating"
+        const { location } = await requestStreamingCompletion({chat, token: apiKey.value, debug: false });
+        return await new Promise<StreamingMessageType>((resolve, reject) => {
+            const eventSource = new EventSource(location, { withCredentials: true });
+            eventSource.onmessage = (event) => {
+                const eventData = JSON.parse(event.data);
+                const { content: eventContent, role: eventAuthor } = eventData.choices[0].delta as CompletionEventDeltaType;
+                const isFinish = eventData.choices[0].finish_reason === "stop"
+                streamingMessage.value = {
+                    ...streamingMessage.value,
+                    content: streamingMessage.value.content + (eventContent !== undefined ? eventContent : ""),
+                    author: eventAuthor !== undefined ? eventAuthor : streamingMessage.value.author,
+                    status: isFinish ? "complete" : "generating",
+                    created_at: isFinish ? new Date() : undefined
+                }
+                isFinish && eventSource.close();
+                isFinish && resolve(streamingMessage.value);
             }
-        }
-        streamingMessage.value = {
-            ...streamingMessage.value,
-            status: "complete",
-            created_at: new Date()
-        }
+            eventSource.onerror = (errorEvent) => {
+                eventSource.close();
+                reject(errorEvent);
+            }
+        })
     }
 
     function reset() {
