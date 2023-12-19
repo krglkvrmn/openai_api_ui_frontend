@@ -46,7 +46,7 @@ export function AuthProvider({ children }: {children: React.ReactElement}) {
         queryKey: ["authData"],
         queryFn: getCurrentUser,
         retry: false,
-        refetchInterval: 60000,
+        refetchInterval: 30000,
         onSuccess: () => setIsAuthenticated(true),
         onError: () => ['/login', '/register'].includes(location.pathname) || refreshMutation.mutate()
     });

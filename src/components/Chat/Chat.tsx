@@ -155,7 +155,9 @@ function useChat(chat: ChatPropType) {
     });
 
     function onMessageSubmit(mutateData: {author: MessageAuthor, text: string}) {
-        activeChat.id === null ? createChatMutation.mutate(mutateData) : addMessageMutation.mutate(mutateData);
+        if (!(streamingMessage.value.status === "generating")) {
+            activeChat.id === null ? createChatMutation.mutate(mutateData) : addMessageMutation.mutate(mutateData);
+        }
         
     }
 
@@ -196,7 +198,7 @@ export default function Chat(
     { chat, systemPromptParams }:
     { chat: ChatPropType, systemPromptParams?: {systemPromptValue: Signal<string>, setSystemPromptValue: (value: string) => void} }
     ) {
-    const { data, streamingMessage, isChatLoading, isChatError, isChatSuccess, dispatchers } = useChat(chat);
+    const { data, streamingMessage, isChatLoading, isChatError, dispatchers } = useChat(chat);
     const { switchModel, addMessage } = dispatchers;
     return (
         <div id="chat-container">
@@ -216,7 +218,9 @@ export default function Chat(
                                         modelSwitchHandler={switchModel}/>
                             <MessageList messages={data.messages} />
                             {streamingMessage.value.status !== "awaiting" &&
-                                <Message key="active-message" author={streamingMessage.value.author} content={streamingMessage.value.content} />
+                                <Message key="active-message"
+                                         author={streamingMessage.value.author}
+                                         content={streamingMessage.value.content} />
                             }
                         </> : null
                 }
