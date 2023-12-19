@@ -6,7 +6,8 @@ export function RequireAuth() {
     const { isAuthenticated, authState } = useAuth();
 
     return (
-        authState.loginVerified ? (isAuthenticated ? <Outlet /> : <Navigate to="/login" />) : null
+        authState.loginVerified ?
+            (isAuthenticated ? <Outlet /> : <Navigate to="/login" />) : null
     );
 }
 
@@ -14,6 +15,7 @@ export function RequireNoAuth() {
     const { isAuthenticated, authState } = useAuth();
 
     return (
-        authState.loginVerified ? (isAuthenticated ? <Navigate to="/" /> : <Outlet />) : null
+        authState.loginVerified ?
+            (isAuthenticated && !authState.isRefreshing ? <Navigate to="/" /> : <Outlet />) : null
     );
 }

@@ -6,6 +6,7 @@ import { UserErrors } from "../types";
 import { queryClient } from "../App";
 import { error } from "console";
 import { parseLogInError, parseLogOutError, parseSignUpError } from "../utils/errorsParsers";
+import { useLocation } from "react-router-dom";
 
 
 type AuthProviderUserSchema = {
@@ -14,6 +15,7 @@ type AuthProviderUserSchema = {
 
 type AuthStateType = {
     loginVerified: boolean,
+    isRefreshing: boolean,
     user?: AuthProviderUserSchema
 };
 
@@ -35,6 +37,7 @@ type AuthContextValue = {
 export const AuthContext = React.createContext<AuthContextValue>(null);
 
 export function AuthProvider({ children }: {children: React.ReactElement}) {
+    const location = useLocation();
     const [logInError, setLogInError] = useState<string | null>(null);
     const [logOutError, setLogOutError] = useState<string | null>(null);
     const [signUpError, setSignUpError] = useState<string | null>(null);
@@ -43,11 +46,9 @@ export function AuthProvider({ children }: {children: React.ReactElement}) {
         queryKey: ["authData"],
         queryFn: getCurrentUser,
         retry: false,
+        refetchInterval: 60000,
         onSuccess: () => setIsAuthenticated(true),
-        onError: () => {
-            setIsAuthenticated(false);
-            refreshMutation.mutate();
-        }
+        onError: () => ['/login', '/register'].includes(location.pathname) || refreshMutation.mutate()
     });
 
     const logInMutation = useMutation({
@@ -69,6 +70,7 @@ export function AuthProvider({ children }: {children: React.ReactElement}) {
 
     const refreshMutation = useMutation({
         mutationFn: refresh,
+        onError: () => setIsAuthenticated(false),
         onSuccess: () => queryClient.invalidateQueries('authData'),
     });
 
@@ -77,6 +79,7 @@ export function AuthProvider({ children }: {children: React.ReactElement}) {
             isAuthenticated,
             authState: {
                 loginVerified: isFetched,
+                isRefreshing: refreshMutation.isLoading,
                 user: data
             },
             logInError, logOutError, signUpError,

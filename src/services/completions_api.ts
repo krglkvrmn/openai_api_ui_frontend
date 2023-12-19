@@ -63,7 +63,7 @@ export function useStreamingMessage(): TuseModelStreamingMessageReturn {
     const streamingMessage = useSignal<StreamingMessageType>(streamingMessageDefaultState);
 
     async function streamMessage(chat: ChatType) {
-        const { location } = await requestStreamingCompletion({chat, token: apiKey.value, debug: false });
+        const { location } = await requestStreamingCompletion({chat, token: apiKey.value, debug: true });
         return await new Promise<StreamingMessageType>((resolve, reject) => {
             const eventSource = new EventSource(location, { withCredentials: true });
             eventSource.onmessage = (event) => {
