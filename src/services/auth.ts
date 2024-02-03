@@ -15,9 +15,11 @@ export type LoginFormDataType = {
 export type UserSchema = {
     id?: UUID,
     email: string,
+    username: string,
     is_active?: boolean,
     is_superuser?: boolean,
-    is_verified?: boolean
+    is_verified?: boolean,
+    is_guest?: boolean
 };
 
 export type ResponseDetails = {
@@ -59,7 +61,8 @@ export async function refresh(): Promise<undefined> {
 
 export async function getCurrentUser(): Promise<UserSchema> {
     const response = await axios.get('http://localhost:8000/users/me', {withCredentials: true});
-    return response.data;
+    const userData = {...response.data, username: response.data.email.split('@')[0]}
+    return userData;
 }
 
 export async function refreshRetryOnUnauthorized(requestGenerator: () => Promise<AxiosResponse>) {

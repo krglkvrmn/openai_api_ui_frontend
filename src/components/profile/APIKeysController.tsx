@@ -3,6 +3,7 @@ import { APIKeyForm } from "../forms/APIKeyForm";
 import { APIKeysList } from "./APIKeysList";
 import { APIKeysBackendResponse, deleteAPIKeyRequest, getAPIKeysRequest } from "../../services/backend_api";
 import { optimisticQueryUpdateConstructor } from "../../utils/optimisticUpdates";
+import { APIKeyProvider } from "../../contexts/APIKeyProvider";
 
 
 type TuseAPIKeysReturn = {
@@ -12,10 +13,10 @@ type TuseAPIKeysReturn = {
 
 type APIKeysStateType = APIKeysBackendResponse[] | undefined;
 
-function useAPIKeys(): TuseAPIKeysReturn {
+export function useAPIKeys(): TuseAPIKeysReturn {
     const apiKeysQuery = useQuery({
         queryKey: ['apiKeys'],
-        queryFn: getAPIKeysRequest
+        queryFn: getAPIKeysRequest,
     });
 
     const deleteKeyOptimisticConfig = optimisticQueryUpdateConstructor({
@@ -43,12 +44,15 @@ export function APIKeysController() {
 
     return (
         <div>
-            <APIKeyForm />
             {
                 apiKeysQuery.isError ? "Error while loading API keys" :
                 apiKeysQuery.isLoading ? "Loading API keys..." :
-                apiKeysQuery.isSuccess && apiKeysQuery.data !== undefined ?
-                    <APIKeysList apiKeys={apiKeysQuery.data} keyDeleteHandler={deleteApiKey}/> : null
+                apiKeysQuery.isSuccess && apiKeysQuery.data !== undefined ? (
+                    apiKeysQuery.data.length === 0 ? <>
+                        <APIKeyProvider><APIKeyForm /></APIKeyProvider>
+                        <p>You don't have any saved API keys</p>
+                    </> : <APIKeysList apiKeys={apiKeysQuery.data} keyDeleteHandler={deleteApiKey}/>
+                ) : null
             }
         </div>
     );

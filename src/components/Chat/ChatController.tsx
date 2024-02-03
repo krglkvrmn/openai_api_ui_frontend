@@ -9,17 +9,18 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAPIKey, useAuth } from "../../hooks/contextHooks";
 import { APIKeyForm } from "../forms/APIKeyForm";
 import { APIKeyProvider } from "../../contexts/APIKeyProvider";
+import { useAPIKeys } from "../profile/APIKeysController";
 
 
 export default function ChatController() {
+    const [ apiKey, setApiKey ] = useAPIKey();
+    const { apiKeysQuery } = useAPIKeys();
     const [systemPromptValue, setSystemPromptValue] = useSignalState<string>("");
     const { isAuthenticated, authState, authDispatchers } = useAuth();
     const { logOut } = authDispatchers;
     const { activeChat, chats, isChatsLoading, isChatsError, isChatsSuccess, dispatchers } = useChats();
     const { activateChat, deleteChat, renameChat  } = dispatchers;
 
-    // console.log("ChatController render with following chats:", chats);
-    // console.log("Active chat:", activeChat);
     return (
         <div id="chat-controller">
             <ControlSidebar>
@@ -37,17 +38,15 @@ export default function ChatController() {
                     {!isAuthenticated ?
                         <Link to="/login"><button>Log In</button></Link> :
                         <>
-                            <p>{`You are already logged in as ${authState ? authState?.user?.email : authState}`}</p>
+                            <p>{`You are already logged in as ${authState ? authState?.user?.username : authState}`}</p>
                             <button onClick={logOut}>Log out</button>
                         </>
                     }
                 </div>
             </ControlSidebar>
             <div id="chat-content">
-                <APIKeyProvider><>
-                    <APIKeyForm />
-                    <Chat chat={activeChat} systemPromptParams={{systemPromptValue, setSystemPromptValue}} />
-                </></APIKeyProvider>
+                {(apiKeysQuery.data === undefined || apiKeysQuery.data.length === 0) && <APIKeyForm />}
+                <Chat chat={activeChat} systemPromptParams={{systemPromptValue, setSystemPromptValue}} />
             </div>
             <PromptSelectionSidebar>
                 <PromptSelector promptSelectionCallback={setSystemPromptValue}/>

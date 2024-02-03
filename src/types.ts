@@ -56,16 +56,8 @@ export type MessageCreateType = {
 }
 
 export type MessageType = MessageOverviewType & {content?: string}
+export type MessageWithContentType = MessageOverviewType & {content: string}
 export type MessageExistingType = MessageType & {id: number}
-
-export type StreamingMessageType = {
-    id?: number,
-    author: MessageAuthor,
-    content: string,
-    status: "awaiting" | "generating" | "complete",
-    created_at?: Date | null,
-}
-
 
 // Prompt
 
@@ -74,9 +66,6 @@ export type PromptType = {
     popularity: number;
     content: string
 }
-
-
-
 
 export interface ChatTypeFields {
     id?: number,

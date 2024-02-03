@@ -6,11 +6,12 @@ import { UserErrors } from "../types";
 import { queryClient } from "../App";
 import { error } from "console";
 import { parseLogInError, parseLogOutError, parseSignUpError } from "../utils/errorsParsers";
-import { useLocation } from "react-router-dom";
+import { UNSAFE_DataRouterContext, useLocation } from "react-router-dom";
 
 
 type AuthProviderUserSchema = {
     email: string,
+    username: string,
 };
 
 type AuthStateType = {
@@ -80,7 +81,7 @@ export function AuthProvider({ children }: {children: React.ReactElement}) {
             authState: {
                 loginVerified: isFetched,
                 isRefreshing: refreshMutation.isLoading,
-                user: data
+                user: data 
             },
             logInError, logOutError, signUpError,
             authDispatchers: {

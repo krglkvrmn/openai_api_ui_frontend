@@ -18,9 +18,11 @@ export function UserInfo() {
                 userInfoQuery.isLoading ? "Loading user data" :
                 userInfoQuery.isSuccess && userInfoQuery.data !== undefined ?
                 <>
-                    <p>Email: {userInfoQuery.data.email}</p>
-                    <p>Verified: {userInfoQuery.data.is_verified}</p>
-                    <p>Superuser: {userInfoQuery.data.is_superuser}</p>
+                    {
+                        userInfoQuery.data.is_guest ?
+                            <p>You are logged in as a guest</p> :
+                            <p>Email: {userInfoQuery.data.email}</p>
+                    }
                 </>
                 : null
             }
