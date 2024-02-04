@@ -1,6 +1,7 @@
 // Main data types
 
 // Chat
+export type ChatIdType = number | null;
 export type ChatBaseType = {
     title: string,
     model: string,
@@ -15,12 +16,12 @@ export type DefaultChatType = {
 } & ChatBaseType;
 
 export type ChatOverviewType = {
-    id: number,
+    id: ChatIdType,
 } & ChatBaseType;
 
 
 export type ChatType = {
-    id: number | null,
+    id: ChatIdType,
     messages: MessageType[],
 } & ChatBaseType;
 
@@ -31,7 +32,7 @@ export type ChatCreateType = {
 } & ChatBaseType;
 
 // export type ChatAnyType = ChatOverviewType | ChatType;
-export type ChatsStateType = ChatType[] | undefined;
+export type ChatsStateType = ChatOverviewType[] | undefined;
 export type ChatPropType = ChatType | undefined;
 export type ChatStateType = ChatType | undefined;
 
@@ -51,7 +52,7 @@ export type MessageOverviewExistingType = MessageOverviewType & {id: number};
 export type MessageCreateType = {
     author: MessageAuthor,
     content: string,
-    chat_id?: number,
+    chat_id?: ChatIdType,
     created_at?: Date | null,
 }
 

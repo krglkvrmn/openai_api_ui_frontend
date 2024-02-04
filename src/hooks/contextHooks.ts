@@ -1,7 +1,7 @@
 import { useContext } from "react";
-import { ActiveChatIdContext } from "../contexts/ActiveChatIdProvider";
 import { AuthContext } from "../contexts/AuthProvider";
 import { APIKeyContext } from "../contexts/APIKeyProvider";
+import { ActiveChatIndexContext } from "../contexts/ActiveChatIndexProvider";
 
 
 function createContextHook<T>(context: React.Context<T | null>, onNotSetErrorMessage: string) {
@@ -16,5 +16,5 @@ function createContextHook<T>(context: React.Context<T | null>, onNotSetErrorMes
 
 
 export const useAPIKey = createContextHook(APIKeyContext, 'APIKey value is not set');
-export const useActiveChatId = createContextHook(ActiveChatIdContext, 'ActiveChatId value is not set');
+export const useActiveChatIndex = createContextHook(ActiveChatIndexContext, 'ActiveChatIndex value is not set');
 export const useAuth = createContextHook(AuthContext, 'Auth provider value is not set');

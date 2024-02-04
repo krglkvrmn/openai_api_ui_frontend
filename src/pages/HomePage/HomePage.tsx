@@ -4,7 +4,7 @@ export function HomePage() {
     return (
         <div>
             <ul>
-                <li><Link to="/chat" >Chat</Link></li>
+                <li><Link to="/chat/new" >Chat</Link></li>
             </ul>
         </div>
     );

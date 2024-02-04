@@ -1,5 +1,5 @@
 import { Signal, useSignal } from "@preact/signals-react";
-import { ChatType, MessageAuthor, MessageWithContentType } from "../types";
+import { ChatIdType, ChatType, MessageAuthor, MessageWithContentType } from "../types";
 import { useAPIKey } from "../hooks/contextHooks";
 import axios from "axios";
 import { UUID } from "crypto";
@@ -61,7 +61,7 @@ type TuseModelStreamingMessageReturn = {
 }
 type StreamingStatusType = {
     status: "ready" | "generating" | "complete" | "abort",
-    chatId: number | null
+    chatId: ChatIdType | null
 }
 
 const streamingMessageDefaultState: MessageWithContentType = {author: "assistant", content: ""};

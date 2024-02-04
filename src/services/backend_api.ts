@@ -1,5 +1,5 @@
 import axios from "axios";
-import { ChatCreateType, ChatOverviewType, ChatType, MessageCreateType, MessageType } from "../types";
+import { ChatCreateType, ChatIdType, ChatOverviewType, ChatType, MessageCreateType, MessageType } from "../types";
 import { UUID } from "crypto";
 import { refreshRetryOnUnauthorized } from "./auth";
 
@@ -36,9 +36,9 @@ export async function getAllChatsOverviewRequest(): Promise<ChatOverviewBackendR
     return response.data;
 }
 
-export async function getChatRequest(chat_id: number): Promise<ChatBackendResponse> {
+export async function getChatRequest(chatId: ChatIdType): Promise<ChatBackendResponse> {
     const requestGenerator = () =>
-        axios.get(`http://localhost:8000/api/v1/chats/${chat_id}`, { withCredentials: true });
+        axios.get(`http://localhost:8000/api/v1/chats/${chatId}`, { withCredentials: true });
     const response = await refreshRetryOnUnauthorized(requestGenerator);
     return response.data;
 }
@@ -64,9 +64,9 @@ export async function updateChatRequest(chat: ChatOverviewType): Promise<ChatOve
     return response.data;
 }
 
-export async function deleteChatRequest(chat_id: number): Promise<ChatOverviewBackendResponse> {
+export async function deleteChatRequest(chatId: ChatIdType): Promise<ChatOverviewBackendResponse> {
     const requestGenerator = () =>
-        axios.delete(`http://localhost:8000/api/v1/chats/deleteChat/${chat_id}`, { withCredentials: true });
+        axios.delete(`http://localhost:8000/api/v1/chats/deleteChat/${chatId}`, { withCredentials: true });
     const response = await refreshRetryOnUnauthorized(requestGenerator);
     return response.data;
 }
