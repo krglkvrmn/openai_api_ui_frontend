@@ -1,9 +1,10 @@
-import { Signal, useSignal } from "@preact/signals-react";
+import { Signal, signal, useSignal } from "@preact/signals-react";
 import { ChatIdType, ChatType, MessageAuthor, MessageWithContentType } from "../types";
 import { useAPIKey } from "../hooks/contextHooks";
 import axios from "axios";
 import { UUID } from "crypto";
 import { refreshRetryOnUnauthorized } from "./auth";
+import { useOneTimeMemo } from "../hooks/useOneTimeMemo";
 
 
 type RequestStreamingCompletionParamsType = {
@@ -64,13 +65,14 @@ type StreamingStatusType = {
     chatId: ChatIdType | null
 }
 
+
 const streamingMessageDefaultState: MessageWithContentType = {author: "assistant", content: ""};
 const streamingStatusDefaultState: StreamingStatusType = {status: "ready", chatId: null};
 
-export function useStreamingMessage(): TuseModelStreamingMessageReturn {
+export function useStreamingMessage(identifier: number | null): TuseModelStreamingMessageReturn {
     const [apiKey, setApiKey] = useAPIKey();
-    const streamingMessage = useSignal<MessageWithContentType>(streamingMessageDefaultState);
-    const streamingStatus = useSignal<StreamingStatusType>(streamingStatusDefaultState);
+    const streamingMessage = useOneTimeMemo(() => signal(streamingMessageDefaultState), [identifier]);
+    const streamingStatus = useOneTimeMemo(() => signal(streamingStatusDefaultState), [identifier]);
 
     async function streamMessage(chat: ChatType) {
         const { location } = await requestStreamingCompletion({chat, token: apiKey.value, debug: true });
@@ -78,21 +80,22 @@ export function useStreamingMessage(): TuseModelStreamingMessageReturn {
             const eventSource = new EventSource(location, { withCredentials: true });
             streamingStatus.value = {status: "generating", chatId: chat.id};
             eventSource.onmessage = (event) => {
-                if (streamingStatus.value.status === "abort") {
+                if (streamingStatus.value.status !== "generating") {
+                    console.log('Closing an EventSource');
                     eventSource.close();
                     reject(event);
                 }
                 const eventData = JSON.parse(event.data);
                 const { content: eventContent, role: eventAuthor } = eventData.choices[0].delta as CompletionEventDeltaType;
-                const isFinish = eventData.choices[0].finish_reason === "stop"
+                const isFinish = eventData.choices[0].finish_reason === "stop";
                 streamingMessage.value = {
                     ...streamingMessage.value,
                     content: streamingMessage.value.content + (eventContent !== undefined ? eventContent : ""),
                     author: eventAuthor !== undefined ? eventAuthor : streamingMessage.value.author,
                     created_at: isFinish ? new Date() : undefined
                 }
-                streamingStatus.value = {...streamingStatus.value, status: isFinish ? "complete" : "generating"};
                 if (isFinish) {
+                    streamingStatus.value = {...streamingStatus.value, status: "complete"};
                     eventSource.close();
                     resolve(streamingMessage.value);
                 }

@@ -1,10 +1,10 @@
 import { useQueries } from "react-query";
-import { MessageType } from "../../types";
+import { MessageType, MessageWithContentType } from "../../types";
 import { getMessageRequest } from "../../services/backend_api";
 import Message from "./Message";
 import { useContext } from "react";
 import { ChatContext } from "./Chat";
-
+import { Signal } from "@preact/signals-core";
 
 
 function useMessageList(messages: MessageType[]) {
@@ -25,9 +25,11 @@ function useMessageList(messages: MessageType[]) {
 
 
 export function MessageList(
-    { messages }: { messages: MessageType[] }
+    { messages }: { messages: (MessageType | Signal<MessageWithContentType>)[] }
 ) {
-    const messagesQueries = useMessageList(messages);
+    const staticMessages = messages.filter(message => !(message instanceof Signal)) as MessageType[];
+    const dynamicMessages = messages.filter(message => message instanceof Signal) as Signal<MessageWithContentType>[];
+    const messagesQueries = useMessageList(staticMessages);
     return (
         <>
         {
@@ -36,6 +38,13 @@ export function MessageList(
                 query.isError ? "An error occured while loading a message" :
                 query.isSuccess && query.data !== undefined && query.data.content !== undefined ?
                 <Message key={index} author={query.data.author} content={query.data.content}/> : null
+            })
+        }
+        {
+            dynamicMessages.map((message, index) => {
+                return <Message key={messagesQueries.length + index}
+                                author={message.value.author}
+                                content={message.value.content} />
             })
         }
         </>

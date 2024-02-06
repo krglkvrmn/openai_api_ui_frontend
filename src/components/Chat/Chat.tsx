@@ -1,5 +1,5 @@
 import { Signal } from "@preact/signals-react";
-import { ChatIdType, ChatPropType, ChatStateType, ChatType, ChatsStateType, DefaultChatType, MessageAuthor, MessageType } from "../../types";
+import { ChatIdType, ChatPropType, ChatStateType, ChatType, ChatsStateType, DefaultChatType, MessageAuthor, MessageType, MessageWithContentType } from "../../types";
 import Message from "./Message";
 import { useMutation, useQuery } from "react-query";
 import { createMessageRequest, createNewChatRequest, getChatRequest, updateChatRequest } from "../../services/backend_api";
@@ -42,7 +42,7 @@ function useChat(chatId: ChatIdType) {
     const {
         streamingMessage, streamingStatus, streamMessage,
         reset: resetStreamingMessage, abort: abortStreamingMessage
-    } = useStreamingMessage();
+    } = useStreamingMessage(chatId);
     const { data: queryData, isLoading, isError, isSuccess } = useQuery({
         queryKey: ['chats', chatId],
         queryFn: async ({ queryKey }) => {
@@ -162,18 +162,16 @@ function useChat(chatId: ChatIdType) {
         onSettled: async (resp) => {
             await createChatOptimisticConfig.onSettled();
             if (resp != undefined) {
+                await stream(resp);
                 setActiveChatIndex(0);
                 navigate(`/chat/${resp.id}`);
                 setDefaultChat(createDefaultChat());
-                await stream(resp);
             }
         }
     });
 
-    function onMessageSubmit(mutateData: { chatId: ChatIdType, author: MessageAuthor, text: string }) {
-        if (!(streamingStatus.value.status === "generating")) {
-            isDefault ? createChatMutation.mutate(mutateData) : addMessageMutation.mutate(mutateData);
-        }
+    function onMessageSubmit(mutateData: {chatId: ChatIdType, author: MessageAuthor, text: string }) {
+        isDefault ? createChatMutation.mutate(mutateData) : addMessageMutation.mutate(mutateData);
     }
 
     async function stream(chat: ChatType) {
@@ -186,7 +184,6 @@ function useChat(chatId: ChatIdType) {
             queryClient.setQueryData(['chats', chat.id], {
                 ...completeChat, messages: [...completeChat.messages, savedMessage]
             });
-            queryClient.refetchQueries(['chats', chat.id], {exact: true});
         } catch {} finally {
             queryClient.invalidateQueries(['chats', chat.id], { exact: true });
             resetStreamingMessage();
@@ -221,6 +218,12 @@ export default function Chat(
     const chatId = parseChatId(queryParams.chatId);
     const { data, streamingMessage, streamingStatus, isChatLoading, isChatError, dispatchers } = useChat(chatId);
     const { switchModel, addMessage } = dispatchers;
+
+    const messages: (MessageType | Signal<MessageWithContentType>)[] = [...data.messages];
+    if (!['ready', 'abort'].includes(streamingStatus.value.status)) {
+        messages.push(streamingMessage);
+    }
+
     return (
         <div id="chat-container">
             <ChatContext.Provider value={data}>
@@ -237,12 +240,7 @@ export default function Chat(
                         <>
                             <ModelSelector activeModel={data.model}
                                         modelSwitchHandler={(newModel: string) => switchModel({chatId: data.id, newModel})}/>
-                            <MessageList messages={data.messages} />
-                            {!['ready', 'abort'].includes(streamingStatus.value.status) && streamingStatus.value.chatId === data.id &&
-                                <Message key={data.messages.length}
-                                         author={streamingMessage.value.author}
-                                         content={streamingMessage.value.content} />
-                            }
+                            <MessageList messages={messages} />
                         </> : null
                 }
                 <PromptFooter>
