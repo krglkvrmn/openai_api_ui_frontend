@@ -1,19 +1,32 @@
-import { Signal } from "@preact/signals-react";
-import { ChatIdType, ChatPropType, ChatStateType, ChatType, ChatsStateType, DefaultChatType, MessageAuthor, MessageType, MessageWithContentType } from "../../types";
-import Message from "./Message";
-import { useMutation, useQuery } from "react-query";
-import { createMessageRequest, createNewChatRequest, getChatRequest, updateChatRequest } from "../../services/backend_api";
+import {Signal} from "@preact/signals-react";
+import {
+    ChatIdType,
+    ChatPropType,
+    ChatStateType,
+    ChatType,
+    DefaultChatType,
+    MessageAuthor,
+    MessageType,
+    MessageWithContentType
+} from "../../types";
+import {useMutation, useQuery} from "react-query";
+import {
+    createMessageRequest,
+    createNewChatRequest,
+    getChatRequest,
+    updateChatRequest
+} from "../../services/backend_api";
 import ModelSelector from "../control/ModelSelector";
-import { optimisticQueryUpdateConstructor } from "../../utils/optimisticUpdates";
-import { queryClient } from "../../App";
-import { MessageList } from "./MessageList";
-import { SystemPrompt, UserPrompt } from "../control/Prompt";
+import {optimisticQueryUpdateConstructor} from "../../utils/optimisticUpdates";
+import {queryClient} from "../../App";
+import {MessageList} from "./MessageList";
+import {SystemPrompt, UserPrompt} from "../control/Prompt";
 import PromptFooter from "../layout/PromptFooter";
-import React, { useEffect, useState } from "react";
-import { useStreamingMessage } from "../../services/completions_api";
-import { useNavigate, useParams } from "react-router-dom";
-import { useActiveChatIndex } from "../../hooks/contextHooks";
-import { parseChatId } from "../../utils/stringparsers";
+import React, {useState} from "react";
+import {useStreamingMessage} from "../../services/completions_api";
+import {useNavigate, useParams} from "react-router-dom";
+import {useActiveChatIndex} from "../../hooks/contextHooks";
+import {parseChatId} from "../../utils/stringparsers";
 
 
 function assembleChat(chat: ChatType) {
@@ -92,18 +105,7 @@ function useChat(chatId: ChatIdType) {
         }
     })
     const createChatOptimisticConfig = optimisticQueryUpdateConstructor({
-        queryKey: ['chats'],
-        stateUpdate: (mutateData: { author: MessageAuthor, text: string }, prevChats: ChatsStateType) => {
-            if (prevChats !== undefined) {
-                return [{
-                    id: null,
-                    title: data.title,
-                    model: data.model,
-                }, ...prevChats]
-            }
-            throw new Error('State is not loaded yet');
-        },
-        sideEffectsUpdate: (mutateData) => {
+        sideEffectsUpdate: (mutateData: { author: MessageAuthor, text: string }) => {
             const prevDefaultChat = defaultChat;
             setDefaultChat(prev => {
                 return {...prev, messages: [...prev.messages, {
@@ -160,21 +162,24 @@ function useChat(chatId: ChatIdType) {
             }
         },
         onSettled: async (resp) => {
-            await createChatOptimisticConfig.onSettled();
-            if (resp != undefined) {
-                await stream(resp);
+            if (resp !== undefined) {
+                await stream(resp, false);
+                await queryClient.invalidateQueries(['chats'], {exact: true});
                 setActiveChatIndex(0);
                 navigate(`/chat/${resp.id}`);
                 setDefaultChat(createDefaultChat());
+                resetStreamingMessage();
             }
         }
     });
 
-    function onMessageSubmit(mutateData: {chatId: ChatIdType, author: MessageAuthor, text: string }) {
-        isDefault ? createChatMutation.mutate(mutateData) : addMessageMutation.mutate(mutateData);
+    function onMessageSubmit(mutateData: { chatId: ChatIdType, author: MessageAuthor, text: string }) {
+        if (streamingStatus.value.status !== "generating") {
+            isDefault ? createChatMutation.mutate(mutateData) : addMessageMutation.mutate(mutateData);
+        }
     }
 
-    async function stream(chat: ChatType) {
+    async function stream(chat: ChatType, reset: boolean = true) {
         try {
             const completeChat = assembleChat(chat);
             const finalMessage = await streamMessage(completeChat);
@@ -186,10 +191,12 @@ function useChat(chatId: ChatIdType) {
             });
         } catch {} finally {
             queryClient.invalidateQueries(['chats', chat.id], { exact: true });
-            resetStreamingMessage();
+            reset && resetStreamingMessage();
         }
+    }
 
-
+    async function generateResponse() {
+        await stream(data);
     }
 
     return {
@@ -202,6 +209,8 @@ function useChat(chatId: ChatIdType) {
         dispatchers: {
             switchModel: switchModelMutation.mutate,
             addMessage: onMessageSubmit,
+            abortGeneration: abortStreamingMessage,
+            generateResponse: generateResponse
         }
        
     };
@@ -217,7 +226,7 @@ export default function Chat(
     const queryParams = useParams();
     const chatId = parseChatId(queryParams.chatId);
     const { data, streamingMessage, streamingStatus, isChatLoading, isChatError, dispatchers } = useChat(chatId);
-    const { switchModel, addMessage } = dispatchers;
+    const { switchModel, addMessage, generateResponse, abortGeneration } = dispatchers;
 
     const messages: (MessageType | Signal<MessageWithContentType>)[] = [...data.messages];
     if (!['ready', 'abort'].includes(streamingStatus.value.status)) {
@@ -228,7 +237,7 @@ export default function Chat(
         <div id="chat-container">
             <ChatContext.Provider value={data}>
                 {
-                    data !== undefined && data.messages.length === 0 && 
+                    data.messages.length === 0 && 
                     <SystemPrompt promptValue={systemPromptParams?.systemPromptValue}
                                 promptValueChangeHandler={systemPromptParams?.setSystemPromptValue}
                                 submitHandler={prompt => addMessage({chatId: data.id, author: 'system', text: prompt})}/>
@@ -236,17 +245,22 @@ export default function Chat(
                 {
                     isChatLoading ? "Loading chat contents..." :
                     isChatError ? "Error occured while loading chat contents" :
-                    data !== undefined ? 
                         <>
                             <ModelSelector activeModel={data.model}
                                         modelSwitchHandler={(newModel: string) => switchModel({chatId: data.id, newModel})}/>
                             <MessageList messages={messages} />
-                        </> : null
+                        </>
                 }
                 <PromptFooter>
+                    <UserPrompt submitHandler={prompt => addMessage({chatId: data?.id, author: 'user', text: prompt})}/>
                     {
-                        data !== undefined &&
-                        <UserPrompt submitHandler={prompt => addMessage({chatId: data?.id, author: 'user', text: prompt})}/>
+                        streamingStatus.value.status !== "generating" && data.messages.length > 0 &&
+                        data.messages[data.messages.length - 1].author === "user" &&
+                        <button onClick={generateResponse}>Regenerate</button>
+                    }
+                    {
+                        streamingStatus.value.status === "generating" &&
+                        <button onClick={abortGeneration}>Abort generation</button>
                     }
                 </PromptFooter>
             </ChatContext.Provider>
