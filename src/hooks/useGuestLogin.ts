@@ -18,12 +18,12 @@ export function useGuestLogin(): TuseGuestLoginReturn {
         return [username, password];
     }
 
-    async function loginAsGuest() {
+    async function loginAsGuest(): Promise<void> {
         const [username, password] = createGuestUserData();
         await signUp({email: username, password: password, is_guest: true});
         await logIn({username, password});
     }
 
-    const error = logInError || signUpError ? "An error occured while logging as a guest" : null;
+    const error = logInError || signUpError ? "An error occurred while logging as a guest" : null;
     return {error, loginAsGuest};
 }

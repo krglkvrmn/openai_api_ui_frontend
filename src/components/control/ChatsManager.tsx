@@ -1,12 +1,12 @@
-import { funcClosureOrUndefined  } from "../../utils/functional";
-import { ChatOverviewType, ChatsStateType } from "../../types";
-import { useEffect, useRef, useState } from "react";
-import { resetSelections, selectElementContent } from "../../utils/elements";
-import { useMutation, useQuery } from "react-query";
-import { deleteChatRequest, getAllChatsOverviewRequest, updateChatRequest } from "../../services/backend_api";
-import { optimisticQueryUpdateConstructor } from "../../utils/optimisticUpdates";
-import { useNavigate } from "react-router-dom";
-import { useActiveChatIndex } from "../../hooks/contextHooks";
+import {funcClosureOrUndefined} from "../../utils/functional";
+import {ChatOverviewType, ChatsStateType} from "../../types";
+import {useRef, useState} from "react";
+import {resetSelections, selectElementContent} from "../../utils/elements";
+import {useMutation, useQuery} from "react-query";
+import {deleteChatRequest, getAllChatsOverviewRequest, updateChatRequest} from "../../services/backend_api";
+import {optimisticQueryUpdateConstructor} from "../../utils/optimisticUpdates";
+import {useNavigate} from "react-router-dom";
+import {useActiveChatIndex} from "../../hooks/contextHooks";
 
 export type ChatIndexType = number | null;
 
@@ -42,7 +42,11 @@ export function useChats(): TuseChatsReturn {
     const [activeChatIndex, setActiveChatIndex] = useActiveChatIndex();
     const { data, isSuccess, isLoading, isError } = useQuery({
         queryKey: ['chats'],
-        queryFn: async () => await getAllChatsOverviewRequest() as ChatOverviewType[],
+        queryFn: async () => {
+            const chats = await getAllChatsOverviewRequest() as ChatOverviewType[]
+            console.log('Fetched chats', chats);
+            return chats;
+        },
         placeholderData: []
     });
 
@@ -133,6 +137,7 @@ export function useChats(): TuseChatsReturn {
 export default function ChatsManager() {
     const { chats, isChatsLoading, isChatsSuccess, isChatsError, dispatchers } = useChats();
     const { activateChat, deleteChat, renameChat } = dispatchers;
+    console.log(chats);
     return (
         <div id="chat-history-sidebar-container">
             <button id="new-chat-button"
@@ -140,7 +145,7 @@ export default function ChatsManager() {
             
             {
                 isChatsLoading ? <p>"Loading chats..."</p> :
-                isChatsError ? "An error occured while loading chats" :
+                isChatsError ? "An error occurred while loading chats" :
                 isChatsSuccess && chats !== undefined ?
                 chats.map((chat, index) => {
                     return (

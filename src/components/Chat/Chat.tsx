@@ -46,10 +46,10 @@ export function createDefaultChat(): DefaultChatType {
 }
 
 
-
 function useChat(chatId: ChatIdType) {
     const isDefault = chatId === null;
 
+    const navigate = useNavigate();
     const [activeChatIndex, setActiveChatIndex] = useActiveChatIndex();
     const [defaultChat, setDefaultChat] = useState<DefaultChatType>(createDefaultChat());
     const {
@@ -61,9 +61,10 @@ function useChat(chatId: ChatIdType) {
         queryFn: async ({ queryKey }) => {
             return await getChatRequest(queryKey[1] as ChatIdType) as ChatType;
         },
+        onError: () => navigate('/chat/new'),
+        retry: 1,
         enabled: !isDefault
     });
-    const navigate = useNavigate();
     const data = queryData === undefined ? defaultChat : queryData;
 
    async function switchModel(
@@ -163,7 +164,12 @@ function useChat(chatId: ChatIdType) {
         },
         onSettled: async (resp) => {
             if (resp !== undefined) {
-                await stream(resp, false);
+                switch (resp.messages[0].author) {
+                    case 'user':
+                        await stream(resp, false); break;
+                    case 'system':
+                        await queryClient.invalidateQueries(['prompts'], {exact: true}); break;
+                }
                 await queryClient.invalidateQueries(['chats'], {exact: true});
                 setActiveChatIndex(0);
                 navigate(`/chat/${resp.id}`);
@@ -240,7 +246,10 @@ export default function Chat(
                     data.messages.length === 0 && 
                     <SystemPrompt promptValue={systemPromptParams?.systemPromptValue}
                                 promptValueChangeHandler={systemPromptParams?.setSystemPromptValue}
-                                submitHandler={prompt => addMessage({chatId: data.id, author: 'system', text: prompt})}/>
+                                submitHandler={prompt => {
+                                    addMessage({chatId: data.id, author: 'system', text: prompt});
+                                    systemPromptParams?.setSystemPromptValue('');
+                                }}/>
                 }
                 {
                     isChatLoading ? "Loading chat contents..." :

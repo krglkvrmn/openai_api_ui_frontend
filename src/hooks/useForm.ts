@@ -1,6 +1,5 @@
-import React, { FormEvent, SyntheticEvent } from "react";
-import { useRef, useState } from "react";
-import { UserErrors } from "../types";
+import {FormEvent, useState} from "react";
+import {UserErrors} from "../types";
 
 type TuseFormReturn = [
     UserErrors,
@@ -41,7 +40,7 @@ export function useForm(validators: ValidatorType[]): TuseFormReturn {
         return validatedForm;
     }
 
-    function onFormSubmit(event: FormEvent<HTMLFormElement>, submitHandler: (formData: any) => void) {
+    function onFormSubmit(event: FormEvent<HTMLFormElement>, submitHandler: (formData: any) => void): void {
         event.preventDefault();
         if (event.target === null) {
             return;

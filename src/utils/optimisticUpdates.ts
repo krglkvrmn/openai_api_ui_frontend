@@ -26,6 +26,7 @@ export function optimisticQueryUpdateConstructor<QS, SS, MD>(
             sideEffectsRecover && sideEffectsRecover(context?.sideEffectsPrevState);
         },
         onSettled: async () => {
+            console.log('Invalidated', queryKey);
             updateQuery && await queryClient.invalidateQueries(queryKey);
         }
     };

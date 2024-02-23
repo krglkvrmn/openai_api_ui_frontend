@@ -1,9 +1,11 @@
-import { UseQueryResult, useMutation, useQuery } from "react-query";
-import useFetch from "../../hooks/useFetch";
-import { PromptType } from "../../types";
-import { funcClosureOrUndefined } from "../../utils/functional";
-import { SystemPromptBackendResponse, deleteSystemPromptsRequest, getPopularSystemPromptsRequest } from "../../services/backend_api";
-import { optimisticQueryUpdateConstructor } from "../../utils/optimisticUpdates";
+import {useMutation, useQuery} from "react-query";
+import {funcClosureOrUndefined} from "../../utils/functional";
+import {
+    deleteSystemPromptsRequest,
+    getPopularSystemPromptsRequest,
+    SystemPromptBackendResponse
+} from "../../services/backend_api";
+import {optimisticQueryUpdateConstructor} from "../../utils/optimisticUpdates";
 
 type PromptSelectorProps = {
     promptSelectionCallback?: (prompt: string) => void;
@@ -17,15 +19,10 @@ type PromptSelectionRecordProps = {
 
 type SystemPromptsStateType = SystemPromptBackendResponse[] | undefined;
 
-type TuseSystemPromptsLibraryReturn = {
-    systemPromptsLibraryQuery: UseQueryResult<SystemPromptBackendResponse[], unknown>,
-    deleteSystemPrompt: (promptId: string) => void
-}
-
 function useSystemPromptsLibrary() {
     const systemPromptsLibraryQuery = useQuery({
         queryKey: ['prompts'],
-        queryFn: getPopularSystemPromptsRequest 
+        queryFn: getPopularSystemPromptsRequest
     });
 
     const systemPromptDeleteOptimisticConfig = optimisticQueryUpdateConstructor({
@@ -71,8 +68,8 @@ export default function PromptSelector({promptSelectionCallback}: PromptSelector
 
 function PromptSelectorRecord({prompt, promptSelectionCallback, promptDeleteHandler}: PromptSelectionRecordProps) {
     return (
-        <div className="prompt-selection-record-container" onClick={promptSelectionCallback}>
-            <b className="prompt-selection-record">{prompt}</b>
+        <div className="prompt-selection-record-container">
+            <b className="prompt-selection-record" onClick={promptSelectionCallback}>{prompt}</b>
             <button onClick={promptDeleteHandler}>Delete</button>
         </div>
     );

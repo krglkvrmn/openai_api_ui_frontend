@@ -1,10 +1,11 @@
+import React from "react";
 import { useContext } from "react";
 import { AuthContext } from "../contexts/AuthProvider";
 import { APIKeyContext } from "../contexts/APIKeyProvider";
 import { ActiveChatIndexContext } from "../contexts/ActiveChatIndexProvider";
 
 
-function createContextHook<T>(context: React.Context<T | null>, onNotSetErrorMessage: string) {
+function createContextHook<T>(context: React.Context<T | null>, onNotSetErrorMessage: string): () => T {
     return () => {
         const values = useContext(context);
         if (values === null) {

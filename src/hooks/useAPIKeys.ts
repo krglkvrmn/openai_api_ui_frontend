@@ -1,4 +1,4 @@
-import { UseQueryResult, useMutation, useQuery } from "react-query";
+import { useMutation, useQuery } from "react-query";
 import { APIKeysBackendResponse, deleteAPIKeyRequest, getAPIKeysRequest } from "../services/backend_api";
 import { optimisticQueryUpdateConstructor } from "../utils/optimisticUpdates";
 
