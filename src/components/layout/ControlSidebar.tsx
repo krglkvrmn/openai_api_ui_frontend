@@ -1,4 +1,4 @@
-import { funcClosureOrUndefined } from "../../utils/functional"
+import React from "react";
 
 export default function ControlSidebar({ children }: { children: React.ReactNode} ) {
     return (

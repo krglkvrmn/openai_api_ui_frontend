@@ -1,5 +1,3 @@
-import { funcClosureOrUndefined } from "../../utils/functional";
-
 const modelOptions = ['gpt-3.5-turbo', 'gpt-4']
 
 

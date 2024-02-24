@@ -1,5 +1,5 @@
-import { UUID } from "crypto";
-import axios, { AxiosError, AxiosResponse } from "axios";
+import {UUID} from "crypto";
+import axios, {AxiosResponse} from "axios";
 
 export type SignupFormDataType = {
     email: string,
@@ -10,7 +10,7 @@ export type SignupFormDataType = {
 export type LoginFormDataType = {
     username: string,
     password: string
-};
+}
 
 export type UserSchema = {
     id?: UUID,
@@ -61,11 +61,12 @@ export async function refresh(): Promise<undefined> {
 
 export async function getCurrentUser(): Promise<UserSchema> {
     const response = await axios.get('http://localhost:8000/users/me', {withCredentials: true});
-    const userData = {...response.data, username: response.data.email.split('@')[0]}
-    return userData;
+    return {...response.data, username: response.data.email.split('@')[0]};
 }
 
-export async function refreshRetryOnUnauthorized(requestGenerator: () => Promise<AxiosResponse>) {
+export async function refreshRetryOnUnauthorized(
+    requestGenerator: () => Promise<AxiosResponse>
+) {
     try {
         return await requestGenerator();
     } catch (error) {
@@ -76,6 +77,5 @@ export async function refreshRetryOnUnauthorized(requestGenerator: () => Promise
             }
         }
         throw error;
-
-    };
+    }
 }

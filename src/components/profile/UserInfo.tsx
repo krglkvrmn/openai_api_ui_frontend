@@ -1,12 +1,11 @@
-import { useQuery } from "react-query";
-import { getCurrentUser } from "../../services/auth";
+import {useQuery, UseQueryResult} from "react-query";
+import {getCurrentUser, UserSchema} from "../../services/auth";
 
-function useUserInfo() {
-    const userQuery = useQuery({
+function useUserInfo(): UseQueryResult<UserSchema> {
+    return useQuery({
         queryKey: ['user', 'general'],
         queryFn: getCurrentUser
     });
-    return userQuery;
 }
 
 export function UserInfo() {

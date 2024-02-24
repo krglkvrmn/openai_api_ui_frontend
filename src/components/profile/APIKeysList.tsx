@@ -1,6 +1,5 @@
-import { useQuery } from "react-query";
-import { APIKeysBackendResponse, getAPIKeysRequest } from "../../services/backend_api";
 import { funcClosureOrUndefined } from "../../utils/functional";
+import {APIKeyRead} from "../../types/dataTypes";
 
 
 
@@ -10,7 +9,7 @@ type APIKeyRecordPropsType = {
 }
 
 type APIKeysListPropsType = {
-    apiKeys: APIKeysBackendResponse[],
+    apiKeys: APIKeyRead[],
     keyDeleteHandler?: (keyId: string) => void
 }
 

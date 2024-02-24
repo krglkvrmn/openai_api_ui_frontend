@@ -1,9 +1,9 @@
 import ChatsManager from "../control/ChatsManager";
 import ControlSidebar from "../layout/ControlSidebar";
-import { Link, Route, Routes, useNavigate } from "react-router-dom";
-import { useAuth } from "../../hooks/contextHooks";
-import { ChatController } from "./ChatController";
-import { ActiveChatIndexProvider } from "../../contexts/ActiveChatIndexProvider";
+import {Link} from "react-router-dom";
+import {useAuth} from "../../hooks/contextHooks";
+import {ChatController} from "./ChatController";
+import {ActiveChatIndexProvider} from "../../contexts/ActiveChatIndexProvider";
 
 
 export default function ChatApp() {

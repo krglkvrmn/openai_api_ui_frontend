@@ -1,8 +1,9 @@
 import { useMutation, useQuery } from "react-query";
-import { APIKeysBackendResponse, deleteAPIKeyRequest, getAPIKeysRequest } from "../services/backend_api";
+import { deleteAPIKeyRequest, getAPIKeysRequest } from "../services/backendAPI";
 import { optimisticQueryUpdateConstructor } from "../utils/optimisticUpdates";
+import {APIKeyRead} from "../types/dataTypes";
 
-type APIKeysStateType = APIKeysBackendResponse[] | undefined;
+type APIKeysStateType = APIKeyRead[] | undefined;
 
 type TuseAPIKeysReturn = {
     apiKeys: APIKeysStateType,

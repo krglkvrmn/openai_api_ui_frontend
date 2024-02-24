@@ -1,12 +1,12 @@
 import {funcClosureOrUndefined} from "../../utils/functional";
-import {ChatOverviewType, ChatsStateType} from "../../types";
-import {useRef, useState} from "react";
+import React, {useRef, useState} from "react";
 import {resetSelections, selectElementContent} from "../../utils/elements";
 import {useMutation, useQuery} from "react-query";
-import {deleteChatRequest, getAllChatsOverviewRequest, updateChatRequest} from "../../services/backend_api";
+import {deleteChatRequest, getAllChatsRequest, updateChatRequest} from "../../services/backendAPI";
 import {optimisticQueryUpdateConstructor} from "../../utils/optimisticUpdates";
 import {useNavigate} from "react-router-dom";
 import {useActiveChatIndex} from "../../hooks/contextHooks";
+import {ChatInfoRead} from "../../types/dataTypes";
 
 export type ChatIndexType = number | null;
 
@@ -28,7 +28,7 @@ export type TuseChatsDispatchers = {
 };
 
 export type TuseChatsReturn = {
-    chats: ChatOverviewType[] | undefined,
+    chats: ChatInfoRead[] | undefined,
     isChatsLoading: boolean,
     isChatsError: boolean,
     isChatsSuccess: boolean,
@@ -43,24 +43,22 @@ export function useChats(): TuseChatsReturn {
     const { data, isSuccess, isLoading, isError } = useQuery({
         queryKey: ['chats'],
         queryFn: async () => {
-            const chats = await getAllChatsOverviewRequest() as ChatOverviewType[]
-            console.log('Fetched chats', chats);
-            return chats;
+            return await getAllChatsRequest();
         },
         placeholderData: []
     });
 
-    async function deleteChat(chatIndex: number) {
+    async function deleteChat(chatIndex: number): Promise<void> {
         if (isSuccess) {
             await deleteChatRequest(data[chatIndex].id);
         }
     }
-    async function renameChat({chatIndex, name}: {chatIndex: number, name: string}) {
+    async function renameChat({chatIndex, name}: {chatIndex: number, name: string}): Promise<void> {
         if (isSuccess) {
             await updateChatRequest({...data[chatIndex], title: name});
         }
     }
-    function activateChat(chatIndex: number | null) {
+    function activateChat(chatIndex: number | null): void {
         setActiveChatIndex(chatIndex);
         if (chatIndex === null) {
             navigate('/chat/new')
@@ -71,7 +69,7 @@ export function useChats(): TuseChatsReturn {
 
     const deleteChatOptimisticConfig = optimisticQueryUpdateConstructor({
         queryKey: ['chats'],
-        stateUpdate: (chatIndex: number, prevChats: ChatsStateType) => {
+        stateUpdate: (chatIndex: number, prevChats: ChatInfoRead[] | undefined) => {
             if (prevChats !== undefined) {
                 const chatsCopy = prevChats.slice();
                 chatsCopy.splice(chatIndex, 1);
@@ -95,7 +93,7 @@ export function useChats(): TuseChatsReturn {
     });
     const renameChatOptimisticConfig = optimisticQueryUpdateConstructor({
         queryKey: ['chats'],
-        stateUpdate: (mutateData: {chatIndex: number, name: string}, prevChats: ChatsStateType) => {
+        stateUpdate: (mutateData: {chatIndex: number, name: string}, prevChats: ChatInfoRead[] | undefined) => {
             if (prevChats !== undefined) {
                 const chatsCopy = prevChats.slice();
                 chatsCopy[mutateData.chatIndex] = {...chatsCopy[mutateData.chatIndex], title: mutateData.name};

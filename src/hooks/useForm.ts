@@ -1,5 +1,5 @@
 import {FormEvent, useState} from "react";
-import {UserErrors} from "../types";
+import {UserErrors} from "../types/types";
 
 type TuseFormReturn = [
     UserErrors,

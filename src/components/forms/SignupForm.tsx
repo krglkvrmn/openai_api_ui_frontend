@@ -2,7 +2,7 @@ import { FormEvent } from "react";
 import { ValidatorType, useForm } from "../../hooks/useForm";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/contextHooks";
-import { UserErrors } from "../../types";
+import {UserErrors} from "../../types/types";
 
 type TuseSignupFormReturn = {
     validationErrors: UserErrors,
@@ -31,12 +31,12 @@ export function useSignupForm(): TuseSignupFormReturn {
     const [validationErrors, onFormSubmit] = useForm(validators);
     const navigate = useNavigate();
 
-    function submitHandler(formData: any) {
+    function submitHandler(formData: any): void {
         const data = {email: formData.username, password: formData.password};
         signUp(data).then(response => {
             console.log('Successfully signed up:', response.email);
             navigate('/login');
-        }).catch(error => console.error('Error while signing up:', error));;
+        }).catch(error => console.error('Error while signing up:', error));
     }
 
     const onFormSubmitWithCallback = (event: FormEvent<HTMLFormElement>) => onFormSubmit(event, submitHandler);

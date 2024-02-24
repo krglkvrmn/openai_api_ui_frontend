@@ -1,9 +1,8 @@
 import { FormEvent } from "react";
 import { ValidatorType, useForm } from "../../hooks/useForm";
 import { useNavigate } from "react-router-dom";
-import { login } from "../../services/auth";
 import { useAuth } from "../../hooks/contextHooks";
-import { UserErrors } from "../../types";
+import {UserErrors} from "../../types/types";
 
 
 type TuseLoginFormReturn = {
@@ -23,7 +22,6 @@ export function useLoginForm(): TuseLoginFormReturn {
     function submitHandler(formData: any) {
         const data = {username: formData.username, password: formData.password};
         logIn(data).then(response => {
-            console.log('Successfully logged in');
             navigate('/');
         }).catch(error => console.error('Error while logging in:', error));
     }

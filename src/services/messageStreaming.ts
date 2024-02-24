@@ -1,21 +1,21 @@
-import { Signal, signal, useSignal } from "@preact/signals-react";
-import { ChatIdType, ChatType, MessageAuthor, MessageWithContentType } from "../types";
-import { useAPIKey } from "../hooks/contextHooks";
+import {Signal, signal} from "@preact/signals-react";
+import {useAPIKey} from "../hooks/contextHooks";
 import axios from "axios";
-import { UUID } from "crypto";
-import { refreshRetryOnUnauthorized } from "./auth";
-import { useOneTimeMemo } from "../hooks/useOneTimeMemo";
+import {UUID} from "crypto";
+import {refreshRetryOnUnauthorized} from "./auth";
+import {useOneTimeMemo} from "../hooks/useOneTimeMemo";
+import {ChatFullStream, MessageAuthor, MessageCreate} from "../types/dataTypes";
 
 
 type RequestStreamingCompletionParamsType = {
-    chat: ChatType,
+    chat: ChatFullStream,
     token?: string,
     debug: boolean
 }
 
 type RequestStreamingCompletionDataType = {
     token: UUID,
-    expiry_data: Date
+    expiry_date: Date
 }
 
 type RequestStreamingCompletionReturnType = {
@@ -26,6 +26,19 @@ type RequestStreamingCompletionReturnType = {
 type CompletionEventDeltaType = {
     role?: MessageAuthor,
     content?: string
+}
+
+export type StreamingStatusType = "ready" | "generating" | "complete" | "abort";
+export type StreamingStateType = {
+    status: StreamingStatusType
+}
+
+type TuseModelStreamingMessageReturn = {
+    streamingMessage: Signal<MessageCreate>,
+    streamMessage: (chat: ChatFullStream) => Promise<MessageCreate>,
+    streamingState: Signal<StreamingStateType>,
+    reset: () => void,
+    abort: () => void
 }
 
 async function requestStreamingCompletion(
@@ -53,35 +66,21 @@ async function requestStreamingCompletion(
 }
 
 
-type TuseModelStreamingMessageReturn = {
-    streamingMessage: Signal<MessageWithContentType>,
-    streamMessage: (chat: ChatType) => Promise<MessageWithContentType>,
-    streamingStatus: Signal<StreamingStatusType>,
-    reset: () => void,
-    abort: () => void
-}
-type StreamingStatusType = {
-    status: "ready" | "generating" | "complete" | "abort",
-    chatId: ChatIdType | null
-}
-
-
-const streamingMessageDefaultState: MessageWithContentType = {author: "assistant", content: ""};
-const streamingStatusDefaultState: StreamingStatusType = {status: "ready", chatId: null};
+const streamingMessageDefault: MessageCreate = {author: "assistant", content: ""};
+const streamingStateDefault: StreamingStateType = {status: "ready"};
 
 export function useStreamingMessage(identifier: number | null): TuseModelStreamingMessageReturn {
-    const [apiKey, setApiKey] = useAPIKey();
-    const streamingMessage = useOneTimeMemo(() => signal(streamingMessageDefaultState), [identifier]);
-    const streamingStatus = useOneTimeMemo(() => signal(streamingStatusDefaultState), [identifier]);
+    const apiKey = useAPIKey()[0];
+    const streamingMessage = useOneTimeMemo(() => signal(streamingMessageDefault), [identifier]);
+    const streamingState = useOneTimeMemo(() => signal(streamingStateDefault), [identifier]);
 
-    async function streamMessage(chat: ChatType) {
+    async function streamMessage(chat: ChatFullStream): Promise<MessageCreate> {
         const { location } = await requestStreamingCompletion({chat, token: apiKey.value, debug: true });
-        return await new Promise<MessageWithContentType>((resolve, reject) => {
+        return await new Promise<MessageCreate>((resolve, reject) => {
             const eventSource = new EventSource(location, { withCredentials: true });
-            streamingStatus.value = {status: "generating", chatId: chat.id};
-            eventSource.onmessage = (event) => {
-                if (streamingStatus.value.status !== "generating") {
-                    console.log('Closing an EventSource');
+            streamingState.value = {status: "generating"};
+            eventSource.onmessage = (event: MessageEvent): void => {
+                if (streamingState.value.status !== "generating") {
                     eventSource.close();
                     reject(event);
                 }
@@ -95,26 +94,26 @@ export function useStreamingMessage(identifier: number | null): TuseModelStreami
                     created_at: isFinish ? new Date() : undefined
                 }
                 if (isFinish) {
-                    streamingStatus.value = {...streamingStatus.value, status: "complete"};
+                    streamingState.value = {...streamingState.value, status: "complete"};
                     eventSource.close();
                     resolve(streamingMessage.value);
                 }
                 
             }
-            eventSource.onerror = (errorEvent) => {
+            eventSource.onerror = (errorEvent: Event): void => {
                 eventSource.close();
                 reject(errorEvent);
             }
         })
     }
 
-    function reset() {
-        streamingMessage.value = streamingMessageDefaultState;
-        streamingStatus.value = streamingStatusDefaultState;
+    function reset(): void {
+        streamingMessage.value = streamingMessageDefault;
+        streamingState.value = streamingStateDefault;
     }
-    function abort() {
-        streamingStatus.value.status = "abort";
+    function abort(): void {
+        streamingState.value.status = "abort";
     }
-    return { streamingMessage, streamingStatus, streamMessage, reset, abort };
+    return { streamingMessage, streamingState: streamingState, streamMessage, reset, abort };
 
 }

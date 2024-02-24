@@ -1,12 +1,20 @@
-import axios, { AxiosError } from "axios";
-import React, { useEffect, useState } from "react";
-import { useQuery, useMutation, UseMutateAsyncFunction } from 'react-query';
-import { LoginFormDataType, LoginResponse, ResponseDetails, SignupFormDataType, SignupResponse, UserSchema, getCurrentUser, login, logout, refresh, signup } from "../services/auth";
-import { UserErrors } from "../types";
-import { queryClient } from "../App";
-import { error } from "console";
-import { parseLogInError, parseLogOutError, parseSignUpError } from "../utils/errorsParsers";
-import { UNSAFE_DataRouterContext, useLocation } from "react-router-dom";
+import React, {useState} from "react";
+import {useMutation, useQuery} from 'react-query';
+import {
+    getCurrentUser,
+    login,
+    LoginFormDataType,
+    LoginResponse,
+    logout,
+    refresh,
+    ResponseDetails,
+    signup,
+    SignupFormDataType,
+    SignupResponse
+} from "../services/auth";
+import {queryClient} from "../App";
+import {parseLogInError, parseLogOutError, parseSignUpError} from "../utils/errorsParsers";
+import {useLocation} from "react-router-dom";
 
 
 type AuthProviderUserSchema = {

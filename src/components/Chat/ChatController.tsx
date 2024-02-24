@@ -1,11 +1,10 @@
 import PromptSelectionSidebar from "../layout/PromptSelectionSidebar";
 import PromptSelector from "../control/PromptSelector";
-import { APIKeyForm } from "../forms/APIKeyForm";
-import { useAPIKeys } from "../../hooks/useAPIKeys";
-import { Route, Routes } from "react-router-dom";
+import {APIKeyForm} from "../forms/APIKeyForm";
+import {useAPIKeys} from "../../hooks/useAPIKeys";
+import {Route, Routes} from "react-router-dom";
 import Chat from "./Chat";
-import { useState } from "react";
-import { useSignalState } from "../../hooks/useSignalState";
+import {useSignalState} from "../../hooks/useSignalState";
 
 export function ChatController() {
     const [systemPromptValue, setSystemPromptValue] = useSignalState<string>("");

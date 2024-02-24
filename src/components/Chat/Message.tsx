@@ -5,7 +5,7 @@ import { dark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
 function CodeBlockComponent(
     props: any
-    ) {
+) {
     const {children, className, node, ...rest} = props;
     const match = /language-(\w+)/.exec(className || '');
     if (typeof rest.inline === "boolean") {
@@ -25,7 +25,6 @@ function CodeBlockComponent(
             </code>
         )
 }
-
 
 
 export default function Message(

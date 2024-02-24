@@ -1,11 +1,11 @@
-import {useMutation, useQuery} from "react-query";
+import {useMutation, useQuery, UseQueryResult} from "react-query";
 import {funcClosureOrUndefined} from "../../utils/functional";
 import {
     deleteSystemPromptsRequest,
     getPopularSystemPromptsRequest,
-    SystemPromptBackendResponse
-} from "../../services/backend_api";
+} from "../../services/backendAPI";
 import {optimisticQueryUpdateConstructor} from "../../utils/optimisticUpdates";
+import {SystemPromptRead} from "../../types/dataTypes";
 
 type PromptSelectorProps = {
     promptSelectionCallback?: (prompt: string) => void;
@@ -17,9 +17,12 @@ type PromptSelectionRecordProps = {
     promptDeleteHandler?: () => void
 }
 
-type SystemPromptsStateType = SystemPromptBackendResponse[] | undefined;
+type TuseSystemPromptsLibrary = {
+    systemPromptsLibraryQuery: UseQueryResult<SystemPromptRead[], unknown>,
+    deleteSystemPrompt: (promptId: number) => void
+}
 
-function useSystemPromptsLibrary() {
+function useSystemPromptsLibrary(): TuseSystemPromptsLibrary {
     const systemPromptsLibraryQuery = useQuery({
         queryKey: ['prompts'],
         queryFn: getPopularSystemPromptsRequest
@@ -27,7 +30,7 @@ function useSystemPromptsLibrary() {
 
     const systemPromptDeleteOptimisticConfig = optimisticQueryUpdateConstructor({
         queryKey: ['prompts'],
-        stateUpdate: (promptId: string, prevPrompts: SystemPromptsStateType) => {
+        stateUpdate: (promptId: number, prevPrompts: SystemPromptRead[] | undefined) => {
             if (prevPrompts !== undefined) {
                 return prevPrompts.filter(prompt => prompt.id !== promptId);
             }
@@ -44,7 +47,6 @@ function useSystemPromptsLibrary() {
 
     return { systemPromptsLibraryQuery, deleteSystemPrompt: systemPromptDeleteMutation.mutate };
 }
-
 
 
 export default function PromptSelector({promptSelectionCallback}: PromptSelectorProps) {
