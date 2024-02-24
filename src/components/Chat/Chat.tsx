@@ -202,7 +202,6 @@ function useChat(chatId: ChatIdType): TuseChatReturn {
         try {
             const completeChat = assembleChat(chat);
             const finalMessage = await streamMessage(completeChat);
-            reset && resetStreamingMessage();
             const savedMessage = await addMessage({
                 chatId: chat.id, author: finalMessage.author, text: finalMessage.content
             }); 
@@ -210,6 +209,7 @@ function useChat(chatId: ChatIdType): TuseChatReturn {
                 ...completeChat, messages: [...completeChat.messages, savedMessage]
             });
         } catch {} finally {
+            reset && resetStreamingMessage();
             await queryClient.invalidateQueries(['chats', chat.id], { exact: true });
         }
     }
