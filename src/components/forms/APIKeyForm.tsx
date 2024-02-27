@@ -1,8 +1,8 @@
-import { FormEvent } from "react";
-import { ValidatorType, useForm } from "../../hooks/useForm";
-import { saveAPIKeyRequest } from "../../services/backendAPI";
-import { queryClient } from "../../App";
-import { useAPIKey } from "../../hooks/contextHooks";
+import {FormEvent} from "react";
+import {useForm, ValidatorType} from "../../hooks/useForm";
+import {saveAPIKeyRequest} from "../../services/backendAPI";
+import {queryClient} from "../../App";
+import {useAPIKey} from "../../hooks/contextHooks";
 
 
 const validators: ValidatorType[] = [

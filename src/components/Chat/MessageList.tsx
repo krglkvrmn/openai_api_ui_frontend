@@ -1,7 +1,7 @@
 import {useQueries, UseQueryResult} from "react-query";
 import {getMessageRequest} from "../../services/backendAPI";
 import Message from "./Message";
-import {ReactFragment, useContext} from "react";
+import {useContext} from "react";
 import {ChatContext} from "./Chat";
 import {Signal} from "@preact/signals-core";
 import {MessageAny, MessageCreate, MessageRead} from "../../types/dataTypes";
