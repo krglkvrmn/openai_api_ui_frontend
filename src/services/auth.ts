@@ -1,5 +1,6 @@
 import {UUID} from "crypto";
 import axios, {AxiosResponse} from "axios";
+import {BACKEND_ORIGIN} from "../configuration/config.ts";
 
 export type SignupFormDataType = {
     email: string,
@@ -32,7 +33,7 @@ export type LogoutResponse = ResponseDetails;
 
 
 export async function signup(formData: SignupFormDataType): Promise<SignupResponse> {
-    const response = await axios.post('http://localhost:8000/auth/register', formData, {
+    const response = await axios.post(BACKEND_ORIGIN + '/auth/register', formData, {
         headers: {'Content-Type': 'application/json'},
         withCredentials: true
     })
@@ -41,7 +42,7 @@ export async function signup(formData: SignupFormDataType): Promise<SignupRespon
 
 export async function login(formData: LoginFormDataType): Promise<LoginResponse> {
     const response = await axios.post(
-        'http://localhost:8000/auth/jwt/login', formData, {
+        BACKEND_ORIGIN + '/auth/jwt/login', formData, {
             headers: {'Content-Type': 'application/x-www-form-urlencoded'},
             withCredentials: true
         },
@@ -50,17 +51,17 @@ export async function login(formData: LoginFormDataType): Promise<LoginResponse>
 }
 
 export async function logout(): Promise<LogoutResponse> {
-    const response = await axios.post('http://localhost:8000/auth/jwt/logout', {}, {withCredentials: true});
+    const response = await axios.post(BACKEND_ORIGIN + '/auth/jwt/logout', {}, {withCredentials: true});
     return response.data;
 }
 
 export async function refresh(): Promise<undefined> {
-    const response = await axios.post('http://localhost:8000/refresh', {}, {withCredentials: true});
+    const response = await axios.post(BACKEND_ORIGIN + '/refresh', {}, {withCredentials: true});
     return response.data;
 }
 
 export async function getCurrentUser(): Promise<UserSchema> {
-    const response = await axios.get('http://localhost:8000/users/me', {withCredentials: true});
+    const response = await axios.get(BACKEND_ORIGIN + '/users/me', {withCredentials: true});
     return {...response.data, username: response.data.email.split('@')[0]};
 }
 

@@ -5,6 +5,7 @@ import {UUID} from "crypto";
 import {refreshRetryOnUnauthorized} from "./auth";
 import {useOneTimeMemo} from "../hooks/useOneTimeMemo";
 import {ChatFullStream, MessageAuthor, MessageCreate} from "../types/dataTypes";
+import {BACKEND_ORIGIN} from "../configuration/config.ts";
 
 
 type RequestStreamingCompletionParamsType = {
@@ -51,13 +52,13 @@ async function requestStreamingCompletion(
         }),
         stream: true
     }
-    const additionalHeaders: any = {};
+    const additionalHeaders: Record<string, string> = {};
     if (token) {
         additionalHeaders['X-OpenAI-Auth-Token'] = token;
     }
     const requestGenerator = () =>
         axios.post(
-            `http://localhost:8000/api/v1/ai/requestStreamingCompletion?debug=${debug}`,
+            BACKEND_ORIGIN + `/api/v1/ai/requestStreamingCompletion?debug=${debug}`,
             requestBody,
             { withCredentials: true, headers: {'Content-Type': 'application/json', ...additionalHeaders}}
         );
