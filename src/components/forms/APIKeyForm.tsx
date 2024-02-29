@@ -1,8 +1,9 @@
-import { FormEvent } from "react";
-import { ValidatorType, useForm } from "../../hooks/useForm";
-import { saveAPIKeyRequest } from "../../services/backendAPI";
-import { queryClient } from "../../App";
-import { useAPIKey } from "../../hooks/contextHooks";
+import {FormEvent} from "react";
+import {useForm} from "../../hooks/useForm";
+import {saveAPIKeyRequest} from "../../services/backendAPI";
+import {queryClient} from "../../App";
+import {useAPIKey} from "../../hooks/contextHooks";
+import {ValidatorType} from "../../types/types.ts";
 
 
 const validators: ValidatorType[] = [
@@ -17,10 +18,10 @@ export function APIKeyForm() {
     const setApiKey = useAPIKey()[1];
     const [validationErrors, onFormSubmit] = useForm(validators);
 
-    function submitHandler(formData: any): void {
-        saveAPIKeyRequest(formData.api_key).then(response => {
-            queryClient.invalidateQueries(['apiKeys'], { exact: true });
-        }).catch(error => console.error('Error while saving an API key'));
+    function submitHandler(formData: Record<string, string>): void {
+        saveAPIKeyRequest(formData.api_key).then(() => {
+            queryClient.invalidateQueries(['apiKeys'], { exact: true }).then();
+        }).catch(() => console.error('Error while saving an API key'));
     }
     const onFormSubmitWithCallback = (event: FormEvent<HTMLFormElement>) => onFormSubmit(event, submitHandler);
     return (

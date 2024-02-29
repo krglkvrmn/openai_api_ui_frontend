@@ -1,6 +1,7 @@
 import { generate } from "generate-password-browser";
 import {v4 as uuidv4} from 'uuid';
 import { useAuth } from "./contextHooks";
+import {useState} from "react";
 
 
 type TuseGuestLoginReturn = {
@@ -9,7 +10,8 @@ type TuseGuestLoginReturn = {
 }
 
 export function useGuestLogin(): TuseGuestLoginReturn {
-    const { authDispatchers, logInError, signUpError } = useAuth();
+    const [guestLoginError, setGuestLoginError] = useState<string | null>(null);
+    const { authDispatchers } = useAuth();
     const { signUp, logIn } = authDispatchers;
 
     function createGuestUserData(): [string, string] {
@@ -20,10 +22,13 @@ export function useGuestLogin(): TuseGuestLoginReturn {
 
     async function loginAsGuest(): Promise<void> {
         const [username, password] = createGuestUserData();
-        await signUp({email: username, password: password, is_guest: true});
-        await logIn({username, password});
+        try {
+            await signUp({email: username, password: password, is_guest: true});
+            await logIn({username, password});
+        } catch (error) {
+            setGuestLoginError("An error occurred while logging as a guest");
+        }
     }
 
-    const error = logInError || signUpError ? "An error occurred while logging as a guest" : null;
-    return {error, loginAsGuest};
+    return {error: guestLoginError, loginAsGuest};
 }

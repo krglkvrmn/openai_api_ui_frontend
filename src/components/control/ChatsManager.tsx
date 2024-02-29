@@ -8,8 +8,6 @@ import {useNavigate} from "react-router-dom";
 import {useActiveChatIndex} from "../../hooks/contextHooks";
 import {ChatInfoRead} from "../../types/dataTypes";
 
-export type ChatIndexType = number | null;
-
 
 type ChatHistoryRecordPropsType = {
     title: string,
@@ -37,7 +35,7 @@ export type TuseChatsReturn = {
 };
 
 
-export function useChats(): TuseChatsReturn {
+function useChats(): TuseChatsReturn {
     const navigate = useNavigate();
     const [activeChatIndex, setActiveChatIndex] = useActiveChatIndex();
     const { data, isSuccess, isLoading, isError } = useQuery({
@@ -135,7 +133,6 @@ export function useChats(): TuseChatsReturn {
 export default function ChatsManager() {
     const { chats, isChatsLoading, isChatsSuccess, isChatsError, dispatchers } = useChats();
     const { activateChat, deleteChat, renameChat } = dispatchers;
-    console.log(chats);
     return (
         <div id="chat-history-sidebar-container">
             <button id="new-chat-button"

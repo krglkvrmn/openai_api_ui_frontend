@@ -1,7 +1,7 @@
 import {useQueries, UseQueryResult} from "react-query";
 import {getMessageRequest} from "../../services/backendAPI";
 import Message from "./Message";
-import {ReactFragment, useContext} from "react";
+import {useContext} from "react";
 import {ChatContext} from "./Chat";
 import {Signal} from "@preact/signals-core";
 import {MessageAny, MessageCreate, MessageRead} from "../../types/dataTypes";
@@ -13,7 +13,7 @@ function useMessageList(messages: MessageAny[]): UseQueryResult<MessageCreate>[]
         return {
             queryKey: ['chats', chat?.id, 'messages', index],
             queryFn: async () => {
-                if (message.hasOwnProperty('content') || !message.hasOwnProperty('id')) {
+                if ('content' in message || !('id' in message)) {
                     return message as MessageCreate;
                 }
                 return await getMessageRequest((message as MessageRead).id);
@@ -24,9 +24,10 @@ function useMessageList(messages: MessageAny[]): UseQueryResult<MessageCreate>[]
 
 
 export function MessageList(
-    { messages }: { messages: (MessageAny | Signal<MessageCreate>)[] }
+    { messages}: { messages: (MessageAny | Signal<MessageCreate>)[] }
 ) {
     const staticMessages = messages.filter(message => !(message instanceof Signal)) as MessageAny[];
+    // Dynamic messages are rendered separately because they should not be cached by useQueries
     const dynamicMessages = messages.filter(message => message instanceof Signal) as Signal<MessageCreate>[];
     const messagesQueries = useMessageList(staticMessages);
     return (
@@ -34,16 +35,14 @@ export function MessageList(
         {
             messagesQueries.map((query, index) => {
                 return query.isLoading ? "Message is loading..." :
-                query.isError ? "An error occurred while loading a message" :
-                query.isSuccess && query.data !== undefined && query.data.content !== undefined ?
-                <Message key={index} author={query.data.author} content={query.data.content}/> : null
+                    query.isError ? "An error occurred while loading a message" :
+                    query.isSuccess && query.data !== undefined && query.data.content !== undefined ?
+                    <Message key={index} message={query.data}/> : null
             })
         }
         {
             dynamicMessages.map((message, index) => {
-                return <Message key={messagesQueries.length + index}
-                                author={message.value.author}
-                                content={message.value.content} />
+                return <Message key={messagesQueries.length + index} message={message} />
             })
         }
         </>

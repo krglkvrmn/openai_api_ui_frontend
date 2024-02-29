@@ -1,26 +1,24 @@
 import {FormEvent, useState} from "react";
-import {UserErrors} from "../types/types";
+import {UserErrors, ValidatorType} from "../types/types";
+
+type FormSubmitHandler = (formFata: Record<string, string>) => void;
+
 
 type TuseFormReturn = [
     UserErrors,
-    (event: FormEvent<HTMLFormElement>, submitHandler: (formFata: any) => void) => void
+    (event: FormEvent<HTMLFormElement>, submitHandler: FormSubmitHandler) => void
 ]
-
-export type ValidatorType = (formData: FormData) => {
-    valid: boolean,
-    errors: UserErrors
-}
 
 type ValidatedFormType = {
     valid: boolean,
-    data?: any,
+    data?: Record<string, string>,
     errors: UserErrors
 }
 
 export function useForm(validators: ValidatorType[]): TuseFormReturn {
     const [validationErrors, setValidationErrors] = useState<UserErrors>([]);
 
-    function validateForm(formData: FormData) {
+    function validateForm(formData: FormData): ValidatedFormType {
         let validatedForm: ValidatedFormType = {valid: true, errors: []};
 
         let validationResults;
@@ -34,13 +32,17 @@ export function useForm(validators: ValidatorType[]): TuseFormReturn {
         if (validatedForm.valid) {
             validatedForm.data = {};
             formData.forEach((value, key) => {
-                validatedForm.data[key] = value;
+                if (typeof value === 'string') {
+                    validatedForm.data![key] = value;
+                } else {
+                    throw new Error(`Invalid value type for form field ${key}: ${typeof value}`)
+                }
             });
         }
         return validatedForm;
     }
 
-    function onFormSubmit(event: FormEvent<HTMLFormElement>, submitHandler: (formData: any) => void): void {
+    function onFormSubmit(event: FormEvent<HTMLFormElement>, submitHandler: FormSubmitHandler): void {
         event.preventDefault();
         if (event.target === null) {
             return;
@@ -49,7 +51,7 @@ export function useForm(validators: ValidatorType[]): TuseFormReturn {
         const formData = new FormData(form);
         const {valid, data, errors} = validateForm(formData);
         setValidationErrors(errors);
-        if (valid) {
+        if (valid && data !== undefined) {
             submitHandler(data)
         }
     }

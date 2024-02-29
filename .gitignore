@@ -1,28 +1,79 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+# Node modules and build output
+/node_modules/
+/dist/
+/build/
 
-# dependencies
-/node_modules
-/.pnp
-.pnp.js
-
-# testing
-/coverage
-
-# production
-/build
-
-# misc
-.DS_Store
+# Environment variables
+.env
 .env.local
-.env.development.local
-.env.test.local
-.env.production.local
+.env.*.local
+# Consider including an .env.example for sharing essential configuration without secrets
 
+# TypeScript cache
+/node_modules/.vite/
+/.tsbuildinfo
+
+# IDE - PyCharm specific
+.idea/
+*.iml
+# Various IDEs
+.vscode/
+*.sublime-workspace
+*.sublime-project
+
+# Operating System files
+.DS_Store
+Thumbs.db
+
+# Logs
+logs
+*.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-.env
+# Temporary files
+tmp
+/temp
 
-# IDE
-.vscode
+# Coverage directory used by tools like Istanbul
+/coverage
+
+# Dependency directories
+jspm_packages/
+bower_components/
+
+# Output of 'npm pack'
+*.tgz
+
+# Yarn Integrity file
+.yarn-integrity
+
+# dotenv environment variables file
+.env.test
+
+# parcel-bundler cache (https://parceljs.org/)
+.cache
+.parcel-cache
+
+# Next.js build output
+.out
+.next
+
+# Nuxt.js build output
+.nuxt
+
+# Rollup build output
+/build/
+/rollup.cache/
+
+# Storybook build outputs
+/storybook-static
+/.storybook-out
+
+# Jest test coverage
+/coverage/
+
+# End-to-end test outputs
+/cypress/
+/reports/

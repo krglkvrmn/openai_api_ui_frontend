@@ -1,32 +1,45 @@
 import { queryClient } from "../App";
+import {QueryKey} from "react-query";
 
+type StateType<QS> = QS | undefined;
+type StateUpdaterType<QS, MD> = (mutateData: MD, prevState: StateType<QS>) => QS;
+type SideEffectsUpdaterType<MD, SS> = (mutateData: MD) => SS;
+type SideEffectsRecoverType<SS> = (sideEffectsPrevState: StateType<SS>) => void;
+
+type OptimisticQueryUpdateConstructorArgs<QS, SS, MD> = {
+    queryKey?: QueryKey;
+    stateUpdate?: StateUpdaterType<QS, MD>,
+    sideEffectsUpdate?: SideEffectsUpdaterType<MD, SS>
+    sideEffectsRecover?: SideEffectsRecoverType<SS>
+}
+
+type OnMutateReturn<QS, SS> = {previousQueryState: StateType<QS>, sideEffectsPrevState: StateType<SS>};
+type OptimisticUpdateHandlers<QS, SS, MD> = {
+    onMutate: (mutateData: MD) => Promise<OnMutateReturn<QS, SS>>,
+    onError: (context?: OnMutateReturn<QS, SS>) => Promise<void>,
+    onSettled: () => Promise<void>
+}
 
 export function optimisticQueryUpdateConstructor<QS, SS, MD>(
-    { queryKey, stateUpdate, sideEffectsUpdate, sideEffectsRecover }: {
-        queryKey?: string | (string | number | null)[];
-        stateUpdate?: (mutateData: MD, prevState: QS | undefined) => QS;
-        sideEffectsUpdate?: (mutateData: MD) => SS;
-        sideEffectsRecover?: (sideEffectsPrevState: SS | undefined) => void;
-
-    }) {
+    { queryKey, stateUpdate, sideEffectsUpdate, sideEffectsRecover }: OptimisticQueryUpdateConstructorArgs<QS, SS, MD>
+): OptimisticUpdateHandlers<QS, SS, MD> {
     const updateQuery = queryKey !== undefined && stateUpdate !== undefined;
     return {
-        onMutate: async (mutateData: MD): Promise<{ previousQueryState?: QS; sideEffectsPrevState?: SS; }> => {
+        onMutate: async (mutateData: MD): Promise<OnMutateReturn<QS, SS>> => {
             const sideEffectsPrevState = sideEffectsUpdate ? sideEffectsUpdate(mutateData) : undefined;
-            let previousQueryState: QS | undefined = undefined;
+            let previousQueryState: StateType<QS> = undefined;
             if (updateQuery) {
                 await queryClient.cancelQueries(queryKey, { exact: true });
                 previousQueryState = queryClient.getQueryData(queryKey, { exact: true }) as QS;
-                queryClient.setQueryData(queryKey, (oldState: QS | undefined) => stateUpdate(mutateData, oldState));
+                queryClient.setQueryData(queryKey, (oldState: StateType<QS>) => stateUpdate(mutateData, oldState));
             }
             return { previousQueryState, sideEffectsPrevState };
         },
-        onError: async (error: unknown, mutateData: MD, context?: { previousQueryState?: QS; sideEffectsPrevState?: SS }) => {
+        onError: async (context?: OnMutateReturn<QS, SS>): Promise<void> => {
             updateQuery && queryClient.setQueryData(queryKey, context?.previousQueryState);
             sideEffectsRecover && sideEffectsRecover(context?.sideEffectsPrevState);
         },
-        onSettled: async () => {
-            console.log('Invalidated', queryKey);
+        onSettled: async (): Promise<void> => {
             updateQuery && await queryClient.invalidateQueries(queryKey);
         }
     };

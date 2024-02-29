@@ -50,7 +50,7 @@ function assembleChat(chat: ChatAny): ChatFullStream {
     return {...chat, messages: messages.length === 0 ? chat.messages as MessageCreate[] : messages};
 }
 
-export function createDefaultChat(): ChatDefault {
+function createDefaultChat(): ChatDefault {
     return {
         id: null,
         model: "gpt-3.5-turbo",
@@ -204,11 +204,12 @@ function useChat(chatId: ChatIdType): TuseChatReturn {
             const finalMessage = await streamMessage(completeChat);
             const savedMessage = await addMessage({
                 chatId: chat.id, author: finalMessage.author, text: finalMessage.content
-            }); 
+            });
             queryClient.setQueryData(['chats', chat.id], {
                 ...completeChat, messages: [...completeChat.messages, savedMessage]
             });
-        } catch {} finally {
+            console.log(queryClient.getQueryData(['chats', chat.id], {exact: true}));
+        } catch { /* empty */ } finally {
             reset && resetStreamingMessage();
             await queryClient.invalidateQueries(['chats', chat.id], { exact: true });
         }
@@ -248,7 +249,6 @@ export default function Chat(
     const chatId = parseChatId(queryParams.chatId);
     const { data, streamingMessage, streamingState, isChatLoading, isChatError, dispatchers } = useChat(chatId);
     const { switchModel, addMessage, generateResponse, abortGeneration } = dispatchers;
-
     const messages: (MessageAny | Signal<MessageCreate>)[] = [...data.messages];
     if (!['ready', 'abort'].includes(streamingState.value.status)) {
         messages.push(streamingMessage);

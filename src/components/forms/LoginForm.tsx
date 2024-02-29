@@ -1,8 +1,8 @@
 import { FormEvent } from "react";
-import { ValidatorType, useForm } from "../../hooks/useForm";
+import { useForm } from "../../hooks/useForm";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/contextHooks";
-import {UserErrors} from "../../types/types";
+import {UserErrors, ValidatorType} from "../../types/types";
 
 
 type TuseLoginFormReturn = {
@@ -13,15 +13,15 @@ type TuseLoginFormReturn = {
 
 const validators: ValidatorType[] = [];
 
-export function useLoginForm(): TuseLoginFormReturn {
+function useLoginForm(): TuseLoginFormReturn {
     const { authDispatchers, logInError } = useAuth();
     const { logIn } = authDispatchers;
     const [validationErrors, onFormSubmit] = useForm(validators);
     const navigate = useNavigate();
 
-    function submitHandler(formData: any) {
+    function submitHandler(formData: Record<string, string>): void {
         const data = {username: formData.username, password: formData.password};
-        logIn(data).then(response => {
+        logIn(data).then(() => {
             navigate('/');
         }).catch(error => console.error('Error while logging in:', error));
     }

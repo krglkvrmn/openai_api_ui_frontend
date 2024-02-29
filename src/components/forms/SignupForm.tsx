@@ -1,8 +1,8 @@
 import { FormEvent } from "react";
-import { ValidatorType, useForm } from "../../hooks/useForm";
+import { useForm } from "../../hooks/useForm";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/contextHooks";
-import {UserErrors} from "../../types/types";
+import {UserErrors, ValidatorType} from "../../types/types";
 
 type TuseSignupFormReturn = {
     validationErrors: UserErrors,
@@ -25,16 +25,15 @@ const validators: ValidatorType[] = [
 
 ];
 
-export function useSignupForm(): TuseSignupFormReturn {
+function useSignupForm(): TuseSignupFormReturn {
     const { authDispatchers, signUpError } = useAuth();
     const { signUp } = authDispatchers;
     const [validationErrors, onFormSubmit] = useForm(validators);
     const navigate = useNavigate();
 
-    function submitHandler(formData: any): void {
+    function submitHandler(formData: Record<string, string>): void {
         const data = {email: formData.username, password: formData.password};
-        signUp(data).then(response => {
-            console.log('Successfully signed up:', response.email);
+        signUp(data).then(() => {
             navigate('/login');
         }).catch(error => console.error('Error while signing up:', error));
     }

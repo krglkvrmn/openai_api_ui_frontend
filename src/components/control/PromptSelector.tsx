@@ -18,7 +18,7 @@ type PromptSelectionRecordProps = {
 }
 
 type TuseSystemPromptsLibrary = {
-    systemPromptsLibraryQuery: UseQueryResult<SystemPromptRead[], unknown>,
+    systemPromptsLibraryQuery: UseQueryResult<SystemPromptRead[]>,
     deleteSystemPrompt: (promptId: number) => void
 }
 
