@@ -1,5 +1,5 @@
-import { queryClient } from "../App";
 import {QueryKey} from "react-query";
+import {queryClient} from "../queryClient.ts";
 
 type StateType<QS> = QS | undefined;
 type StateUpdaterType<QS, MD> = (mutateData: MD, prevState: StateType<QS>) => QS;

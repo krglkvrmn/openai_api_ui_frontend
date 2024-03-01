@@ -12,9 +12,9 @@ import {
     SignupFormDataType,
     SignupResponse
 } from "../services/auth";
-import {queryClient} from "../App";
 import {parseLogInError, parseLogOutError, parseSignUpError} from "../utils/errorsParsers";
 import {useLocation} from "react-router-dom";
+import {queryClient} from "../queryClient.ts";
 
 
 type AuthProviderUserSchema = {

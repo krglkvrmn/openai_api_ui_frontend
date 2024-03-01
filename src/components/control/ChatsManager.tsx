@@ -4,9 +4,10 @@ import {resetSelections, selectElementContent} from "../../utils/elements";
 import {useMutation, useQuery} from "react-query";
 import {deleteChatRequest, getAllChatsRequest, updateChatRequest} from "../../services/backendAPI";
 import {optimisticQueryUpdateConstructor} from "../../utils/optimisticUpdates";
-import {useNavigate} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import {useActiveChatIndex} from "../../hooks/contextHooks";
 import {ChatInfoRead} from "../../types/dataTypes";
+import {parseChatId} from "../../utils/stringparsers.ts";
 
 
 type ChatHistoryRecordPropsType = {
@@ -36,8 +37,8 @@ export type TuseChatsReturn = {
 
 
 function useChats(): TuseChatsReturn {
+    const queryParams = useParams();
     const navigate = useNavigate();
-    const [activeChatIndex, setActiveChatIndex] = useActiveChatIndex();
     const { data, isSuccess, isLoading, isError } = useQuery({
         queryKey: ['chats'],
         queryFn: async () => {
@@ -45,6 +46,12 @@ function useChats(): TuseChatsReturn {
         },
         placeholderData: []
     });
+    const [defaultActiveChatIndex, setActiveChatIndex] = useActiveChatIndex();
+    let activeChatIndex: number | null = defaultActiveChatIndex;
+    if (data !== undefined && defaultActiveChatIndex === null) {
+        activeChatIndex = data.findIndex((chat) => chat.id === parseChatId(queryParams['*']));
+        activeChatIndex = activeChatIndex === -1 ? null : activeChatIndex;
+    }
 
     async function deleteChat(chatIndex: number): Promise<void> {
         if (isSuccess) {
@@ -80,7 +87,7 @@ function useChats(): TuseChatsReturn {
             if (activeChatIndex === chatIndex) {
                 activateChat(null);
             } else if (activeChatIndex !== null && chatIndex < activeChatIndex) {
-                activateChat(prevActiveChatIndex === null ? null : prevActiveChatIndex - 1);
+                setActiveChatIndex(prevActiveChatIndex === null ? null : prevActiveChatIndex - 1);
             }
             return prevActiveChatIndex;
 

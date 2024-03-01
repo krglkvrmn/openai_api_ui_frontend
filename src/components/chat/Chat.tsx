@@ -8,7 +8,6 @@ import {
 } from "../../services/backendAPI";
 import ModelSelector from "../control/ModelSelector";
 import {optimisticQueryUpdateConstructor} from "../../utils/optimisticUpdates";
-import {queryClient} from "../../App";
 import {MessageList} from "./MessageList";
 import {SystemPrompt, UserPrompt} from "../control/Prompt";
 import PromptFooter from "../layout/PromptFooter";
@@ -26,6 +25,7 @@ import {
     MessageAuthor, MessageCreate,
     MessageFullRead
 } from "../../types/dataTypes";
+import {queryClient} from "../../queryClient.ts";
 
 
 type TuseChatReturn = {
@@ -218,7 +218,6 @@ function useChat(chatId: ChatIdType): TuseChatReturn {
             });
         } catch { /* empty */ } finally {
             reset && resetStreamingMessage();
-            await queryClient.invalidateQueries(['chats', chat.id], { exact: true });
         }
     }
 
