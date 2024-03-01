@@ -101,7 +101,7 @@ export async function saveAPIKeyRequest(token: string): Promise<unknown> {
 
 export async function getAPIKeysRequest(): Promise<APIKeyRead[]> {
     const requestGenerator = () =>
-        axios.get('http://localhost:8000/api/v1/keys/list', { withCredentials: true });
+        axios.get(BACKEND_ORIGIN + '/api/v1/keys/list', { withCredentials: true });
     const response = await refreshRetryOnUnauthorized(requestGenerator);
     return response.data;    
 }

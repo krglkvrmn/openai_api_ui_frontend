@@ -76,7 +76,9 @@ export function useStreamingMessage(identifier: number | null): TuseModelStreami
     const streamingState = useOneTimeMemo(() => signal(streamingStateDefault), [identifier]);
 
     async function streamMessage(chat: ChatFullStream): Promise<MessageCreate> {
-        const { location } = await requestStreamingCompletion({chat, token: apiKey.value, debug: true });
+        const { location } = await requestStreamingCompletion(
+            {chat, token: apiKey.value, debug: import.meta.env.VITE_CHAT_DEBUG_MODE_ENABLED }
+        );
         return await new Promise<MessageCreate>((resolve, reject) => {
             const eventSource = new EventSource(location, { withCredentials: true });
             streamingState.value = {status: "generating"};
