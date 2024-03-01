@@ -170,16 +170,20 @@ function useChat(chatId: ChatIdType): TuseChatReturn {
         mutationFn: createChat,
         onMutate: createChatOptimisticConfig.onMutate,
         onError: createChatOptimisticConfig.onError,
-        onSuccess: async (resp: ChatFullRead | undefined): Promise<void> => {
+        onSuccess: async (resp: ChatFullRead | undefined, variables): Promise<void> => {
             if (resp !== undefined) {
-                queryClient.setQueryData(['chats', resp.id], resp);
+                queryClient.setQueryData(['chats', resp.id], {
+                    ...resp, messages: [{author: resp.messages[0].author, content: variables.text}]
+                });
             }
         },
-        onSettled: async (resp: ChatFullRead | undefined): Promise<void> => {
+        onSettled: async (resp: ChatFullRead | undefined, _error, variables): Promise<void> => {
             if (resp !== undefined) {
                 switch (resp.messages[0].author) {
                     case 'user':
-                        await stream(resp, false); break;
+                        await stream({
+                            ...resp, messages: [{author: resp.messages[0].author, content: variables.text}]
+                        }, false); break;
                     case 'system':
                         await queryClient.invalidateQueries(['prompts'], {exact: true}); break;
                 }
@@ -202,6 +206,10 @@ function useChat(chatId: ChatIdType): TuseChatReturn {
         try {
             const completeChat = assembleChat(chat);
             const finalMessage = await streamMessage(completeChat);
+            if (finalMessage === undefined) {
+                reset = false;
+                return;
+            }
             const savedMessage = await addMessage({
                 chatId: chat.id, author: finalMessage.author, text: finalMessage.content
             });
@@ -249,30 +257,34 @@ export default function Chat(
     const { data, streamingMessage, streamingState, isChatLoading, isChatError, dispatchers } = useChat(chatId);
     const { switchModel, addMessage, generateResponse, abortGeneration } = dispatchers;
     const messages: (MessageAny | Signal<MessageCreate>)[] = [...data.messages];
-    if (!['ready', 'abort'].includes(streamingState.value.status)) {
+    if (!['ready', 'abort', 'error'].includes(streamingState.value.status)) {
         messages.push(streamingMessage);
     }
 
     return (
         <div id="chat-container">
+            <p>{streamingState.value.error}</p>
             <ChatContext.Provider value={data}>
                 {
-                    data.messages.length === 0 && 
+                    data.messages.length === 0 &&
                     <SystemPrompt promptValue={systemPromptParams?.systemPromptValue}
-                                promptValueChangeHandler={systemPromptParams?.setSystemPromptValue}
-                                submitHandler={prompt => {
-                                    addMessage({chatId: data.id, author: 'system', text: prompt});
-                                    systemPromptParams?.setSystemPromptValue('');
-                                }}/>
+                                  promptValueChangeHandler={systemPromptParams?.setSystemPromptValue}
+                                  submitHandler={prompt => {
+                                      addMessage({chatId: data.id, author: 'system', text: prompt});
+                                      systemPromptParams?.setSystemPromptValue('');
+                                  }}/>
                 }
                 {
                     isChatLoading ? "Loading chat contents..." :
-                    isChatError ? "Error occurred while loading chat contents" :
-                        <>
-                            <ModelSelector activeModel={data.model}
-                                           modelSwitchHandler={(newModel: string) => switchModel({chatId: data.id, newModel})}/>
-                            <MessageList messages={messages} />
-                        </>
+                        isChatError ? "Error occurred while loading chat contents" :
+                            <>
+                                <ModelSelector activeModel={data.model}
+                                               modelSwitchHandler={(newModel: string) => switchModel({
+                                                   chatId: data.id,
+                                                   newModel
+                                               })}/>
+                                <MessageList messages={messages}/>
+                            </>
                 }
                 <PromptFooter>
                     <UserPrompt submitHandler={prompt => addMessage({chatId: data?.id, author: 'user', text: prompt})}/>

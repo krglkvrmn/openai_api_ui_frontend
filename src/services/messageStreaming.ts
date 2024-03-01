@@ -1,6 +1,6 @@
 import {Signal, signal} from "@preact/signals-react";
 import {useAPIKey} from "../hooks/contextHooks";
-import axios from "axios";
+import axios, {isAxiosError} from "axios";
 import {UUID} from "crypto";
 import {refreshRetryOnUnauthorized} from "./auth";
 import {useOneTimeMemo} from "../hooks/useOneTimeMemo";
@@ -20,8 +20,9 @@ type RequestStreamingCompletionDataType = {
 }
 
 type RequestStreamingCompletionReturnType = {
-    location: string,
-    data: RequestStreamingCompletionDataType 
+    location?: string,
+    data?: RequestStreamingCompletionDataType,
+    error?: string
 }
 
 type CompletionEventDeltaType = {
@@ -29,14 +30,15 @@ type CompletionEventDeltaType = {
     content?: string
 }
 
-export type StreamingStatusType = "ready" | "generating" | "complete" | "abort";
+export type StreamingStatusType = "ready" | "generating" | "complete" | "abort" | "error";
 export type StreamingStateType = {
-    status: StreamingStatusType
+    status: StreamingStatusType,
+    error?: string
 }
 
 type TuseModelStreamingMessageReturn = {
     streamingMessage: Signal<MessageCreate>,
-    streamMessage: (chat: ChatFullStream) => Promise<MessageCreate>,
+    streamMessage: (chat: ChatFullStream) => Promise<MessageCreate | undefined>,
     streamingState: Signal<StreamingStateType>,
     reset: () => void,
     abort: () => void
@@ -62,8 +64,15 @@ async function requestStreamingCompletion(
             requestBody,
             { withCredentials: true, headers: {'Content-Type': 'application/json', ...additionalHeaders}}
         );
-    const response = await refreshRetryOnUnauthorized(requestGenerator);
-    return { location: response.headers['location'], data: response.data };
+    try {
+        const response = await refreshRetryOnUnauthorized(requestGenerator);
+        return { location: response.headers['location'], data: response.data };
+    } catch (error) {
+        if (isAxiosError(error) && error.response?.status === 400 && error.response?.data.detail === 'API key missing') {
+           return { error: 'Set an API key to make requests!' };
+        }
+        throw error;
+    }
 }
 
 
@@ -75,10 +84,14 @@ export function useStreamingMessage(identifier: number | null): TuseModelStreami
     const streamingMessage = useOneTimeMemo(() => signal(streamingMessageDefault), [identifier]);
     const streamingState = useOneTimeMemo(() => signal(streamingStateDefault), [identifier]);
 
-    async function streamMessage(chat: ChatFullStream): Promise<MessageCreate> {
-        const { location } = await requestStreamingCompletion(
+    async function streamMessage(chat: ChatFullStream): Promise<MessageCreate | undefined> {
+        const { location, error} = await requestStreamingCompletion(
             {chat, token: apiKey.value, debug: import.meta.env.VITE_CHAT_DEBUG_MODE_ENABLED }
         );
+        if (location === undefined || error !== undefined) {
+            streamingState.value = {status: "error", error: error};
+            return;
+        }
         return await new Promise<MessageCreate>((resolve, reject) => {
             const eventSource = new EventSource(location, { withCredentials: true });
             streamingState.value = {status: "generating"};
