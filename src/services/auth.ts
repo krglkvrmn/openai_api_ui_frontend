@@ -31,6 +31,11 @@ export type SignupResponse = UserSchema & ResponseDetails;
 export type LoginResponse = ResponseDetails;
 export type LogoutResponse = ResponseDetails;
 
+export type OIDCRequestAuthorizationResponse = {
+    authorization_url: string
+}
+export type OIDCProviderType = 'google' | 'github';
+
 
 export async function signup(formData: SignupFormDataType): Promise<SignupResponse> {
     const response = await axios.post(BACKEND_ORIGIN + '/auth/register', formData, {
@@ -63,6 +68,14 @@ export async function refresh(): Promise<undefined> {
 export async function getCurrentUser(): Promise<UserSchema> {
     const response = await axios.get(BACKEND_ORIGIN + '/users/me', {withCredentials: true});
     return {...response.data, username: response.data.email.split('@')[0]};
+}
+
+export async function getOIDCAuthorizationURL(oidcProvider: OIDCProviderType): Promise<string> {
+    const response: AxiosResponse<OIDCRequestAuthorizationResponse> = await axios.get(
+        BACKEND_ORIGIN + `/auth/${oidcProvider}/authorize`,
+        { withCredentials: true }
+    );
+    return response.data.authorization_url;
 }
 
 export async function refreshRetryOnUnauthorized(

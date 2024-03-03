@@ -13,6 +13,7 @@ type TuseLoginFormReturn = {
 
 const validators: ValidatorType[] = [];
 
+
 function useLoginForm(): TuseLoginFormReturn {
     const { authDispatchers, logInError } = useAuth();
     const { logIn } = authDispatchers;
@@ -51,11 +52,11 @@ export function LoginForm() {
                        type="password"
                        placeholder="Enter your password"
                        autoComplete="current-password" required/>
-                <br />
+                <br/>
                 <button type="submit">Log In</button>
             </form>
             {logInError}
         </div>
-        
+
     );
 }

@@ -2,10 +2,12 @@ import React, {useState} from "react";
 import {useMutation, useQuery} from 'react-query';
 import {
     getCurrentUser,
+    getOIDCAuthorizationURL,
     login,
     LoginFormDataType,
     LoginResponse,
     logout,
+    OIDCProviderType,
     refresh,
     ResponseDetails,
     signup,
@@ -38,6 +40,7 @@ type AuthContextValue = {
         logIn: (formData: LoginFormDataType) => Promise<LoginResponse>,
         logOut: () => Promise<ResponseDetails>,
         signUp: (formData: SignupFormDataType) => Promise<SignupResponse>,
+        oidcLogin: (oidcProvider: OIDCProviderType) => Promise<void>
     }
 } | null;
 
@@ -62,13 +65,13 @@ export function AuthProvider({ children }: {children: React.ReactElement}) {
 
     const logInMutation = useMutation({
         mutationFn: login,
-        onSuccess: () => queryClient.invalidateQueries('authData'),
+        onSuccess: async () => await queryClient.invalidateQueries('authData'),
         onError: error => setLogInError(parseLogInError(error))
     });
 
     const logOutMutation = useMutation({
         mutationFn: logout,
-        onSuccess: () => queryClient.invalidateQueries('authData'),
+        onSuccess: async () => await queryClient.invalidateQueries('authData'),
         onError: error => setLogOutError(parseLogOutError(error))
     });
 
@@ -80,7 +83,16 @@ export function AuthProvider({ children }: {children: React.ReactElement}) {
     const refreshMutation = useMutation({
         mutationFn: refresh,
         onError: () => setIsAuthenticated(false),
-        onSuccess: () => queryClient.invalidateQueries('authData'),
+        onSuccess: async () => await queryClient.invalidateQueries('authData'),
+    });
+
+    async function oidcLogin(oidcProvider: OIDCProviderType): Promise<void> {
+        window.location.href = await getOIDCAuthorizationURL(oidcProvider);
+    }
+
+    const oidcLoginMutation = useMutation({
+        mutationFn: oidcLogin,
+        onSuccess: async () => await queryClient.invalidateQueries('authData')
     });
 
     return (
@@ -95,7 +107,8 @@ export function AuthProvider({ children }: {children: React.ReactElement}) {
             authDispatchers: {
                 logIn: logInMutation.mutateAsync,
                 logOut: logOutMutation.mutateAsync,
-                signUp: signUpMutation.mutateAsync
+                signUp: signUpMutation.mutateAsync,
+                oidcLogin: oidcLoginMutation.mutateAsync
             }
         }}>
             {children}
