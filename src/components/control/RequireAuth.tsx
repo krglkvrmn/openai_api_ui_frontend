@@ -1,21 +1,23 @@
 import { Navigate, Outlet } from "react-router-dom";
 import { useAuth } from "../../hooks/contextHooks";
+import React from "react";
 
 
-export function RequireAuth() {
+export function RequireAuth({children} : {children?: React.ReactNode}) {
     const { isAuthenticated, authState } = useAuth();
-
+    const renderedComponent = children || <Outlet />;
     return (
         authState.loginVerified ?
-            (isAuthenticated ? <Outlet /> : <Navigate to="/login" />) : null
+            (isAuthenticated ? renderedComponent : <Navigate to="/login" />) : null
     );
 }
 
-export function RequireNoAuth() {
+export function RequireNoAuth({children} : {children?: React.ReactNode}) {
     const { isAuthenticated, authState } = useAuth();
+    const renderedComponent = children || <Outlet />;
 
     return (
         authState.loginVerified ?
-            (isAuthenticated && !authState.isRefreshing ? <Navigate to="/" /> : <Outlet />) : null
+            (isAuthenticated && !authState.isRefreshing ? <Navigate to="/" /> : renderedComponent) : null
     );
 }

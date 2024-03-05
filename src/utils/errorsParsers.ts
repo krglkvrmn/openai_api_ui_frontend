@@ -44,3 +44,12 @@ export function parseSignUpError(signUpError: AxiosError<ResponseDetails> | unkn
     }
     return signUpError ? "Unknown error" : null;
 }
+
+export function parseVerificationError(verificationError: AxiosError<ResponseDetails> | unknown): string | null {
+    if (axios.isAxiosError(verificationError)) {
+        if (verificationError.response?.status === 400 && verificationError.response?.data.detail === "VERIFY_USER_BAD_TOKEN") {
+            return "Invalid token";
+        }
+    }
+    return verificationError ? "Unknown error" : null;
+}

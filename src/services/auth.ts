@@ -30,6 +30,11 @@ export type ResponseDetails = {
 export type SignupResponse = UserSchema & ResponseDetails;
 export type LoginResponse = ResponseDetails;
 export type LogoutResponse = ResponseDetails;
+export type VerifyResponse = {
+    email: string,
+    is_guest: boolean,
+    is_verified: boolean
+} & ResponseDetails;
 
 export type OIDCRequestAuthorizationResponse = {
     authorization_url: string
@@ -76,6 +81,19 @@ export async function getOIDCAuthorizationURL(oidcProvider: OIDCProviderType): P
         { withCredentials: true }
     );
     return response.data.authorization_url;
+}
+
+export async function requestEmailVerification(email: string): Promise<void> {
+    const requestGenerator = () =>
+        axios.post(BACKEND_ORIGIN + '/auth/request-verify-token', { email }, { withCredentials: true });
+    await refreshRetryOnUnauthorized(requestGenerator);
+}
+
+export async function verifyEmail(token: string): Promise<VerifyResponse> {
+    const requestGenerator = () =>
+        axios.post(BACKEND_ORIGIN + '/auth/verify', { token }, { withCredentials: true });
+    const response = await refreshRetryOnUnauthorized(requestGenerator);
+    return response.data;
 }
 
 export async function refreshRetryOnUnauthorized(

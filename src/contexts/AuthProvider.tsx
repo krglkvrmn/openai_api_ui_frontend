@@ -8,13 +8,13 @@ import {
     LoginResponse,
     logout,
     OIDCProviderType,
-    refresh,
+    refresh, requestEmailVerification,
     ResponseDetails,
     signup,
     SignupFormDataType,
-    SignupResponse
+    SignupResponse, verifyEmail, VerifyResponse
 } from "../services/auth";
-import {parseLogInError, parseLogOutError, parseSignUpError} from "../utils/errorsParsers";
+import {parseLogInError, parseLogOutError, parseSignUpError, parseVerificationError} from "../utils/errorsParsers";
 import {useLocation} from "react-router-dom";
 import {queryClient} from "../queryClient.ts";
 
@@ -22,6 +22,7 @@ import {queryClient} from "../queryClient.ts";
 type AuthProviderUserSchema = {
     email: string,
     username: string,
+    is_verified?: boolean
 };
 
 type AuthStateType = {
@@ -36,11 +37,14 @@ type AuthContextValue = {
     logInError: string | null,
     logOutError: string | null,
     signUpError: string | null,
+    verificationError: string | null,
     authDispatchers: {
         logIn: (formData: LoginFormDataType) => Promise<LoginResponse>,
         logOut: () => Promise<ResponseDetails>,
         signUp: (formData: SignupFormDataType) => Promise<SignupResponse>,
-        oidcLogin: (oidcProvider: OIDCProviderType) => Promise<void>
+        oidcLogin: (oidcProvider: OIDCProviderType) => Promise<void>,
+        requestVerification: () => Promise<void>,
+        verify: (token: string) => Promise<VerifyResponse>
     }
 } | null;
 
@@ -53,6 +57,7 @@ export function AuthProvider({ children }: {children: React.ReactElement}) {
     const [logInError, setLogInError] = useState<string | null>(null);
     const [logOutError, setLogOutError] = useState<string | null>(null);
     const [signUpError, setSignUpError] = useState<string | null>(null);
+    const [verificationError, setVerificationError] = useState<string | null>(null);
     const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
     const { data, isFetched } = useQuery({
         queryKey: ["authData"],
@@ -77,7 +82,7 @@ export function AuthProvider({ children }: {children: React.ReactElement}) {
 
     const signUpMutation = useMutation({
         mutationFn: signup,
-        onError: error => setSignUpError(parseSignUpError(error))
+        onError: error => setSignUpError(parseSignUpError(error)),
     });
 
     const refreshMutation = useMutation({
@@ -95,6 +100,22 @@ export function AuthProvider({ children }: {children: React.ReactElement}) {
         onSuccess: async () => await queryClient.invalidateQueries('authData')
     });
 
+    async function requestVerification(): Promise<void> {
+        const email = data?.email;
+        if (email === undefined) {
+            setVerificationError('You are not logged in!');
+        } else {
+            await requestEmailVerification(email);
+        }
+    }
+
+    const verificationMutation = useMutation({
+        mutationFn: verifyEmail,
+        onError: error => setVerificationError(parseVerificationError(error)),
+        onSettled: async () => await queryClient.invalidateQueries('authData')
+    });
+
+
     return (
         <AuthContext.Provider value={{
             isAuthenticated,
@@ -103,12 +124,14 @@ export function AuthProvider({ children }: {children: React.ReactElement}) {
                 isRefreshing: refreshMutation.isLoading,
                 user: data 
             },
-            logInError, logOutError, signUpError,
+            logInError, logOutError, signUpError, verificationError,
             authDispatchers: {
                 logIn: logInMutation.mutateAsync,
                 logOut: logOutMutation.mutateAsync,
                 signUp: signUpMutation.mutateAsync,
-                oidcLogin: oidcLoginMutation.mutateAsync
+                oidcLogin: oidcLoginMutation.mutateAsync,
+                requestVerification: requestVerification,
+                verify: verificationMutation.mutateAsync
             }
         }}>
             {children}

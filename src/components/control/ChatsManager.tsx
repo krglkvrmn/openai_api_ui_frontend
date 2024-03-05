@@ -49,7 +49,7 @@ function useChats(): TuseChatsReturn {
     const [defaultActiveChatIndex, setActiveChatIndex] = useActiveChatIndex();
     let activeChatIndex: number | null = defaultActiveChatIndex;
     if (data !== undefined && defaultActiveChatIndex === null) {
-        activeChatIndex = data.findIndex((chat) => chat.id === parseChatId(queryParams['*']));
+        activeChatIndex = data.findIndex((chat) => chat.id === parseChatId(queryParams.chatId));
         activeChatIndex = activeChatIndex === -1 ? null : activeChatIndex;
     }
 
