@@ -3,3 +3,9 @@ export type ValidatorType = (formData: FormData) => {
     valid: boolean,
     errors: UserErrors
 }
+
+export type LocationStateType = {
+    redirectFrom?: string,
+    reason: string,
+    message: string
+}

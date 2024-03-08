@@ -12,6 +12,7 @@ import {ProfilePage} from './pages/ProfilePage/ProfilePage';
 import {queryClient} from "./queryClient.ts";
 import {RequireVerification} from "./components/control/RequireVerification.tsx";
 import {VerificationPage} from "./pages/VerificationPage/VerificationPage.tsx";
+import {ForgotPasswordPage} from "./pages/ForgotPasswordPage/ForgotPasswordPage.tsx";
 
 
 function App() {
@@ -32,6 +33,7 @@ function App() {
             <Route path="/" element={<RequireNoAuth />}>
               <Route path='/register' element={<RegisterPage />}/>
               <Route path='/login' element={<LoginPage />}/>
+              <Route path='/forgot-password' element={<ForgotPasswordPage />}/>
             </Route>
             <Route path='*' element={<Navigate to="/" />}/>
           </Routes>

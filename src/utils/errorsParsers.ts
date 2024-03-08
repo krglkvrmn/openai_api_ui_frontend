@@ -53,3 +53,12 @@ export function parseVerificationError(verificationError: AxiosError<ResponseDet
     }
     return verificationError ? "Unknown error" : null;
 }
+
+export function parsePasswordResetError(passwordResetError: AxiosError<ResponseDetails> | unknown): string | null {
+    if (axios.isAxiosError(passwordResetError)) {
+        if (passwordResetError.response?.status === 400 && passwordResetError.response?.data.detail === "RESET_PASSWORD_BAD_TOKEN") {
+            return "Invalid token";
+        }
+    }
+    return passwordResetError ? "Unknown error" : null;
+}

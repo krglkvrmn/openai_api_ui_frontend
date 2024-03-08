@@ -1,4 +1,3 @@
-import {FormEvent} from "react";
 import {useForm} from "../../hooks/useForm";
 import {saveAPIKeyRequest} from "../../services/backendAPI";
 import {useAPIKey} from "../../hooks/contextHooks";
@@ -16,20 +15,25 @@ const validators: ValidatorType[] = [
 
 export function APIKeyForm() {
     const setApiKey = useAPIKey()[1];
-    const [validationErrors, onFormSubmit] = useForm(validators);
+    const { validationErrors, onFormSubmit } = useForm({
+        validators,
+        submitHandler: async (formData: Record<string, string>): Promise<void> => {
+            try {
+                await saveAPIKeyRequest(formData.api_key);
+                await queryClient.invalidateQueries(['api_keys']);
+            } catch (error) {
+                console.error('Error while saving an API key:', error);
+                throw error;
+            }
+        },
+    });
 
-    function submitHandler(formData: Record<string, string>): void {
-        saveAPIKeyRequest(formData.api_key).then(() => {
-            queryClient.invalidateQueries(['apiKeys'], { exact: true }).then();
-        }).catch(() => console.error('Error while saving an API key'));
-    }
-    const onFormSubmitWithCallback = (event: FormEvent<HTMLFormElement>) => onFormSubmit(event, submitHandler);
     return (
         <>
             {validationErrors.map((error, index) => {
                 return <p key={index}>{error}</p>
             })}
-            <form onSubmit={onFormSubmitWithCallback}>
+            <form onSubmit={onFormSubmit}>
                 <input type="password" name="api_key" id="api-key-input" onChange={e => setApiKey(e.target.value)}/>
                 <button>Save</button>
             </form>

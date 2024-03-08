@@ -83,16 +83,30 @@ export async function getOIDCAuthorizationURL(oidcProvider: OIDCProviderType): P
     return response.data.authorization_url;
 }
 
-export async function requestEmailVerification(email: string): Promise<void> {
+export async function requestEmailVerification(email: string): Promise<ResponseDetails> {
     const requestGenerator = () =>
         axios.post(BACKEND_ORIGIN + '/auth/request-verify-token', { email }, { withCredentials: true });
-    await refreshRetryOnUnauthorized(requestGenerator);
+    return await refreshRetryOnUnauthorized(requestGenerator) as ResponseDetails;
 }
 
 export async function verifyEmail(token: string): Promise<VerifyResponse> {
     const requestGenerator = () =>
         axios.post(BACKEND_ORIGIN + '/auth/verify', { token }, { withCredentials: true });
     const response = await refreshRetryOnUnauthorized(requestGenerator);
+    return response.data;
+}
+
+export async function requestPasswordReset(email: string): Promise<ResponseDetails> {
+    const response = await axios.post(
+        BACKEND_ORIGIN + '/auth/forgot-password', { email }, { withCredentials: true }
+    );
+    return response.data;
+}
+
+export async function resetPassword({token, password}: {token: string, password: string}): Promise<ResponseDetails> {
+    const response = await axios.post(
+        BACKEND_ORIGIN + '/auth/reset-password', { token, password }, { withCredentials: true }
+    );
     return response.data;
 }
 

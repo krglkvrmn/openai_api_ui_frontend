@@ -3,6 +3,7 @@ import { useForm } from "../../hooks/useForm";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/contextHooks";
 import {UserErrors, ValidatorType} from "../../types/types";
+import {EmailInput, PasswordInput} from "./Inputs.tsx";
 
 
 type TuseLoginFormReturn = {
@@ -15,20 +16,24 @@ const validators: ValidatorType[] = [];
 
 
 function useLoginForm(): TuseLoginFormReturn {
+    const navigate = useNavigate();
     const { authDispatchers, logInError } = useAuth();
     const { logIn } = authDispatchers;
-    const [validationErrors, onFormSubmit] = useForm(validators);
-    const navigate = useNavigate();
+    const { validationErrors, onFormSubmit } = useForm({
+        validators,
+        submitHandler: async (formData: Record<string, string>): Promise<void> => {
+            const data = {username: formData.username, password: formData.password};
+            try {
+                await logIn(data);
+                navigate('/');
+            } catch (error) {
+                console.error('Error while logging in:', error);
+                throw error;
+            }
+        }
+    });
 
-    function submitHandler(formData: Record<string, string>): void {
-        const data = {username: formData.username, password: formData.password};
-        logIn(data).then(() => {
-            navigate('/');
-        }).catch(error => console.error('Error while logging in:', error));
-    }
-
-    const onFormSubmitWithCallback = (event: FormEvent<HTMLFormElement>) => onFormSubmit(event, submitHandler);
-    return { validationErrors, logInError, onFormSubmit: onFormSubmitWithCallback };
+    return { validationErrors, logInError, onFormSubmit };
 }
 
 export function LoginForm() {
@@ -40,18 +45,10 @@ export function LoginForm() {
             })}
             <form onSubmit={onFormSubmit}>
                 <label htmlFor="login-email-input">Email:</label>
-                <input id="login-email-input"
-                       name="username"
-                       type="email"
-                       placeholder="Enter your email"
-                       autoComplete="username" required/>
+                <EmailInput id="login-email-input" />
                 <br/>
                 <label htmlFor="login-password-input">Password:</label>
-                <input id="login-password-input"
-                       name="password"
-                       type="password"
-                       placeholder="Enter your password"
-                       autoComplete="current-password" required/>
+                <PasswordInput id="login-password-input" />
                 <br/>
                 <button type="submit">Log In</button>
             </form>

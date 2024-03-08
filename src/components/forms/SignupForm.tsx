@@ -3,6 +3,8 @@ import {useForm} from "../../hooks/useForm";
 import {useAuth} from "../../hooks/contextHooks";
 import {UserErrors, ValidatorType} from "../../types/types";
 import {useNavigate} from "react-router-dom";
+import {passwordsLengthValidator, passwordsMatchValidator} from "../../vallidation/formValidators.ts";
+import {EmailInput, NewPasswordInput, RepeatPasswordInput} from "./Inputs.tsx";
 
 type TuseSignupFormReturn = {
     validationErrors: UserErrors,
@@ -11,37 +13,30 @@ type TuseSignupFormReturn = {
 }
 
 const validators: ValidatorType[] = [
-    formData => {
-        return formData.get("password") !== formData.get("reppassword") ?
-            {valid: false, errors: ["Passwords do not match"]} :
-            {valid: true, errors: []}
-    },
-    formData => {
-        const password = formData.get("password") as string;
-        return password !== null && password.length < 8 ?
-            {valid: false, errors: ["Password must contain at least 8 symbols!"]} :
-            {valid: true, errors: []}
-    },
-
+    passwordsMatchValidator,
+    passwordsLengthValidator
 ];
 
 function useSignupForm(): TuseSignupFormReturn {
+    const navigate = useNavigate();
     const { authDispatchers, signUpError } = useAuth();
     const { logIn, signUp } = authDispatchers;
-    const [validationErrors, onFormSubmit] = useForm(validators);
-    const navigate = useNavigate();
+    const { validationErrors, onFormSubmit } = useForm({
+        validators,
+        submitHandler: async (formData: Record<string, string>): Promise<void> => {
+            const data = {email: formData.username, password: formData.password};
+            try {
+                await signUp(data);
+                await logIn({username: data.email, password: data.password});
+                navigate('/verification', {state: 'just_registered'})
+            } catch (error) {
+                console.error('Error while signing up:', error)
+                throw error;
+            }
+        }
+    });
 
-    function submitHandler(formData: Record<string, string>): void {
-        const data = {email: formData.username, password: formData.password};
-        signUp(data).then(() => {
-            logIn({username: data.email, password: data.password}).then(() => {
-                navigate('/verification', {state: 'just_registered'});
-            });
-        }).catch(error => console.error('Error while signing up:', error));
-    }
-
-    const onFormSubmitWithCallback = (event: FormEvent<HTMLFormElement>) => onFormSubmit(event, submitHandler);
-    return { validationErrors, signUpError, onFormSubmit: onFormSubmitWithCallback };
+    return { validationErrors, signUpError, onFormSubmit: onFormSubmit };
 }
 
 export function SignupForm() {
@@ -53,27 +48,15 @@ export function SignupForm() {
             })}
             <form onSubmit={onFormSubmit}>
                 <label htmlFor="signup-email-input">Email:</label>
-                <input id="signup-email-input" 
-                       name="username"
-                       type="email"
-                       placeholder="Enter your email"
-                       autoComplete="username" required />
+                <EmailInput id="signup-email-input" />
                 <br/>
                 <label htmlFor="signup-password-input">Password:</label>
-                <input id="signup-password-input"
-                       name="password"
-                       type="password"
-                       placeholder="Enter your password"
-                       autoComplete="new-password" required />
+                <NewPasswordInput id="signup-password-input" />
                 <br/>
                 <label htmlFor="signup-rep-password-input">Repeat password:</label>
-                <input id="signup-rep-password-input"
-                       name="reppassword"
-                       type="password"
-                       placeholder="Repeat your password"
-                       autoComplete="new-password" required />
+                <RepeatPasswordInput id="signup-rep-password-input" />
                 <br />
-                <button type="submit" onSubmit={e => {console.log(e)}}>Sign Up</button>
+                <button type="submit">Sign Up</button>
             </form>
             {signUpError}
         </div>
