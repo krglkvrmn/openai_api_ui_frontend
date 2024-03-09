@@ -7,11 +7,12 @@ import {useSignalState} from "../../hooks/useSignalState";
 
 export function ChatController() {
     const [systemPromptValue, setSystemPromptValue] = useSignalState<string>("");
-    const { apiKeys, isEmpty: isApiKeysEmpty } = useAPIKeys()
+    const { apiKeys, isEmpty: isApiKeysEmpty, dispatchers } = useAPIKeys()
+    const { saveApiKey } = dispatchers;
     return (
         <div id="chat-controller">
             <div id="chat-content">
-                {(apiKeys === undefined || isApiKeysEmpty) && <APIKeyForm />}
+                {(apiKeys === undefined || isApiKeysEmpty) && <APIKeyForm keySaveHandler={saveApiKey} />}
                 <Chat systemPromptParams={{systemPromptValue, setSystemPromptValue}} />
             </div>
             <PromptSelectionSidebar>

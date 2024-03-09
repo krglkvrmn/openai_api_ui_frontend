@@ -11,3 +11,9 @@ export const passwordsLengthValidator: ValidatorType = (formData) => {
         {valid: false, errors: ["Password must contain at least 8 symbols!"]} :
         {valid: true, errors: []}
 }
+
+export const apiKeyNotEmptyValidator: ValidatorType = (formData) => {
+    return !formData.get("api_key") ?
+        {valid: false, errors: ["API key is not set"]} :
+        {valid: true, errors: []}
+}

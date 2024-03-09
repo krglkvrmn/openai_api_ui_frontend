@@ -1,13 +1,13 @@
 import ChatApp from "../../components/chat/ChatApp";
 import "./style.css";
-import { APIKeyProvider } from "../../contexts/APIKeyProvider";
+import { LocalAPIKeyProvider } from "../../contexts/LocalAPIKeyProvider.tsx";
 
 export default function ChatPage() {
     return (
         <div id="app-content">
-            <APIKeyProvider>
+            <LocalAPIKeyProvider>
                 <ChatApp/>
-            </APIKeyProvider>
+            </LocalAPIKeyProvider>
         </div>
     )
 }

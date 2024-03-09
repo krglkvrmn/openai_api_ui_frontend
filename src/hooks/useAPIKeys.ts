@@ -1,7 +1,8 @@
 import { useMutation, useQuery } from "react-query";
-import { deleteAPIKeyRequest, getAPIKeysRequest } from "../services/backendAPI";
+import {deleteAPIKeyRequest, getAPIKeysRequest, saveAPIKeyRequest} from "../services/backendAPI";
 import { optimisticQueryUpdateConstructor } from "../utils/optimisticUpdates";
 import {APIKeyRead} from "../types/dataTypes";
+import {queryClient} from "../queryClient.ts";
 
 type APIKeysStateType = APIKeyRead[] | undefined;
 
@@ -12,7 +13,8 @@ type TuseAPIKeysReturn = {
     isSuccess: boolean,
     isEmpty: boolean,
     dispatchers: {
-        deleteApiKey: (keyId: string) => void 
+        deleteApiKey: (keyId: string) => Promise<unknown>,
+        saveApiKey: (apiToken: string) => Promise<unknown>,
     }
 }
 
@@ -21,6 +23,7 @@ export function useAPIKeys(): TuseAPIKeysReturn {
     const apiKeysQuery = useQuery({
         queryKey: ['apiKeys'],
         queryFn: getAPIKeysRequest,
+
     });
 
     const deleteKeyOptimisticConfig = optimisticQueryUpdateConstructor({
@@ -40,6 +43,11 @@ export function useAPIKeys(): TuseAPIKeysReturn {
         onSettled: deleteKeyOptimisticConfig.onSettled
     });
 
+    const saveKeyMutation = useMutation({
+        mutationFn: saveAPIKeyRequest,
+        onSettled: async () => await queryClient.invalidateQueries(['apiKeys'], { exact: true })
+    });
+
     return { 
         apiKeys: apiKeysQuery.data, 
         isLoading: apiKeysQuery.isLoading,
@@ -47,7 +55,8 @@ export function useAPIKeys(): TuseAPIKeysReturn {
         isSuccess: apiKeysQuery.isSuccess,
         isEmpty: apiKeysQuery.data !== undefined && apiKeysQuery.data.length === 0,
         dispatchers: {
-            deleteApiKey: deleteKeyMutation.mutate
+            deleteApiKey: deleteKeyMutation.mutateAsync,
+            saveApiKey: saveKeyMutation.mutateAsync
         }
     };
 }

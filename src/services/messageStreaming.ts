@@ -1,5 +1,5 @@
 import {Signal, signal} from "@preact/signals-react";
-import {useAPIKey} from "../hooks/contextHooks";
+import {useLocalAPIKey} from "../hooks/contextHooks";
 import axios, {isAxiosError} from "axios";
 import {UUID} from "crypto";
 import {refreshRetryOnUnauthorized} from "./auth";
@@ -80,13 +80,13 @@ const streamingMessageDefault: MessageCreate = {author: "assistant", content: ""
 const streamingStateDefault: StreamingStateType = {status: "ready"};
 
 export function useStreamingMessage(identifier: number | null): TuseModelStreamingMessageReturn {
-    const apiKey = useAPIKey()[0];
+    const localApiKey = useLocalAPIKey()[0];
     const streamingMessage = useOneTimeMemo(() => signal(streamingMessageDefault), [identifier]);
     const streamingState = useOneTimeMemo(() => signal(streamingStateDefault), [identifier]);
 
     async function streamMessage(chat: ChatFullStream): Promise<MessageCreate | undefined> {
         const { location, error} = await requestStreamingCompletion(
-            {chat, token: apiKey.value, debug: import.meta.env.VITE_CHAT_DEBUG_MODE_ENABLED }
+            {chat, token: localApiKey.value, debug: import.meta.env.VITE_CHAT_DEBUG_MODE_ENABLED }
         );
         if (location === undefined || error !== undefined) {
             streamingState.value = {status: "error", error: error};
@@ -96,12 +96,25 @@ export function useStreamingMessage(identifier: number | null): TuseModelStreami
             const eventSource = new EventSource(location, { withCredentials: true });
             streamingState.value = {status: "generating"};
             eventSource.onmessage = (event: MessageEvent): void => {
+                const eventData = JSON.parse(event.data);
+
                 if (streamingState.value.status !== "generating") {
                     eventSource.close();
                     reject(event);
                 }
-                const eventData = JSON.parse(event.data);
-                const { content: eventContent, role: eventAuthor } = eventData.choices[0].delta as CompletionEventDeltaType;
+                if ('error' in eventData) {
+                    switch (eventData.error.code) {
+                        case 'invalid_api_key':
+                            streamingState.value = {status: "error", error: "Invalid API key"};
+                    }
+                    eventSource.close();
+                    reject(event);
+                }
+
+                const {
+                    content: eventContent,
+                    role: eventAuthor
+                } = eventData.choices[0].delta as CompletionEventDeltaType;
                 const isFinish = eventData.choices[0].finish_reason === "stop";
                 streamingMessage.value = {
                     ...streamingMessage.value,
@@ -114,9 +127,9 @@ export function useStreamingMessage(identifier: number | null): TuseModelStreami
                     eventSource.close();
                     resolve(streamingMessage.value);
                 }
-                
             }
             eventSource.onerror = (errorEvent: Event): void => {
+                console.log(errorEvent);
                 eventSource.close();
                 reject(errorEvent);
             }

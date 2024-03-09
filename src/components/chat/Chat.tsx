@@ -216,7 +216,9 @@ function useChat(chatId: ChatIdType): TuseChatReturn {
             queryClient.setQueryData(['chats', chat.id], {
                 ...completeChat, messages: [...completeChat.messages, savedMessage]
             });
-        } catch { /* empty */ } finally {
+        } catch (error) {
+            reset = false;
+        } finally {
             reset && resetStreamingMessage();
         }
     }
@@ -259,6 +261,7 @@ export default function Chat(
     if (!['ready', 'abort', 'error'].includes(streamingState.value.status)) {
         messages.push(streamingMessage);
     }
+    console.log(streamingState.value);
 
     return (
         <div id="chat-container">
