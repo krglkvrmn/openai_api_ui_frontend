@@ -11,9 +11,9 @@ import {optimisticQueryUpdateConstructor} from "../../utils/optimisticUpdates";
 import {MessageList} from "./MessageList";
 import {SystemPrompt, UserPrompt} from "../control/Prompt";
 import PromptFooter from "../layout/PromptFooter";
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {StreamingStateType, useStreamingMessage} from "../../services/messageStreaming";
-import {useNavigate, useParams} from "react-router-dom";
+import {useLocation, useNavigate, useParams} from "react-router-dom";
 import {useActiveChatIndex} from "../../hooks/contextHooks";
 import {parseChatId} from "../../utils/stringparsers";
 import {
@@ -64,6 +64,7 @@ function useChat(chatId: ChatIdType): TuseChatReturn {
     const isDefault = chatId === null;
 
     const navigate = useNavigate();
+    const location = useLocation();
     const setActiveChatIndex = useActiveChatIndex()[1];
     const [defaultChat, setDefaultChat] = useState<ChatDefault>(createDefaultChat());
     const {
@@ -189,7 +190,7 @@ function useChat(chatId: ChatIdType): TuseChatReturn {
                 }
                 await queryClient.invalidateQueries(['chats'], {exact: true});
                 setActiveChatIndex(0);
-                navigate(`/chat/${resp.id}`);
+                navigate(`/chat/${resp.id}`, { state: streamingState.value });
                 setDefaultChat(createDefaultChat());
                 resetStreamingMessage();
             }
@@ -228,6 +229,12 @@ function useChat(chatId: ChatIdType): TuseChatReturn {
         await stream(data);
     }
 
+    useEffect(() => {
+        if (location.state) {
+            streamingState.value = location.state;
+        }
+    }, [location.state]);
+
     return {
         data,
         streamingMessage,
@@ -261,7 +268,6 @@ export default function Chat(
     if (!['ready', 'abort', 'error'].includes(streamingState.value.status)) {
         messages.push(streamingMessage);
     }
-    console.log(streamingState.value);
 
     return (
         <div id="chat-container">
