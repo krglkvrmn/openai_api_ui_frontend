@@ -230,7 +230,7 @@ function useChat(chatId: ChatIdType): TuseChatReturn {
     }
 
     useEffect(() => {
-        if (location.state) {
+        if (location.state?.status === 'error') {
             streamingState.value = location.state;
         }
     }, [location.state]);
