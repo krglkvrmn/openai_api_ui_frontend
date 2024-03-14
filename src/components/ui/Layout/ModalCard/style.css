@@ -1,0 +1,23 @@
+.modal-card-wrapper {
+    display: flex;
+    min-height: 100vh;
+    justify-content: center;
+}
+
+.modal-card {
+    display: flex;
+    align-self: center;
+    box-sizing: border-box;
+    padding: 1rem;
+    min-width: 25rem;
+    min-height: 25rem;
+    max-width: 50rem;
+    max-height: 50rem;
+    flex-direction: column;
+    justify-content: space-between;
+    align-content: center;
+    border-style: solid;
+    border-radius: 1rem;
+    border-color: #1a1818;
+    box-shadow: 5px 5px 15px gray;
+}
