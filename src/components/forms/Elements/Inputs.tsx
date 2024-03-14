@@ -1,10 +1,11 @@
 import React from "react";
+import "./style.css";
 
 export function EmailInput({...props}: React.HTMLAttributes<HTMLInputElement>) {
     const defaultAttributes = {
         name: "username",
         type: "email",
-        placeholder: "Enter your email",
+        placeholder: "Email",
         autoComplete: "username",
         required: true
     }
@@ -19,7 +20,7 @@ export function PasswordInput({...props}: React.HTMLAttributes<HTMLInputElement>
         name: "password",
         type: "password",
         autoComplete: "current-password",
-        placeholder: "Enter your password",
+        placeholder: "Password",
         required: true
     }
     const inputProps = {...defaultAttributes, ...props};
@@ -31,7 +32,7 @@ export function PasswordInput({...props}: React.HTMLAttributes<HTMLInputElement>
 export function RepeatPasswordInput({...props}: React.HTMLAttributes<HTMLInputElement>) {
     const defaultAttributes = {
         name: "reppassword",
-        placeholder: "Repeat your password"
+        placeholder: "Repeat password"
     };
     const inputProps = {...defaultAttributes, ...props}
     return (
@@ -48,4 +49,3 @@ export function NewPasswordInput({...props}: React.HTMLAttributes<HTMLInputEleme
         <PasswordInput {...inputProps} />
     );
 }
-

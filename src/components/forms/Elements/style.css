@@ -1,0 +1,42 @@
+.button-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.button-container > .loader {
+    align-self: center;
+}
+
+.form-submit-button {
+    min-height: 2.5em;
+    font-size: large;
+    border-radius: 0.5rem;
+    background-color: #61dafb;
+    cursor: pointer;
+    border-width: 0;
+    box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.form-submit-button:hover {
+    background-color: #57c6e5;
+}
+
+.guest-login-button {
+    margin: 5px;
+    height: 2rem;
+    font-size: 19px;
+    align-self: center;
+    cursor: pointer;
+    border: 0;
+    border-radius: 3px;
+    box-shadow: rgba(0, 0, 0, 0.5) 0px 1px 2px;
+}
+
+.string-form-input {
+    font-size: large;
+    min-width: 200px;
+    min-height: 50px;
+    padding: 0 1rem;
+    margin: 0.25rem 0;
+    border-radius: 0.5rem;
+}

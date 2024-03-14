@@ -2,7 +2,7 @@ import {useForm} from "../../hooks/useForm.ts";
 import {useAuth} from "../../hooks/contextHooks.ts";
 import {FormEvent} from "react";
 import {UserErrors} from "../../types/types.ts";
-import {EmailInput} from "./Inputs.tsx";
+import {EmailInput} from "./Elements/Inputs.tsx";
 import {useNavigate} from "react-router-dom";
 
 

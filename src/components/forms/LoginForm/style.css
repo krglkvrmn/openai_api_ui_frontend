@@ -1,0 +1,18 @@
+.login-form {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.login-form-container {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1rem;
+}
+
+.login-form-inputs {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1rem;
+}
+

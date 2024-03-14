@@ -4,7 +4,7 @@ import {FormEvent} from "react";
 import {UserErrors, ValidatorType} from "../../types/types.ts";
 import {Link} from "react-router-dom";
 import {passwordsLengthValidator, passwordsMatchValidator} from "../../vallidation/formValidators.ts";
-import {NewPasswordInput, RepeatPasswordInput} from "./Inputs.tsx";
+import {NewPasswordInput, RepeatPasswordInput} from "./Elements/Inputs.tsx";
 
 
 type TuseResetPasswordFormReturn = {

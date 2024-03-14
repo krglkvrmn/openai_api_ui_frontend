@@ -4,7 +4,7 @@ import {useAuth} from "../../hooks/contextHooks";
 import {UserErrors, ValidatorType} from "../../types/types";
 import {useNavigate} from "react-router-dom";
 import {passwordsLengthValidator, passwordsMatchValidator} from "../../vallidation/formValidators.ts";
-import {EmailInput, NewPasswordInput, RepeatPasswordInput} from "./Inputs.tsx";
+import {EmailInput, NewPasswordInput, RepeatPasswordInput} from "./Elements/Inputs.tsx";
 
 type TuseSignupFormReturn = {
     validationErrors: UserErrors,

@@ -23,6 +23,8 @@ import {
 } from "../utils/errorsParsers";
 import {useLocation} from "react-router-dom";
 import {queryClient} from "../queryClient.ts";
+import {v4 as uuidv4} from "uuid";
+import {generate} from "generate-password-browser";
 
 
 type AuthProviderUserSchema = {
@@ -41,12 +43,14 @@ type AuthContextValue = {
     isAuthenticated: boolean,
     authState: AuthStateType,
     logInError: string | null,
+    guestLogInError: string | null,
     logOutError: string | null,
     signUpError: string | null,
     verificationError: string | null,
     passwordResetError: string | null,
     authDispatchers: {
         logIn: (formData: LoginFormDataType) => Promise<LoginResponse>,
+        logInAsGuest: () => Promise<void>,
         logOut: () => Promise<ResponseDetails>,
         signUp: (formData: SignupFormDataType) => Promise<SignupResponse>,
         oidcLogin: (oidcProvider: OIDCProviderType) => Promise<void>,
@@ -54,6 +58,15 @@ type AuthContextValue = {
         verify: (token: string) => Promise<VerifyResponse>,
         requestPasswordReset: (email: string) => Promise<ResponseDetails>,
         resetPassword: ({token, password}: {token: string, password: string}) => Promise<ResponseDetails>
+    },
+    dispatchersStatuses: {
+        logIn: "success" | "error" | "idle" | "loading",
+        loginAsGuest: "success" | "error" | "idle" | "loading",
+        logOut: "success" | "error" | "idle" | "loading",
+        signUp: "success" | "error" | "idle" | "loading",
+        oidcLogin: "success" | "error" | "idle" | "loading",
+        verify: "success" | "error" | "idle" | "loading",
+        resetPassword: "success" | "error" | "idle" | "loading"
     }
 } | null;
 
@@ -63,6 +76,7 @@ export const AuthContext = React.createContext<AuthContextValue>(null);
 
 export function AuthProvider({ children }: {children: React.ReactElement}) {
     const location = useLocation();
+    const [guestLogInError, setGuestLogInError] = useState<string | null>(null);
     const [logInError, setLogInError] = useState<string | null>(null);
     const [logOutError, setLogOutError] = useState<string | null>(null);
     const [signUpError, setSignUpError] = useState<string | null>(null);
@@ -80,17 +94,21 @@ export function AuthProvider({ children }: {children: React.ReactElement}) {
 
     const logInMutation = useMutation({
         mutationFn: login,
+        onMutate: () => setLogInError(null),
         onSuccess: async () => {
-            setLogInError(null);
             await queryClient.invalidateQueries('authData');
         },
-        onError: error => setLogInError(parseLogInError(error))
+        onError: error => {
+            // Guest login error and normal login error are mutually exclusive
+            setLogInError(parseLogInError(error));
+            setGuestLogInError(null);
+        }
     });
 
     const logOutMutation = useMutation({
         mutationFn: logout,
+        onMutate: () => setLogOutError(null),
         onSuccess: async () => {
-            setLogOutError(null);
             await queryClient.invalidateQueries('authData')
         },
         onError: error => setLogOutError(parseLogOutError(error))
@@ -98,7 +116,7 @@ export function AuthProvider({ children }: {children: React.ReactElement}) {
 
     const signUpMutation = useMutation({
         mutationFn: signup,
-        onSuccess: () => setSignUpError(null),
+        onMutate: () => setSignUpError(null),
         onError: error => setSignUpError(parseSignUpError(error)),
     });
 
@@ -114,40 +132,61 @@ export function AuthProvider({ children }: {children: React.ReactElement}) {
 
     const oidcLoginMutation = useMutation({
         mutationFn: oidcLogin,
+        onMutate: () => {
+            setSignUpError(null);
+            setLogInError(null);
+        },
         onSuccess: async () => {
             await queryClient.invalidateQueries('authData');
-            setLogInError(null);
-            setSignUpError(null);
         }
     });
 
     async function requestVerification(): Promise<void> {
         const email = data?.email;
+        setVerificationError(null);
         if (email === undefined) {
             setVerificationError('You are not logged in!');
         } else {
             await requestEmailVerification(email);
-            setVerificationError(null);
         }
     }
 
     const verificationMutation = useMutation({
         mutationFn: verifyEmail,
-        onSuccess: () => setVerificationError(null),
+        onMutate: () => setVerificationError(null),
         onError: error => setVerificationError(parseVerificationError(error)),
         onSettled: async () => await queryClient.invalidateQueries('authData')
     });
 
     const resetPasswordMutation = useMutation({
         mutationFn: resetPassword,
-        onSuccess: () => setPasswordResetError(null),
+        onMutate: () => setPasswordResetError(null),
         onError: error => setPasswordResetError(parsePasswordResetError(error)),
         onSettled: async () => await queryClient.invalidateQueries('authData')
     });
 
+    function createGuestUserData(): [string, string] {
+        const username = `Guest@${uuidv4()}.guest`;
+        const password = generate({length: 30, numbers: true, symbols: true, uppercase: true, lowercase: true});
+        return [username, password];
+    }
+
+    async function logInAsGuest(): Promise<void> {
+        const [username, password] = createGuestUserData();
+        setGuestLogInError(null);
+        try {
+            await signUpMutation.mutateAsync({email: username, password: password, is_guest: true});
+            await logInMutation.mutateAsync({username, password});
+        } catch (error) {
+            setGuestLogInError("An error occurred while logging as a guest");
+            setLogInError(null);
+        }
+    }
+
     // Do not persist error information between different routes
     useEffect(() => {
         setLogInError(null);
+        setGuestLogInError(null);
         setSignUpError(null);
         setVerificationError(null);
         setPasswordResetError(null);
@@ -162,9 +201,10 @@ export function AuthProvider({ children }: {children: React.ReactElement}) {
                 isRefreshing: refreshMutation.isLoading,
                 user: data 
             },
-            logInError, logOutError, signUpError, verificationError, passwordResetError,
+            logInError, guestLogInError, logOutError, signUpError, verificationError, passwordResetError,
             authDispatchers: {
                 logIn: logInMutation.mutateAsync,
+                logInAsGuest,
                 logOut: logOutMutation.mutateAsync,
                 signUp: signUpMutation.mutateAsync,
                 oidcLogin: oidcLoginMutation.mutateAsync,
@@ -172,6 +212,15 @@ export function AuthProvider({ children }: {children: React.ReactElement}) {
                 verify: verificationMutation.mutateAsync,
                 requestPasswordReset: requestPasswordReset,
                 resetPassword: resetPasswordMutation.mutateAsync
+            },
+            dispatchersStatuses: {
+                logIn: logInMutation.status,
+                loginAsGuest: signUpMutation.status === "success" ? logInMutation.status : signUpMutation.status,
+                logOut: logOutMutation.status,
+                signUp: signUpMutation.status,
+                oidcLogin: oidcLoginMutation.status,
+                verify: verificationMutation.status,
+                resetPassword: resetPasswordMutation.status
             }
         }}>
             {children}

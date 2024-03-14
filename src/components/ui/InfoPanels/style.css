@@ -1,0 +1,18 @@
+.form-error {
+    background-color: #ff4469;
+}
+
+.info-panel-container {
+    margin-top: 1rem;
+}
+
+
+
+.info-panel {
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    align-self: stretch;
+    min-height: 2rem;
+}
