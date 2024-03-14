@@ -51,9 +51,9 @@ export function LoginForm() {
             <form className="login-form auth-form" onSubmit={onFormSubmit}>
                 <div className="login-form-inputs auth-form-inputs">
                     <label htmlFor="login-email-input" hidden>Email</label>
-                    <EmailInput className="string-form-input" id="login-email-input"/>
+                    <EmailInput id="login-email-input"/>
                     <label htmlFor="login-password-input" hidden>Password</label>
-                    <PasswordInput className="string-form-input" id="login-password-input"/>
+                    <PasswordInput id="login-password-input"/>
                 </div>
                 <FormSubmitButton replaceWithLoader={isLoading}>Log In</FormSubmitButton>
             </form>

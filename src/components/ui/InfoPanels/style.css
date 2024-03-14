@@ -1,5 +1,5 @@
 .form-error {
-    background-color: #ff4469;
+    color: #f12626;
 }
 
 .info-panel-container {
@@ -15,4 +15,23 @@
     align-items: center;
     align-self: stretch;
     min-height: 2rem;
+    border-radius: 1rem;
+}
+
+.auth-form-validation-errors-list {
+    margin: 0.5rem 0;
+    padding: 0;
+}
+
+.auth-form-validation-errors-list-item {
+    list-style-type: none;
+}
+
+.auth-form-validation-errors-list-item > .info-panel-container {
+    margin: 0;
+}
+
+.auth-form-validation-errors-list-item > .info-panel-container > .info-panel {
+    justify-content: flex-start;
+    margin: 0;
 }

@@ -11,7 +11,7 @@ export function EmailInput({...props}: React.HTMLAttributes<HTMLInputElement>) {
     }
     const inputProps = {...defaultAttributes, ...props};
     return (
-        <input {...inputProps} />
+        <input className="string-form-input" {...inputProps} />
     );
 }
 
@@ -25,7 +25,7 @@ export function PasswordInput({...props}: React.HTMLAttributes<HTMLInputElement>
     }
     const inputProps = {...defaultAttributes, ...props};
     return (
-        <input {...inputProps} />
+        <input className="string-form-input" {...inputProps} />
     );
 }
 
@@ -36,7 +36,7 @@ export function RepeatPasswordInput({...props}: React.HTMLAttributes<HTMLInputEl
     };
     const inputProps = {...defaultAttributes, ...props}
     return (
-        <PasswordInput {...inputProps} />
+        <PasswordInput className="string-form-input" {...inputProps} />
     );
 }
 
@@ -46,6 +46,6 @@ export function NewPasswordInput({...props}: React.HTMLAttributes<HTMLInputEleme
     };
     const inputProps = {...defaultAttributes, ...props}
     return (
-        <PasswordInput {...inputProps} />
+        <PasswordInput className="string-form-input" {...inputProps} />
     );
 }

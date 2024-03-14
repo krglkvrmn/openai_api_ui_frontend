@@ -3,7 +3,7 @@
     border-radius: 1px;
     border-width: 1px;
     padding: 0;
-    margin: 0 0 0.5rem 0;
+    margin: 1rem 0 2rem 0;
 }
 
 .alternative-login-options-container {
@@ -13,6 +13,7 @@
 
 .social-logins-container {
     display: flex;
+    flex-direction: column;
     justify-content: space-between;
     align-items: center;
 }

@@ -30,9 +30,11 @@ export default function LoginPage() {
             <div className="alternative-login-options-container">
                 <div className="social-logins-container">
                     <GoogleLoginButton className="social-login-button"
+                                       align="center"
                                        size="2rem"
                                        onClick={() => oidcLogin('google')}/>
                     <GithubLoginButton className="social-login-button"
+                                       align="center"
                                        size="2rem"
                                        onClick={() => oidcLogin('github')}/>
                 </div>
@@ -42,10 +44,10 @@ export default function LoginPage() {
                 </div>
             </div>
             <FormError error={guestLogInError} />
-            <div className="unable-to-login-container">
+            <nav className="unable-to-login-container">
                 <Link className="unable-to-login-action-link" to="/register">Not registered yet?</Link>
                 <Link className="unable-to-login-action-link" to="/forgot-password">Forgot password?</Link>
-            </div>
+            </nav>
         </ModalCard>
     );
 }
