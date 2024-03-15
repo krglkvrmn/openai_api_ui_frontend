@@ -1,4 +1,4 @@
-import { FormEvent } from "react";
+import {FormEvent, useState} from "react";
 import { useForm } from "../../../hooks/useForm.ts";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../../hooks/contextHooks.ts";
@@ -23,17 +23,21 @@ function useLoginForm(): TuseLoginFormReturn {
     const navigate = useNavigate();
     const { authDispatchers, logInError, dispatchersStatuses } = useAuth();
     const { logIn } = authDispatchers;
-    const isLoading = dispatchersStatuses.logIn === "loading";
+    const [isCalledInternally, setIsCalledInternally] = useState<boolean>(false);
+    const isLoading = dispatchersStatuses.logIn === "loading" && isCalledInternally;
     const { validationErrors, onFormSubmit } = useForm({
         validators,
         submitHandler: async (formData: Record<string, string>): Promise<void> => {
             const data = {username: formData.username, password: formData.password};
             try {
+                setIsCalledInternally(true);
                 await logIn(data);
                 navigate('/');
             } catch (error) {
                 console.error('Error while logging in:', error);
                 throw error;
+            } finally {
+                setIsCalledInternally(false);
             }
         }
     });
