@@ -1,10 +1,15 @@
-import {useLocalStorage} from "../../hooks/useLocalStorage.ts";
-import {useCountdown} from "../../hooks/useCountdown.ts";
+import {useLocalStorage} from "../../../hooks/useLocalStorage.ts";
+import {useCountdown} from "../../../hooks/useCountdown.ts";
 import {useEffect, useState} from "react";
-import {useAuth} from "../../hooks/contextHooks.ts";
-import {Link, useLocation, useSearchParams} from "react-router-dom";
-import {RequireAuth} from "./RequireAuth.tsx";
-import {RequireNoVerification} from "./RequireVerification.tsx";
+import {useAuth} from "../../../hooks/contextHooks.ts";
+import {Link, useLocation, useNavigate, useSearchParams} from "react-router-dom";
+import {RequireAuth} from "../RequireAuth.tsx";
+import {RequireNoVerification} from "../RequireVerification.tsx";
+import styles from "./style.module.css";
+
+import {GenericButton} from "../../ui/Buttons/GenericButton.tsx";
+import {Spinner} from "../../ui/Indicators/Spinner.tsx";
+
 
 function VerificationRequestAction(
     {requestVerificationHandler}:
@@ -12,10 +17,13 @@ function VerificationRequestAction(
 ) {
     const [nextRequestTime, setNextRequestTime] = useLocalStorage('__nrt', 0);
     const {count, startCountdown, resetCountdown, isFinished} = useCountdown();
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     async function onRequestVerification(): Promise<void> {
+        setIsLoading(true)
         await requestVerificationHandler();
         setNextRequestTime(new Date().getTime() + 60000);
+        setIsLoading(false)
     }
 
     useEffect(() => {
@@ -26,8 +34,11 @@ function VerificationRequestAction(
 
     return (
         isFinished.value ?
-            <button onClick={onRequestVerification}>Click here to send verification link to this email</button> :
-            <p>Wait for {count} seconds until next request</p>
+            <GenericButton onClick={onRequestVerification} replaceWithLoader={isLoading}>Continue</GenericButton> :
+            <>
+                <p>An email with verification instructions was sent to this email</p>
+                <p>Wait for <b>{count}</b> seconds until next request</p>
+            </>
     );
 }
 
@@ -40,16 +51,21 @@ function VerificationRequestController() {
         <>
             {
                 location.state === 'just_registered' ?
-                    <p>You were successfully registered, please verify your email address</p> :
-                    <p>You must verify your email to see this page</p>
+                    <>
+                        <h2>You were successfully registered</h2>
+                        <p>Now, you need to verify your email address</p>
+                    </> :
+                    <h2>You must verify your email to see this page</h2>
             }
             {
                 isAuthenticated && authState.user !== undefined && authState.user.email ?
                     (
                         <>
-                            <p>Your email: {authState.user.email}</p>
+                            <p><b>Your email:</b> {authState.user.email}</p>
                             <VerificationRequestAction requestVerificationHandler={requestVerification}/>
-                            {verificationError}
+                            {
+                                verificationError && <p className={styles.verificationError}>{verificationError}</p>
+                            }
                         </>
                     ) :
                     <p>You are not logged in. <Link to='/login'>Log in</Link> to validate your email</p>
@@ -59,6 +75,7 @@ function VerificationRequestController() {
 }
 
 function VerificationTokenController({verificationToken}: { verificationToken: string }) {
+    const navigate = useNavigate();
     const {authDispatchers, verificationError} = useAuth();
     const {verify} = authDispatchers;
     const [verificationFinished, setVerificationFinished] = useState<boolean>(false);
@@ -73,11 +90,18 @@ function VerificationTokenController({verificationToken}: { verificationToken: s
         verificationFinished ?
             (
                 verificationError === null ?
-                    <p>Verification successful, you can close this page</p> :
-                    verificationError
+                    <p className={styles.verificationConfirmation}>Verification successful, you can close this page</p> :
+                    <>
+                        <p className={styles.verificationError}>{verificationError}</p>
+                        <GenericButton onClick={() => navigate('/verification')}>Continue</GenericButton>
+                    </>
             ) :
-            <p>Verifying...</p>
-    );
+            <div className={styles.verificationInfoBlock}>
+                <p>Verifying your email...</p>
+                <Spinner/>
+            </div>
+)
+    ;
 }
 
 export function VerificationController() {
@@ -85,7 +109,7 @@ export function VerificationController() {
     const verificationToken = searchParams.get('vt');
 
     return (
-        <div>
+        <div className={styles.verificationContainer}>
             {
                 verificationToken === null ?
                     <RequireAuth>

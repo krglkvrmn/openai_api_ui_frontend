@@ -1,8 +1,11 @@
-import {VerificationController} from "../../components/control/VerificationController.tsx";
+import {VerificationController} from "../../components/control/VerificationController/VerificationController.tsx";
+import {ModalCard} from "../../components/ui/Layout/ModalCard/ModalCard.tsx";
 
 
 export function VerificationPage() {
     return (
-        <VerificationController />
+        <ModalCard showBorder>
+            <VerificationController />
+        </ModalCard>
     );
 }

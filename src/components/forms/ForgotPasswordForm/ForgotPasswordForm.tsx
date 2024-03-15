@@ -5,8 +5,8 @@ import {UserErrors} from "../../../types/types.ts";
 import {EmailInput} from "../Elements/Inputs.tsx";
 import {useNavigate} from "react-router-dom";
 import FormError, {FormErrorsList} from "../../ui/InfoPanels/Error.tsx";
-import {FormSubmitButton} from "../Elements/Buttons.tsx";
 import commonFormStyles from "../common-form-styles.module.css";
+import {FormSubmitButton} from "../../ui/Buttons/FormSubmitButton.tsx";
 
 
 type TuseForgotPasswordFormReturn = {

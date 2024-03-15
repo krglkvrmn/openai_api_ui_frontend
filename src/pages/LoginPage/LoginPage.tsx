@@ -4,10 +4,10 @@ import {useAuth} from "../../hooks/contextHooks.ts";
 import {GithubLoginButton, GoogleLoginButton} from "react-social-login-buttons";
 import FormError from "../../components/ui/InfoPanels/Error.tsx";
 import {FormInfo} from "../../components/ui/InfoPanels/Info.tsx";
-import {GuestLoginButton} from "../../components/forms/Elements/Buttons.tsx";
 import {ModalCard} from "../../components/ui/Layout/ModalCard/ModalCard.tsx";
 import styles from "./style.module.css";
 import globalStyles from "../../styles/global-styles.module.css";
+import {GuestLoginButton} from "../../components/ui/Buttons/GuestLoginButton.tsx";
 
 export default function LoginPage() {
     const location = useLocation();

@@ -48,7 +48,7 @@ export function parseSignUpError(signUpError: AxiosError<ResponseDetails> | unkn
 export function parseVerificationError(verificationError: AxiosError<ResponseDetails> | unknown): string | null {
     if (axios.isAxiosError(verificationError)) {
         if (verificationError.response?.status === 400 && verificationError.response?.data.detail === "VERIFY_USER_BAD_TOKEN") {
-            return "Invalid token";
+            return "Your verification link is corrupted or expired, please try again";
         }
     }
     return verificationError ? "Unknown error" : null;

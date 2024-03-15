@@ -5,9 +5,9 @@ import {UserErrors, ValidatorType} from "../../../types/types.ts";
 import {useNavigate} from "react-router-dom";
 import {passwordsLengthValidator, passwordsMatchValidator} from "../../../vallidation/formValidators.ts";
 import {EmailInput, NewPasswordInput, RepeatPasswordInput} from "../Elements/Inputs.tsx";
-import {FormSubmitButton} from "../Elements/Buttons.tsx";
 import FormError, {FormErrorsList} from "../../ui/InfoPanels/Error.tsx";
 import commonFormStyles from "../common-form-styles.module.css";
+import {FormSubmitButton} from "../../ui/Buttons/FormSubmitButton.tsx";
 
 type TuseSignupFormReturn = {
     validationErrors: UserErrors,
