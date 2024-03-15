@@ -1,10 +1,11 @@
 import React from "react";
-import "./style.css";
+import styles from "./style.module.css";
 
-export function ModalCard({children}: {children: React.ReactNode}) {
+export function ModalCard({children, showBorder = false}: {children: React.ReactNode, showBorder?: boolean}) {
+    const cardStyle = showBorder ? styles.modalCardBase : styles.modalCardBorderless;
     return (
-        <div className="modal-card-wrapper">
-            <div className="modal-card">
+        <div className={styles.modalCardWrapper}>
+            <div className={cardStyle}>
                 {children}
             </div>
         </div>

@@ -6,8 +6,8 @@ import {useNavigate} from "react-router-dom";
 import {passwordsLengthValidator, passwordsMatchValidator} from "../../../vallidation/formValidators.ts";
 import {EmailInput, NewPasswordInput, RepeatPasswordInput} from "../Elements/Inputs.tsx";
 import {FormSubmitButton} from "../Elements/Buttons.tsx";
-import "./style.css"
 import FormError, {FormErrorsList} from "../../ui/InfoPanels/Error.tsx";
+import commonFormStyles from "../common-form-styles.module.css";
 
 type TuseSignupFormReturn = {
     validationErrors: UserErrors,
@@ -47,10 +47,10 @@ function useSignupForm(): TuseSignupFormReturn {
 export function SignupForm() {
     const {validationErrors, signUpError, onFormSubmit, isLoading} = useSignupForm();
     return (
-        <div className="signup-form-container auth-form-container">
+        <div className={commonFormStyles.authFormContainer}>
             <FormErrorsList errors={validationErrors} />
-            <form className="signup-form auth-form" onSubmit={onFormSubmit}>
-                <div className="signup-form-inputs auth-form-inputs">
+            <form className={commonFormStyles.authForm} onSubmit={onFormSubmit}>
+                <div className={commonFormStyles.authFormInputs}>
                     <label htmlFor="signup-email-input" hidden>Email:</label>
                     <EmailInput id="signup-email-input"/>
                     <label htmlFor="signup-password-input" hidden>Password:</label>

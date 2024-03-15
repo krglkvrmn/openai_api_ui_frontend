@@ -1,8 +1,8 @@
-import "./style.css";
+import styles from "./style.module.css";
 
 
 export function Spinner() {
     return (
-        <div className="loader" />
+        <div className={styles.loader} />
     );
 }

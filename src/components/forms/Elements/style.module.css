@@ -1,10 +1,11 @@
 .button-container {
     display: flex;
     flex-direction: column;
+    align-items: center;
 }
 
-.button-container > .loader {
-    align-self: center;
+.button-container > button {
+    align-self: stretch;
 }
 
 .form-submit-button {
@@ -18,7 +19,7 @@
 }
 
 .form-submit-button:hover {
-    background-color: #57c6e5;
+    filter: brightness(90%);
 }
 
 .guest-login-button {
@@ -27,9 +28,13 @@
     font-size: 19px;
     align-self: center;
     cursor: pointer;
-    border: 0;
+    border: 0px;
     border-radius: 3px;
     box-shadow: rgba(0, 0, 0, 0.5) 0px 1px 2px;
+}
+
+.guest-login-button:hover {
+    filter: brightness(90%);
 }
 
 .string-form-input {

@@ -2,15 +2,16 @@
     display: flex;
     min-height: 100vh;
     justify-content: center;
+    background-color: #DDD;
 }
 
-.modal-card {
+.modal-card-base {
     display: flex;
     align-self: center;
     box-sizing: border-box;
     padding: 1rem;
     min-width: 25rem;
-    min-height: 25rem;
+    min-height: 10rem;
     max-width: 50rem;
     max-height: 50rem;
     flex-direction: column;
@@ -18,6 +19,21 @@
     align-content: center;
     border-style: solid;
     border-radius: 1rem;
+    background-color: white;
     border-color: #1a1818;
     box-shadow: 5px 5px 15px gray;
+}
+
+.modal-card-base > hr {
+    border-color: rgba(220,220,220,0.49);
+    border-radius: 1px;
+    border-width: 1px;
+    padding: 0;
+    margin: 1rem 0 2rem 0;
+}
+
+.modal-card-borderless {
+    composes: modal-card-base;
+    border: 0;
+    box-shadow: none;
 }

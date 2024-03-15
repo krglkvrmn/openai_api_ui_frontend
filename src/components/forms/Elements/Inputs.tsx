@@ -1,5 +1,5 @@
 import React from "react";
-import "./style.css";
+import styles from "./style.module.css";
 
 export function EmailInput({...props}: React.HTMLAttributes<HTMLInputElement>) {
     const defaultAttributes = {
@@ -11,7 +11,7 @@ export function EmailInput({...props}: React.HTMLAttributes<HTMLInputElement>) {
     }
     const inputProps = {...defaultAttributes, ...props};
     return (
-        <input className="string-form-input" {...inputProps} />
+        <input className={styles.stringFormInput} {...inputProps} />
     );
 }
 
@@ -25,7 +25,7 @@ export function PasswordInput({...props}: React.HTMLAttributes<HTMLInputElement>
     }
     const inputProps = {...defaultAttributes, ...props};
     return (
-        <input className="string-form-input" {...inputProps} />
+        <input className={styles.stringFormInput} {...inputProps} />
     );
 }
 
@@ -36,7 +36,7 @@ export function RepeatPasswordInput({...props}: React.HTMLAttributes<HTMLInputEl
     };
     const inputProps = {...defaultAttributes, ...props}
     return (
-        <PasswordInput className="string-form-input" {...inputProps} />
+        <PasswordInput className={styles.stringFormInput} {...inputProps} />
     );
 }
 
@@ -46,6 +46,6 @@ export function NewPasswordInput({...props}: React.HTMLAttributes<HTMLInputEleme
     };
     const inputProps = {...defaultAttributes, ...props}
     return (
-        <PasswordInput className="string-form-input" {...inputProps} />
+        <PasswordInput className={styles.stringFormInput} {...inputProps} />
     );
 }

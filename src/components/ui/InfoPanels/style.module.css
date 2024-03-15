@@ -1,12 +1,6 @@
-.form-error {
-    color: #f12626;
-}
-
 .info-panel-container {
-    margin-top: 1rem;
+    margin: 1rem 0;
 }
-
-
 
 .info-panel {
     margin: 0;
@@ -17,6 +11,17 @@
     min-height: 2rem;
     border-radius: 1rem;
 }
+
+.form-error {
+    composes: info-panel;
+    color: #f12626;
+}
+
+.form-info {
+    composes: info-panel;
+    color: steelblue;
+}
+
 
 .auth-form-validation-errors-list {
     margin: 0.5rem 0;

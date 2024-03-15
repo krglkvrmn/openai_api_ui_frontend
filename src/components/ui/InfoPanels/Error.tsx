@@ -1,12 +1,12 @@
-import "./style.css";
 import {UserErrors} from "../../../types/types.ts";
+import styles from "./style.module.css";
 
 
 export default function FormError({error}: {error: string | undefined | null}) {
     return (
         error && (
-            <div className="form-error-container info-panel-container">
-                <p className="form-error info-panel">
+            <div className={styles.infoPanelContainer}>
+                <p className={styles.formError}>
                     {error}
                 </p>
             </div>
@@ -17,11 +17,11 @@ export default function FormError({error}: {error: string | undefined | null}) {
 export function FormErrorsList({errors}: { errors: UserErrors }) {
     return (
         errors.length !== 0 &&
-        <ul className="auth-form-validation-errors-list">
+        <ul className={styles.authFormValidationErrorsList}>
             {
                 errors.map((error, index) => {
                     return (
-                        <li className="auth-form-validation-errors-list-item">
+                        <li className={styles.authFormValidationErrorsListItem}>
                             <FormError key={index} error={error}/>
                         </li>
                     );

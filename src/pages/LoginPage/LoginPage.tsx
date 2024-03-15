@@ -1,12 +1,13 @@
 import {Link, useLocation} from "react-router-dom";
 import { LoginForm } from "../../components/forms/LoginForm/LoginForm.tsx";
 import {useAuth} from "../../hooks/contextHooks.ts";
-import "./style.css";
 import {GithubLoginButton, GoogleLoginButton} from "react-social-login-buttons";
 import FormError from "../../components/ui/InfoPanels/Error.tsx";
 import {FormInfo} from "../../components/ui/InfoPanels/Info.tsx";
 import {GuestLoginButton} from "../../components/forms/Elements/Buttons.tsx";
 import {ModalCard} from "../../components/ui/Layout/ModalCard/ModalCard.tsx";
+import styles from "./style.module.css";
+import globalStyles from "../../styles/global-styles.module.css";
 
 export default function LoginPage() {
     const location = useLocation();
@@ -23,30 +24,28 @@ export default function LoginPage() {
     }
 
     return (
-        <ModalCard>
+        <ModalCard showBorder>
             <FormInfo infoMessage={redirectMessage} />
             <LoginForm/>
             <hr/>
-            <div className="alternative-login-options-container">
-                <div className="social-logins-container">
-                    <GoogleLoginButton className="social-login-button"
-                                       align="center"
+            <div className={styles.alternativeLoginOptionsContainer}>
+                <div className={styles.socialLoginsContainer}>
+                    <GoogleLoginButton align="center"
                                        size="2rem"
                                        onClick={() => oidcLogin('google')}/>
-                    <GithubLoginButton className="social-login-button"
-                                       align="center"
+                    <GithubLoginButton align="center"
                                        size="2rem"
                                        onClick={() => oidcLogin('github')}/>
                 </div>
-                <div className="guest-login-container">
+                <div className={styles.guestLoginContainer}>
                     <span>Or</span>
                     <GuestLoginButton replaceWithLoader={isGuestLoginLoading} onClick={logInAsGuest} />
                 </div>
             </div>
             <FormError error={guestLogInError} />
-            <nav className="unable-to-login-container">
-                <Link className="unable-to-login-action-link" to="/register">Not registered yet?</Link>
-                <Link className="unable-to-login-action-link" to="/forgot-password">Forgot password?</Link>
+            <nav className={styles.authFormNavContainer}>
+                <Link className={globalStyles.navLink} to="/register">Not registered yet?</Link>
+                <Link className={globalStyles.navLink} to="/forgot-password">Forgot password?</Link>
             </nav>
         </ModalCard>
     );

@@ -4,9 +4,9 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../../hooks/contextHooks.ts";
 import {UserErrors, ValidatorType} from "../../../types/types.ts";
 import {EmailInput, PasswordInput} from "../Elements/Inputs.tsx";
-import FormError from "../../ui/InfoPanels/Error.tsx";
-import "./style.css";
+import FormError, {FormErrorsList} from "../../ui/InfoPanels/Error.tsx";
 import {FormSubmitButton} from "../Elements/Buttons.tsx";
+import commonFormStyles from "../common-form-styles.module.css";
 
 
 type TuseLoginFormReturn = {
@@ -44,12 +44,10 @@ function useLoginForm(): TuseLoginFormReturn {
 export function LoginForm() {
     const { validationErrors, logInError, onFormSubmit, isLoading } = useLoginForm();
     return (
-        <div className="login-form-container auth-form-container">
-            {validationErrors.map((error, index) => {
-                return <p key={index}>{error}</p>
-            })}
-            <form className="login-form auth-form" onSubmit={onFormSubmit}>
-                <div className="login-form-inputs auth-form-inputs">
+        <div className={commonFormStyles.authFormContainer}>
+            <FormErrorsList errors={validationErrors} />
+            <form className={commonFormStyles.authForm} onSubmit={onFormSubmit}>
+                <div className={commonFormStyles.authFormInputs}>
                     <label htmlFor="login-email-input" hidden>Email</label>
                     <EmailInput id="login-email-input"/>
                     <label htmlFor="login-password-input" hidden>Password</label>
