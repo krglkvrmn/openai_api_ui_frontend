@@ -40,3 +40,21 @@
 .guest-login-button:hover {
     filter: brightness(90%);
 }
+
+.logout-button {
+    background-color: transparent;
+    border: 0;
+}
+
+.logout-button > svg {
+    width: 2rem;
+    height: auto;
+}
+
+.logout-button-container {
+    composes: button-container;
+}
+
+.logout-button-container:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}

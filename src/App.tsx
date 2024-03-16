@@ -4,7 +4,6 @@ import {BrowserRouter, Navigate, Route, Routes} from 'react-router-dom';
 import RegisterPage from './pages/RegisterPage/RegisterPage';
 import LoginPage from './pages/LoginPage/LoginPage';
 import {AuthProvider} from './contexts/AuthProvider';
-import {HomePage} from './pages/HomePage/HomePage';
 import ChatPage from './pages/ChatPage/ChatPage';
 import {RequireAuth, RequireNoAuth} from "./components/control/RequireAuth";
 import {ReactQueryDevtools} from 'react-query/devtools'
@@ -23,7 +22,7 @@ function App() {
           <Routes>
             <Route path="/verification" element={<VerificationPage />} />
             <Route path="/" element={<RequireAuth />}>
-              <Route path="/" element={<HomePage />} />
+              <Route path="/" element={<Navigate to="/chat"/>} />
               <Route path="/" element={<RequireVerification />}>
                 <Route path="/chat" element={<Navigate to="/chat/new" />}/>
                 <Route path="/chat/:chatId" element={<ChatPage />}/>
