@@ -33,7 +33,7 @@ export function useCountdown(): TuseCountdownReturn {
         timeout !== null && clearTimeout(timeout);
         batch(() => {
             intervals.value = [null, null];
-            isFinished.value = false;
+            isFinished.value = true;
             count.value = 0;
         });
     }

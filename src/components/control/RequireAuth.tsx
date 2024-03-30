@@ -15,7 +15,6 @@ export function RequireAuth({children} : {children?: React.ReactNode}) {
 export function RequireNoAuth({children} : {children?: React.ReactNode}) {
     const { isAuthenticated, authState } = useAuth();
     const renderedComponent = children || <Outlet />;
-
     return (
         authState.loginVerified ?
             (isAuthenticated && !authState.isRefreshing ? <Navigate to="/" /> : renderedComponent) : null

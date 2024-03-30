@@ -1,0 +1,29 @@
+.prompt-container {
+    display: flex;
+    padding: 0.5rem;
+    width: 100%;
+    background-color: white;
+    border-radius: 1rem;
+}
+
+.prompt-container textarea {
+    width: 100%;
+    min-width: 100px;
+    padding: 0;
+    box-sizing: border-box;
+    line-height: 20px;
+    min-height: 20px;
+    max-height: 20em;
+    overflow-y: scroll;
+    border: none;
+    resize: none;
+}
+
+.prompt-container textarea:focus {
+    outline: none;
+}
+
+.prompt-container button {
+
+}
+

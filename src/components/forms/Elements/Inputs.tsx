@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "./style.module.css";
 
-export function EmailInput({...props}: React.HTMLAttributes<HTMLInputElement>) {
+export function EmailInput(props: React.InputHTMLAttributes<HTMLInputElement>) {
     const defaultAttributes = {
         name: "username",
         type: "email",
@@ -15,7 +15,7 @@ export function EmailInput({...props}: React.HTMLAttributes<HTMLInputElement>) {
     );
 }
 
-export function PasswordInput({...props}: React.HTMLAttributes<HTMLInputElement>) {
+export function PasswordInput(props: React.InputHTMLAttributes<HTMLInputElement>) {
     const defaultAttributes = {
         name: "password",
         type: "password",
@@ -29,7 +29,7 @@ export function PasswordInput({...props}: React.HTMLAttributes<HTMLInputElement>
     );
 }
 
-export function RepeatPasswordInput({...props}: React.HTMLAttributes<HTMLInputElement>) {
+export function RepeatPasswordInput(props: React.InputHTMLAttributes<HTMLInputElement>) {
     const defaultAttributes = {
         name: "reppassword",
         placeholder: "Repeat password"
@@ -40,12 +40,27 @@ export function RepeatPasswordInput({...props}: React.HTMLAttributes<HTMLInputEl
     );
 }
 
-export function NewPasswordInput({...props}: React.HTMLAttributes<HTMLInputElement>) {
+export function NewPasswordInput(props: React.InputHTMLAttributes<HTMLInputElement>) {
     const defaultAttributes = {
         autoComplete: "new-password",
     };
     const inputProps = {...defaultAttributes, ...props}
     return (
         <PasswordInput className={styles.stringFormInput} {...inputProps} />
+    );
+}
+
+export function APIKeyInput(props: React.InputHTMLAttributes<HTMLInputElement>) {
+    const defaultAttributes = {
+        name: "api_key",
+        type: "password",
+        placeholder: "Enter your OpenAI API key here",
+        title: "You do not need to save the key, the chat works as long as the key stays here",
+        autoComplete: 'off',
+        required: true
+    }
+    const inputProps = {...defaultAttributes, ...props};
+    return (
+        <input className={styles.apiKeyInput} {...inputProps} />
     );
 }

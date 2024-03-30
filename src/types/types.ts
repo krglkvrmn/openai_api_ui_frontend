@@ -9,3 +9,5 @@ export type LocationStateType = {
     reason: string,
     message: string
 }
+
+export type PromptType = "user" | "system";

@@ -1,10 +1,11 @@
 import {useQueries, UseQueryResult} from "react-query";
 import {getMessageRequest} from "../../services/backendAPI";
-import Message from "./Message";
+import Message from "./Message/Message.tsx";
 import {useContext} from "react";
 import {ChatContext} from "./Chat";
 import {Signal} from "@preact/signals-core";
 import {MessageAny, MessageCreate, MessageRead} from "../../types/dataTypes";
+import styles from "./style.module.css";
 
 
 function useMessageList(messages: MessageAny[]): UseQueryResult<MessageCreate>[] {
@@ -31,20 +32,20 @@ export function MessageList(
     const dynamicMessages = messages.filter(message => message instanceof Signal) as Signal<MessageCreate>[];
     const messagesQueries = useMessageList(staticMessages);
     return (
-        <>
-        {
-            messagesQueries.map((query, index) => {
-                return query.isLoading ? "Message is loading..." :
-                    query.isError ? "An error occurred while loading a message" :
-                    query.isSuccess && query.data !== undefined && query.data.content !== undefined ?
-                    <Message key={index} message={query.data}/> : null
-            })
-        }
-        {
-            dynamicMessages.map((message, index) => {
-                return <Message key={messagesQueries.length + index} message={message} />
-            })
-        }
-        </>
+        <div className={styles.messagesList}>
+            {
+                messagesQueries.map((query, index) => {
+                    return query.isLoading ? "Message is loading..." :
+                        query.isError ? "An error occurred while loading a message" :
+                        query.isSuccess && query.data !== undefined && query.data.content !== undefined ?
+                        <Message key={index} message={query.data}/> : null
+                })
+            }
+            {
+                dynamicMessages.map((message, index) => {
+                    return <Message key={messagesQueries.length + index} message={message} />
+                })
+            }
+        </div>
     );
 }

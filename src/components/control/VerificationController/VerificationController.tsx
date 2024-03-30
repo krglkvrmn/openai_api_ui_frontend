@@ -9,6 +9,8 @@ import styles from "./style.module.css";
 
 import {GenericButton} from "../../ui/Buttons/GenericButton.tsx";
 import {Spinner} from "../../ui/Indicators/Spinner.tsx";
+import {FormInfo} from "../../ui/InfoPanels/Info.tsx";
+import {ElementOrLoader} from "../../ui/Buttons/ElementOrLoader.tsx";
 
 
 function VerificationRequestAction(
@@ -28,16 +30,20 @@ function VerificationRequestAction(
 
     useEffect(() => {
         const diff = Math.floor((nextRequestTime - new Date().getTime()) / 1000);
-        startCountdown(diff, 1);
+        if (diff > 0) {
+            startCountdown(diff, 1);
+        }
         return resetCountdown;
     }, [nextRequestTime]);
 
     return (
         isFinished.value ?
-            <GenericButton onClick={onRequestVerification} replaceWithLoader={isLoading}>Continue</GenericButton> :
+            <ElementOrLoader isLoading={isLoading}>
+                <GenericButton onClick={onRequestVerification}>Continue</GenericButton>
+            </ElementOrLoader> :
             <>
-                <p>An email with verification instructions was sent to this email</p>
-                <p>Wait for <b>{count}</b> seconds until next request</p>
+                <FormInfo infoMessage="An email with verification instructions was sent to this email"/>
+                <p className={styles.retryCounterText}>Wait for <b>{count}</b> seconds until next request</p>
             </>
     );
 }

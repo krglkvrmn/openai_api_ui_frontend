@@ -4,9 +4,10 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../../hooks/contextHooks.ts";
 import {UserErrors, ValidatorType} from "../../../types/types.ts";
 import {EmailInput, PasswordInput} from "../Elements/Inputs.tsx";
-import FormError, {FormErrorsList} from "../../ui/InfoPanels/Error.tsx";
+import FormError, {ValidationErrorsList} from "../../ui/InfoPanels/Error.tsx";
 import commonFormStyles from "../common-form-styles.module.css";
 import {FormSubmitButton} from "../../ui/Buttons/FormSubmitButton.tsx";
+import {ElementOrLoader} from "../../ui/Buttons/ElementOrLoader.tsx";
 
 
 type TuseLoginFormReturn = {
@@ -49,7 +50,7 @@ export function LoginForm() {
     const { validationErrors, logInError, onFormSubmit, isLoading } = useLoginForm();
     return (
         <div className={commonFormStyles.authFormContainer}>
-            <FormErrorsList errors={validationErrors} />
+            <ValidationErrorsList errors={validationErrors} />
             <form className={commonFormStyles.authForm} onSubmit={onFormSubmit}>
                 <div className={commonFormStyles.authFormInputs}>
                     <label htmlFor="login-email-input" hidden>Email</label>
@@ -57,7 +58,9 @@ export function LoginForm() {
                     <label htmlFor="login-password-input" hidden>Password</label>
                     <PasswordInput id="login-password-input"/>
                 </div>
-                <FormSubmitButton replaceWithLoader={isLoading}>Log In</FormSubmitButton>
+                <ElementOrLoader isLoading={isLoading}>
+                    <FormSubmitButton>Log In</FormSubmitButton>
+                </ElementOrLoader>
             </form>
             <FormError error={logInError} />
         </div>

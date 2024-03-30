@@ -1,5 +1,6 @@
 import {useQuery, UseQueryResult} from "react-query";
 import {getCurrentUser, UserSchema} from "../../services/auth";
+import {ElementOrLoader} from "../ui/Buttons/ElementOrLoader.tsx";
 
 function useUserInfo(): UseQueryResult<UserSchema> {
     return useQuery({
@@ -14,16 +15,19 @@ export function UserInfo() {
         <div>
             {
                 userInfoQuery.isError ? "Error while loading user data" :
-                userInfoQuery.isLoading ? "Loading user data" :
-                userInfoQuery.isSuccess && userInfoQuery.data !== undefined ?
-                <>
-                    {
-                        userInfoQuery.data.is_guest ?
-                            <p>You are logged in as a guest</p> :
-                            <p>Email: {userInfoQuery.data.email}</p>
-                    }
-                </>
-                : null
+                    <ElementOrLoader isLoading={userInfoQuery.isLoading} >
+                        {
+                            userInfoQuery.isSuccess && userInfoQuery.data !== undefined ?
+                            <>
+                                {
+                                    userInfoQuery.data.is_guest ?
+                                        <p>You are logged in as a guest</p> :
+                                        <p><b>Email: </b>{userInfoQuery.data.email}</p>
+                                }
+                            </>
+                            : null
+                        }
+                    </ElementOrLoader>
             }
         </div>
     );

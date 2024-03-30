@@ -1,0 +1,13 @@
+.auth-form-nav-container {
+    display: flex;
+    margin-top: 1rem;
+}
+
+.auth-form-nav-container-single-item {
+    composes: auth-form-nav-container;
+    justify-content: center;
+}
+.auth-form-nav-container-multiple-items {
+    composes: auth-form-nav-container;
+    justify-content: space-between;
+}

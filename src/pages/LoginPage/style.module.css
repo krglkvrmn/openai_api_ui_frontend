@@ -3,6 +3,11 @@
     flex-direction: column;
 }
 
+.alternative-login-options-container > span {
+    align-self: center;
+    margin: 0.5rem 0;
+}
+
 .social-logins-container {
     display: flex;
     flex-direction: column;
@@ -21,8 +26,4 @@
     margin: 5px 0;
 }
 
-.auth-form-nav-container {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 1rem;
-}
+

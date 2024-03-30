@@ -1,0 +1,42 @@
+.prompt-library-container {
+    display: flex;
+    flex-direction: column;
+    overflow-y: scroll;
+    scrollbar-width: thin;
+    scrollbar-color: white black;
+    padding: 1rem 1rem 1rem 0;
+}
+
+.prompt-library-record-container {
+    display: flex;
+    justify-content: space-between;
+    border-radius: 1rem;
+}
+.prompt-library-record-container:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.prompt-library-record-title-container {
+    overflow-x: hidden;
+    padding: 1rem;
+    flex-grow: 1;
+}
+
+.prompt-library-record-title {
+}
+
+.prompt-library-record-controls-container {
+    display: none;
+    align-items: center;
+    padding: 0 0.5rem;
+}
+
+/* Buttons sizes */
+.prompt-library-record-controls-container svg {
+    width: 1.2rem;
+    padding: 0 0.2rem;
+}
+
+.prompt-library-record-container:hover .prompt-library-record-controls-container {
+    display: flex;
+}

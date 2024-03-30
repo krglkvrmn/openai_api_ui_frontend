@@ -1,0 +1,59 @@
+.chat-history-container {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem 0.5rem 1rem 0.5rem;
+    overflow-y: clip;
+}
+
+.control-buttons-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.control-buttons-container svg {
+    width: 3rem;
+}
+
+.chat-history-records-container {
+    display: flex;
+    flex-direction: column;
+
+    overflow-y: scroll;
+    scrollbar-width: thin;
+    scrollbar-color: white black;
+}
+
+.chat-history-record-container {
+    display: flex;
+    justify-content: space-between;
+    border-radius: 1rem;
+}
+.chat-history-record-container:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.chat-history-record-title-container {
+    overflow-x: hidden;
+    padding: 1rem;
+    flex-grow: 1;
+}
+
+.chat-history-record-title {
+}
+
+.chat-history-record-controls-container {
+    display: none;
+    align-items: center;
+    padding: 0 0.5rem;
+}
+
+/* Buttons sizes */
+.chat-history-record-controls-container svg {
+    width: 1.2rem;
+    padding: 0 0.2rem;
+}
+
+.chat-history-record-container:hover .chat-history-record-controls-container {
+    display: flex;
+}

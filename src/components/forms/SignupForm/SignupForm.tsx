@@ -5,9 +5,10 @@ import {UserErrors, ValidatorType} from "../../../types/types.ts";
 import {useNavigate} from "react-router-dom";
 import {passwordsLengthValidator, passwordsMatchValidator} from "../../../vallidation/formValidators.ts";
 import {EmailInput, NewPasswordInput, RepeatPasswordInput} from "../Elements/Inputs.tsx";
-import FormError, {FormErrorsList} from "../../ui/InfoPanels/Error.tsx";
+import FormError, {ValidationErrorsList} from "../../ui/InfoPanels/Error.tsx";
 import commonFormStyles from "../common-form-styles.module.css";
 import {FormSubmitButton} from "../../ui/Buttons/FormSubmitButton.tsx";
+import {ElementOrLoader} from "../../ui/Buttons/ElementOrLoader.tsx";
 
 type TuseSignupFormReturn = {
     validationErrors: UserErrors,
@@ -48,7 +49,7 @@ export function SignupForm() {
     const {validationErrors, signUpError, onFormSubmit, isLoading} = useSignupForm();
     return (
         <div className={commonFormStyles.authFormContainer}>
-            <FormErrorsList errors={validationErrors} />
+            <ValidationErrorsList errors={validationErrors} />
             <form className={commonFormStyles.authForm} onSubmit={onFormSubmit}>
                 <div className={commonFormStyles.authFormInputs}>
                     <label htmlFor="signup-email-input" hidden>Email:</label>
@@ -58,7 +59,9 @@ export function SignupForm() {
                     <label htmlFor="signup-rep-password-input" hidden>Repeat password:</label>
                     <RepeatPasswordInput id="signup-rep-password-input"/>
                 </div>
-                <FormSubmitButton replaceWithLoader={isLoading}>Sign Up</FormSubmitButton>
+                <ElementOrLoader isLoading={isLoading}>
+                    <FormSubmitButton>Sign Up</FormSubmitButton>
+                </ElementOrLoader>
             </form>
             <FormError error={signUpError} />
         </div>

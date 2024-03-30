@@ -1,16 +1,9 @@
 import {Signal} from "@preact/signals-react";
 import {useMutation, useQuery} from "react-query";
-import {
-    createMessageRequest,
-    createNewChatRequest,
-    getChatRequest,
-    updateChatRequest
-} from "../../services/backendAPI";
+import {createMessageRequest, createNewChatRequest, getChatRequest, updateChatRequest} from "../../services/backendAPI";
 import ModelSelector from "../control/ModelSelector";
 import {optimisticQueryUpdateConstructor} from "../../utils/optimisticUpdates";
 import {MessageList} from "./MessageList";
-import {SystemPrompt, UserPrompt} from "../control/Prompt";
-import PromptFooter from "../layout/PromptFooter";
 import React, {useEffect, useState} from "react";
 import {StreamingStateType, useStreamingMessage} from "../../services/messageStreaming";
 import {useLocation, useNavigate, useParams} from "react-router-dom";
@@ -21,11 +14,16 @@ import {
     ChatDefault,
     ChatFullRead,
     ChatFullStream,
-    ChatIdType, MessageAny,
-    MessageAuthor, MessageCreate,
+    ChatIdType,
+    MessageAny,
+    MessageAuthor,
+    MessageCreate,
     MessageFullRead
 } from "../../types/dataTypes";
 import {queryClient} from "../../queryClient.ts";
+import styles from "./style.module.css";
+import {PromptsManager} from "../control/PromptsManager/PromptsManager.tsx";
+import {ElementOrLoader} from "../ui/Buttons/ElementOrLoader.tsx";
 
 
 type TuseChatReturn = {
@@ -256,10 +254,7 @@ function useChat(chatId: ChatIdType): TuseChatReturn {
 
 export const ChatContext = React.createContext<ChatAny | null>(null);
 
-export default function Chat(
-    { systemPromptParams }:
-    { systemPromptParams?: {systemPromptValue: Signal<string>, setSystemPromptValue: (value: string) => void} }
-) {
+export default function Chat() {
     const queryParams = useParams();
     const chatId = parseChatId(queryParams.chatId);
     const { data, streamingMessage, streamingState, isChatLoading, isChatError, dispatchers } = useChat(chatId);
@@ -268,34 +263,24 @@ export default function Chat(
     if (!['ready', 'abort', 'error'].includes(streamingState.value.status)) {
         messages.push(streamingMessage);
     }
-
     return (
-        <div id="chat-container">
-            <p>{streamingState.value.error}</p>
-            <ChatContext.Provider value={data}>
-                {
-                    data.messages.length === 0 &&
-                    <SystemPrompt promptValue={systemPromptParams?.systemPromptValue}
-                                  promptValueChangeHandler={systemPromptParams?.setSystemPromptValue}
-                                  submitHandler={prompt => {
-                                      addMessage({chatId: data.id, author: 'system', text: prompt});
-                                      systemPromptParams?.setSystemPromptValue('');
-                                  }}/>
-                }
-                {
-                    isChatLoading ? "Loading chat contents..." :
-                        isChatError ? "Error occurred while loading chat contents" :
-                            <>
-                                <ModelSelector activeModel={data.model}
-                                               modelSwitchHandler={(newModel: string) => switchModel({
-                                                   chatId: data.id,
-                                                   newModel
-                                               })}/>
+        <ChatContext.Provider value={data}>
+            <div className={styles.chatContainer}>
+                <p>{streamingState.value.error}</p>
+                    <ElementOrLoader isLoading={isChatLoading}>
+                        {
+                            isChatError ? "Error occurred while loading chat contents" :
                                 <MessageList messages={messages}/>
-                            </>
-                }
-                <PromptFooter>
-                    <UserPrompt submitHandler={prompt => addMessage({chatId: data?.id, author: 'user', text: prompt})}/>
+                        }
+                    </ElementOrLoader>
+
+            </div>
+                <div className={styles.chatControlFooter}>
+                    <ModelSelector activeModel={data.model}
+                                   modelSwitchHandler={(newModel: string) => switchModel({chatId: data.id, newModel})}/>
+                    <PromptsManager promptSubmitHandler={(text, author) => addMessage({chatId: data.id, text, author})}
+                                    allowSystemPrompt={data.messages.length === 0} />
+
                     {
                         streamingState.value.status !== "generating" && data.messages.length > 0 &&
                         data.messages[data.messages.length - 1].author === "user" &&
@@ -305,8 +290,8 @@ export default function Chat(
                         streamingState.value.status === "generating" &&
                         <button onClick={abortGeneration}>Abort generation</button>
                     }
-                </PromptFooter>
-            </ChatContext.Provider>
-        </div>
+                </div>
+        </ChatContext.Provider>
     )
 }
+

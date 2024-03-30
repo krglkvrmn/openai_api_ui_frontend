@@ -4,7 +4,6 @@
 
 .info-panel {
     margin: 0;
-    display: flex;
     justify-content: center;
     align-items: center;
     align-self: stretch;
@@ -15,11 +14,17 @@
 .form-error {
     composes: info-panel;
     color: #f12626;
+    text-align: center;
 }
 
 .form-info {
     composes: info-panel;
     color: steelblue;
+    text-align: center;
+}
+
+.validation-errors-list-container {
+
 }
 
 
@@ -30,6 +35,7 @@
 
 .auth-form-validation-errors-list-item {
     list-style-type: none;
+    text-align: center;
 }
 
 .auth-form-validation-errors-list-item > .info-panel-container {

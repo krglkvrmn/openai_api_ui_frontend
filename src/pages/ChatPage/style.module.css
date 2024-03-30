@@ -1,0 +1,8 @@
+body {
+    overscroll-behavior: none;
+}
+
+.chat-app-page-wrapper {
+    height: 100vh;
+    /*display: flex;*/
+}

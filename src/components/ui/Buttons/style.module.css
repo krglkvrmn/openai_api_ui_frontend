@@ -15,7 +15,7 @@
     background-color: #61dafb;
     cursor: pointer;
     border-width: 0;
-    box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
 }
 
 .form-submit-button {
@@ -41,20 +41,49 @@
     filter: brightness(90%);
 }
 
-.logout-button {
-    background-color: transparent;
-    border: 0;
-}
-
-.logout-button > svg {
-    width: 2rem;
-    height: auto;
-}
-
 .logout-button-container {
     composes: button-container;
 }
 
-.logout-button-container:hover {
-    background-color: rgba(0, 0, 0, 0.05);
+.icon-button {
+    background-color: transparent;
+    filter: invert(100%);
+    padding: 0;
+    border: 0;
+}
+
+.icon-button > svg {
+    width: 2rem;
+    height: auto;
+    transition: 1s ease;
+}
+
+.icon-button > svg:hover {
+    transform: scale(1.2);
+}
+
+
+.api-key-submit-button-container {
+}
+.api-key-submit-button-container svg {
+    width: 1.5rem;
+}
+
+.expand-collapse-button-container {}
+
+
+.copy-to-clipboard-button-container {}
+.successful-copy-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+}
+
+.successful-copy-container svg {
+    padding-right: 0.25rem;
+}
+
+.loadable-element-container {
+    width: 100%;
 }

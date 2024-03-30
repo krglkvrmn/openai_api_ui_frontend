@@ -1,0 +1,19 @@
+.chat-controller {
+    display: flex;
+    justify-content: space-between;
+    height: 100vh;
+}
+
+.chat-content {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    justify-content: space-between;
+    /*margin: 1rem 0;*/
+}
+
+.chat-api-key-form-header {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}

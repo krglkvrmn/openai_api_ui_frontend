@@ -1,16 +1,16 @@
-import React, { useRef } from "react"
-import { Signal } from "@preact/signals-react";
+import React, {useRef} from "react"
+import {Signal} from "@preact/signals-react";
+import styles from "./style.module.css";
 
 
 type PromptSubmitHandler = (text: string) => void;
 
 
 type BasePromptProps = {
-    promptType: "system" | "user",
     promptValue?: Signal<string> | string,
     promptValueChangeHandler?: (prompt: string) => void,
     placeholder?: string,
-    promptInputRef?: React.RefObject<HTMLInputElement>,
+    promptInputRef?: React.RefObject<HTMLTextAreaElement>,
     onSubmit?: () => void,
     children?: React.ReactNode
 }
@@ -27,8 +27,7 @@ export function UserPrompt(
 ) {
     const [promptInputRef, onPromptSubmit] = usePromptInputSubmitRef(undefined, submitHandler);
     return (
-        <BasePrompt promptType="user"
-                    promptValue={promptValue}
+        <BasePrompt promptValue={promptValue}
                     promptValueChangeHandler={promptValueChangeHandler}
                     placeholder="Enter your prompt here"
                     promptInputRef={promptInputRef}
@@ -45,8 +44,7 @@ export function SystemPrompt(
         }
     }, submitHandler);
     return (
-        <BasePrompt promptType="system"
-                    promptValue={promptValue}
+        <BasePrompt promptValue={promptValue}
                     promptValueChangeHandler={promptValueChangeHandler}
                     placeholder="Enter your system prompt here"
                     promptInputRef={promptInputRef}
@@ -56,19 +54,29 @@ export function SystemPrompt(
 
 
 function BasePrompt(
-    {promptValue, promptValueChangeHandler, promptType, placeholder, promptInputRef, onSubmit, children}: BasePromptProps
+    {promptValue, promptValueChangeHandler, placeholder, promptInputRef, onSubmit, children}: BasePromptProps
     ) {
-    
+    function onChange(event: React.ChangeEvent<HTMLTextAreaElement>) {
+        if (promptValueChangeHandler !== undefined) {
+            promptValueChangeHandler(event.target.value);
+        }
+        if (promptInputRef !== undefined && promptInputRef.current !== null) {
+            promptInputRef.current.style.height = "20px";
+            promptInputRef.current.style.height = promptInputRef.current.scrollHeight + 'px';
+        }
+    }
+    function onKeyDown(event: React.KeyboardEvent<HTMLTextAreaElement>) {
+        if (onSubmit !== undefined && event.key === 'Enter') {
+            onSubmit()
+        }
+    }
     return (
-        <div id={`${promptType}-prompt-container`}
-             className="prompt-container">
-            <input type="text"
-                   id={`${promptType}-prompt-input`}
-                   placeholder={placeholder}
-                   ref={promptInputRef}
-                   value={typeof promptValue === "string" || typeof promptValue === "undefined" ? promptValue : promptValue.value}
-                   onChange={e => promptValueChangeHandler === undefined ? undefined : promptValueChangeHandler(e.target.value)}
-                   onKeyDown={e => {if (onSubmit !== undefined && e.key === 'Enter') {onSubmit()}}}/>
+        <div className={styles.promptContainer}>
+            <textarea placeholder={placeholder}
+                      ref={promptInputRef}
+                      value={typeof promptValue === "string" || typeof promptValue === "undefined" ? promptValue : promptValue.value}
+                      onChange={onChange}
+                      onKeyDown={onKeyDown} rows={1}/>
             {children}
             <button type="submit"
                     id="user-prompt-input-submit-button"
@@ -78,10 +86,10 @@ function BasePrompt(
 }
 
 function usePromptInputSubmitRef(
-    onSubmitSideEffect?: (inputRef: React.RefObject<HTMLInputElement>) => void,
+    onSubmitSideEffect?: (inputRef: React.RefObject<HTMLTextAreaElement>) => void,
     submitValueHandler?: PromptSubmitHandler
-    ): [React.RefObject<HTMLInputElement>, () => void] {
-    const promptInputRef = useRef<HTMLInputElement | null>(null);
+    ): [React.RefObject<HTMLTextAreaElement>, () => void] {
+    const promptInputRef = useRef<HTMLTextAreaElement | null>(null);
 
     function onSubmit() {
         if (promptInputRef.current === null) {

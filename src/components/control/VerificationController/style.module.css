@@ -8,6 +8,7 @@
 
 .verification-container > h2 {
     align-self: center;
+    text-align: center;
 }
 
 .verification-confirmation {
@@ -22,4 +23,8 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+
+.retry-counter-text {
+    text-align: center;
 }

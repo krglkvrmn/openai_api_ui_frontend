@@ -1,6 +1,6 @@
 import {useSearchParams} from "react-router-dom";
 import {ForgotPasswordForm} from "../forms/ForgotPasswordForm/ForgotPasswordForm.tsx";
-import {ResetPasswordForm} from "../forms/ResetPasswordForm.tsx";
+import {ResetPasswordForm} from "../forms/ResetPasswordForm/ResetPasswordForm.tsx";
 
 
 function PasswordResetRequestController() {

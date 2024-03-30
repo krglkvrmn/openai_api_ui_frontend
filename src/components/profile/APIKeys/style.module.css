@@ -1,0 +1,17 @@
+.api-keys-controller-container {}
+
+.api-keys-list {}
+
+.api-key-record-container {
+    display: flex;
+    align-items: center;
+}
+
+.api-ley-record-repr {
+    font-size: 18px;
+}
+
+.api-key-record-container svg {
+    width: 1.2rem;
+    margin-left: 1rem;
+}

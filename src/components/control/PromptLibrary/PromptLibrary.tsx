@@ -1,17 +1,18 @@
 import {useMutation, useQuery, UseQueryResult} from "react-query";
-import {funcClosureOrUndefined} from "../../utils/functional";
+import {funcClosureOrUndefined} from "../../../utils/functional.ts";
 import {
     deleteSystemPromptsRequest,
     getPopularSystemPromptsRequest,
-} from "../../services/backendAPI";
-import {optimisticQueryUpdateConstructor} from "../../utils/optimisticUpdates";
-import {SystemPromptRead} from "../../types/dataTypes";
+} from "../../../services/backendAPI.ts";
+import {optimisticQueryUpdateConstructor} from "../../../utils/optimisticUpdates.ts";
+import {SystemPromptRead} from "../../../types/dataTypes.ts";
+import styles from "./style.module.css";
+import {Spinner} from "../../ui/Indicators/Spinner.tsx";
+import {DeleteButton} from "../../ui/Buttons/DeleteButton.tsx";
+import {useSystemPrompt} from "../../../hooks/contextHooks.ts";
 
-type PromptSelectorProps = {
-    promptSelectionCallback?: (prompt: string) => void;
-}
 
-type PromptSelectionRecordProps = {
+type PromptLibraryRecordProps = {
     prompt: string,
     promptSelectionCallback?: () => void,
     promptDeleteHandler?: () => void
@@ -49,18 +50,19 @@ function useSystemPromptsLibrary(): TuseSystemPromptsLibrary {
 }
 
 
-export default function PromptSelector({promptSelectionCallback}: PromptSelectorProps) {
+export default function PromptLibrary() {
+    const setSystemPromptValue = useSystemPrompt()[1];
     const { systemPromptsLibraryQuery, deleteSystemPrompt } = useSystemPromptsLibrary();
 
     return (
-        <div id="prompt-selector-container">
+        <div className={styles.promptLibraryContainer}>
             {
-                systemPromptsLibraryQuery.isLoading ? "Loading prompts list..." :
-                systemPromptsLibraryQuery.isError ? "Error occured while loading prompts" :
+                systemPromptsLibraryQuery.isLoading ? <Spinner /> :
+                systemPromptsLibraryQuery.isError ? "Error occurred while loading prompts" :
                 systemPromptsLibraryQuery.isSuccess ? (
                     systemPromptsLibraryQuery.data.map((prompt) => {
-                    return <PromptSelectorRecord key={prompt.id} prompt={prompt.content}
-                                                 promptSelectionCallback={funcClosureOrUndefined(promptSelectionCallback, prompt.content)}
+                    return <PromptLibraryRecord key={prompt.id} prompt={prompt.content}
+                                                 promptSelectionCallback={funcClosureOrUndefined(setSystemPromptValue, prompt.content)}
                                                  promptDeleteHandler={funcClosureOrUndefined(deleteSystemPrompt, prompt.id)}/>
                 })) : null
             }
@@ -68,11 +70,15 @@ export default function PromptSelector({promptSelectionCallback}: PromptSelector
     );
 }
 
-function PromptSelectorRecord({prompt, promptSelectionCallback, promptDeleteHandler}: PromptSelectionRecordProps) {
+function PromptLibraryRecord({prompt, promptSelectionCallback, promptDeleteHandler}: PromptLibraryRecordProps) {
     return (
-        <div className="prompt-selection-record-container">
-            <b className="prompt-selection-record" onClick={promptSelectionCallback}>{prompt}</b>
-            <button onClick={promptDeleteHandler}>Delete</button>
+        <div className={styles.promptLibraryRecordContainer}>
+            <div className={styles.promptLibraryRecordTitleContainer} onClick={promptSelectionCallback}>
+                <b className={styles.promptLibraryRecordTitle}>{prompt}</b>
+            </div>
+            <div className={styles.promptLibraryRecordControlsContainer}>
+                <DeleteButton onClick={promptDeleteHandler} />
+            </div>
         </div>
     );
 }

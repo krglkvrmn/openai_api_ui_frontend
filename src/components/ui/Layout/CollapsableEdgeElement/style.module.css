@@ -1,0 +1,88 @@
+.expand-collapse-button-container {
+    position: absolute;
+}
+
+.collapsable-edge-element {
+    transition-duration: 5s;
+    position: relative;
+}
+
+.collapsable-edge-element-content {
+    display: flex;
+    justify-content: center;
+}
+
+.collapsable-edge-element-vertical {composes: collapsable-edge-element}
+.collapsable-edge-element-horizontal {composes: collapsable-edge-element}
+.collapsable-edge-element-collapsed {composes: collapsable-edge-element}
+.collapsable-edge-element-expanded {composes: collapsable-edge-element}
+.collapsable-edge-element-left {composes: collapsable-edge-element-horizontal}
+.collapsable-edge-element-right {composes: collapsable-edge-element-horizontal}
+.collapsable-edge-element-top {composes: collapsable-edge-element-vertical}
+.collapsable-edge-element-bottom {composes: collapsable-edge-element-vertical}
+
+.collapsable-edge-element-collapsed .collapsable-edge-element-content {
+    display: none;
+}
+
+.collapsable-edge-element-horizontal .collapsable-edge-element-content {
+    flex-direction: column;
+}
+
+.collapsable-edge-element-vertically-collapsed {
+    composes: collapsable-edge-element-collapsed collapsable-edge-element-vertical;
+}
+.collapsable-edge-element-horizontally-collapsed {
+    composes: collapsable-edge-element-horizontal collapsable-edge-element-collapsed;
+}
+.collapsable-edge-element-vertically-expanded {
+    composes: collapsable-edge-element-vertical collapsable-edge-element-expanded;
+}
+.collapsable-edge-element-horizontally-expanded {
+    composes: collapsable-edge-element-horizontal collapsable-edge-element-expanded;
+}
+
+.collapsable-edge-element-left .expand-collapse-button-container {
+    left: 100%;
+    top: calc(50% - 1rem);  /* 1rem is half the size of button */
+}
+.collapsable-edge-element-left-collapsed {
+    composes: collapsable-edge-element-horizontally-collapsed collapsable-edge-element-left;
+}
+.collapsable-edge-element-left-expanded {
+    composes: collapsable-edge-element-horizontally-expanded collapsable-edge-element-left;
+}
+
+.collapsable-edge-element-right .expand-collapse-button-container {
+    right: 100%;
+    top: calc(50% - 1rem);    /* 1rem is half the size of button */
+}
+.collapsable-edge-element-right-collapsed {
+    composes: collapsable-edge-element-horizontally-collapsed collapsable-edge-element-right;
+}
+.collapsable-edge-element-right-expanded {
+    composes: collapsable-edge-element-horizontally-expanded collapsable-edge-element-right;
+}
+
+.collapsable-edge-element-top .expand-collapse-button-container {
+    top: 100%;
+    left: calc(50% - 1rem);    /* 1rem is half the size of button */
+}
+.collapsable-edge-element-top-collapsed {
+    composes: collapsable-edge-element-vertically-collapsed collapsable-edge-element-top;
+}
+.collapsable-edge-element-top-expanded {
+    composes: collapsable-edge-element-vertically-expanded collapsable-edge-element-top;
+}
+
+
+.collapsable-edge-element-bottom .expand-collapse-button-container {
+    bottom: 100%;
+    left: calc(50% - 1rem);    /* 1rem is half the size of button */
+}
+.collapsable-edge-element-bottom-collapsed {
+    composes: collapsable-edge-element-vertically-collapsed collapsable-edge-element-bottom;
+}
+.collapsable-edge-element-bottom-expanded {
+    composes: collapsable-edge-element-vertically-expanded collapsable-edge-element-bottom;
+}

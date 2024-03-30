@@ -1,10 +1,10 @@
 import ChatApp from "../../components/chat/ChatApp";
-import "./style.css";
 import { LocalAPIKeyProvider } from "../../contexts/LocalAPIKeyProvider.tsx";
+import styles from "./style.module.css";
 
 export default function ChatPage() {
     return (
-        <div id="app-content">
+        <div className={styles.chatAppPageWrapper}>
             <LocalAPIKeyProvider>
                 <ChatApp/>
             </LocalAPIKeyProvider>

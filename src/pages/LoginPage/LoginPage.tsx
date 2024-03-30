@@ -8,6 +8,8 @@ import {ModalCard} from "../../components/ui/Layout/ModalCard/ModalCard.tsx";
 import styles from "./style.module.css";
 import globalStyles from "../../styles/global-styles.module.css";
 import {GuestLoginButton} from "../../components/ui/Buttons/GuestLoginButton.tsx";
+import {ElementOrLoader} from "../../components/ui/Buttons/ElementOrLoader.tsx";
+import {AuthFormNavigator} from "../../components/layout/AuthFormNavigator/AuthFormNavigator.tsx";
 
 export default function LoginPage() {
     const location = useLocation();
@@ -20,7 +22,7 @@ export default function LoginPage() {
     const state = location.state;
     switch (state) {
         case 'password-reset-request':
-            redirectMessage = 'A link to reset your password was sent to your email'; break;
+            redirectMessage = 'Instructions for resetting your password were sent to your email'; break;
     }
 
     return (
@@ -30,23 +32,27 @@ export default function LoginPage() {
             <hr/>
             <div className={styles.alternativeLoginOptionsContainer}>
                 <div className={styles.socialLoginsContainer}>
-                    <GoogleLoginButton align="center"
-                                       size="2rem"
-                                       onClick={() => oidcLogin('google')}/>
-                    <GithubLoginButton align="center"
-                                       size="2rem"
-                                       onClick={() => oidcLogin('github')}/>
+                    <ElementOrLoader isLoading={dispatchersStatuses.oidcLogin === "loading"}>
+                        <GoogleLoginButton align="center"
+                                           size="2rem"
+                                           onClick={() => oidcLogin('google')}/>
+                        <GithubLoginButton align="center"
+                                           size="2rem"
+                                           onClick={() => oidcLogin('github')}/>
+                    </ElementOrLoader>
                 </div>
+                <span>Or</span>
                 <div className={styles.guestLoginContainer}>
-                    <span>Or</span>
-                    <GuestLoginButton replaceWithLoader={isGuestLoginLoading} onClick={logInAsGuest} />
+                    <ElementOrLoader isLoading={isGuestLoginLoading}>
+                        <GuestLoginButton onClick={logInAsGuest}/>
+                    </ElementOrLoader>
                 </div>
             </div>
             <FormError error={guestLogInError} />
-            <nav className={styles.authFormNavContainer}>
+            <AuthFormNavigator>
                 <Link className={globalStyles.navLink} to="/register">Not registered yet?</Link>
                 <Link className={globalStyles.navLink} to="/forgot-password">Forgot password?</Link>
-            </nav>
+            </AuthFormNavigator>
         </ModalCard>
     );
 }

@@ -1,34 +1,45 @@
-import ChatsManager from "../control/ChatsManager";
-import ControlSidebar from "../layout/ControlSidebar";
-import {Link} from "react-router-dom";
+import ChatsManager from "../control/ChatsManager/ChatsManager.tsx";
 import {useAuth} from "../../hooks/contextHooks";
-import {ChatController} from "./ChatController";
+import {ChatController} from "./ChatController/ChatController.tsx";
 import {ActiveChatIndexProvider} from "../../contexts/ActiveChatIndexProvider";
+import styles from "./style.module.css";
+import {Sidebar} from "../ui/Layout/Sidebar/Sidebar.tsx";
+import {LogoutButton} from "../ui/Buttons/LogoutButton.tsx";
+import {Link} from "react-router-dom";
+import {SystemPromptProvider} from "../../contexts/SystemPromptProvider.tsx";
+import PromptLibrary from "../control/PromptLibrary/PromptLibrary.tsx";
 
 
 export default function ChatApp() {
-    const { isAuthenticated, authState, authDispatchers } = useAuth();
-    const { logOut } = authDispatchers;
+    const {authState, authDispatchers} = useAuth();
+    const {logOut} = authDispatchers;
 
     return (
-        <div id="chat-app">
+        <div className={styles.chatAppWrapper}>
             <ActiveChatIndexProvider>
-                <>
-                    <ControlSidebar>
-                        <ChatsManager />
-                        
-                        <div>
-                            {!isAuthenticated ?
-                                <Link to="/login"><button>Log In</button></Link> :
+                <SystemPromptProvider>
+                    <>
+                        <Sidebar side="left">
+                            <ChatsManager />
+
+                            <div className={styles.authSection}>
                                 <>
-                                    <p>{`You are already logged in as ${authState ? authState?.user?.username : authState}`}</p>
-                                    <button onClick={logOut}>Log out</button>
+                                    <p>
+                                        {"You are logged in as "}
+                                        { authState ? <Link to="/profile">{authState?.user?.username}</Link> : authState }
+                                    </p>
+                                    <LogoutButton onClick={logOut} />
                                 </>
-                            }
+                            </div>
+                        </Sidebar>
+                        <div className={styles.chatMainContent}>
+                            <ChatController />
                         </div>
-                    </ControlSidebar>
-                    <ChatController />
-                </>
+                        <Sidebar side="right" >
+                            <PromptLibrary />
+                        </Sidebar>
+                    </>
+                </SystemPromptProvider>
             </ActiveChatIndexProvider>
         </div>
     )

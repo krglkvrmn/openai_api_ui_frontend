@@ -8,11 +8,16 @@ import {
     LoginResponse,
     logout,
     OIDCProviderType,
-    refresh, requestEmailVerification, requestPasswordReset, resetPassword,
+    refresh,
+    requestEmailVerification,
+    requestPasswordReset,
+    resetPassword,
     ResponseDetails,
     signup,
     SignupFormDataType,
-    SignupResponse, verifyEmail, VerifyResponse
+    SignupResponse,
+    verifyEmail,
+    VerifyResponse
 } from "../services/auth";
 import {
     parseLogInError,
@@ -73,6 +78,7 @@ type AuthContextValue = {
 
 
 export const AuthContext = React.createContext<AuthContextValue>(null);
+
 
 export function AuthProvider({ children }: {children: React.ReactElement}) {
     const location = useLocation();

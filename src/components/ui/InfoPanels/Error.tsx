@@ -14,19 +14,19 @@ export default function FormError({error}: {error: string | undefined | null}) {
     );
 }
 
-export function FormErrorsList({errors}: { errors: UserErrors }) {
+export function ValidationErrorsList({errors}: { errors: UserErrors }) {
     return (
         errors.length !== 0 &&
-        <ul className={styles.authFormValidationErrorsList}>
-            {
-                errors.map((error, index) => {
-                    return (
-                        <li className={styles.authFormValidationErrorsListItem}>
-                            <FormError key={index} error={error}/>
-                        </li>
-                    );
-                })
-            }
-        </ul>
+            <ul className={styles.authFormValidationErrorsList}>
+                {
+                    errors.map((error, index) => {
+                        return (
+                            <li className={styles.authFormValidationErrorsListItem}>
+                                <FormError key={index} error={error}/>
+                            </li>
+                        );
+                    })
+                }
+            </ul>
     );
 }
