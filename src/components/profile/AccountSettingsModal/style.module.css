@@ -1,0 +1,20 @@
+.account-settings-modal {}
+.account-settings-modal[open] {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 1rem;
+    width: 40rem;
+}
+
+.account-settings-modal-footer {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    height: 50px;
+    width: 100%;
+}
+
+.account-settings-modal-footer button {
+    width: 5rem;
+}

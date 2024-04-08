@@ -5,6 +5,8 @@ import {Signal} from "@preact/signals-core";
 import {MessageCreate} from "../../../types/dataTypes.ts";
 import styles from "./style.module.css";
 import {CopyToClipboardButton} from "../../ui/Buttons/CopyToClipboardButton.tsx";
+import React, {useRef} from "react";
+import {useSignalEffect} from "@preact/signals-react";
 
 
 function CodeBlockComponent({
@@ -48,17 +50,24 @@ const authorsMapper = new Map([
 ])
 
 export default function Message(
-    {message}:
-    {message: MessageCreate | Signal<MessageCreate>}
+    {message, autoscroll}:
+    {message: MessageCreate | Signal<MessageCreate>, autoscroll?: boolean}
     ) {
+    const messageContainerRef: React.RefObject<HTMLDivElement> = useRef(null);
     const isMessageSignal = message instanceof Signal;
     const [content, author] = [
         isMessageSignal ? message.value.content : message.content,
         isMessageSignal ? message.value.author: message.author,
     ]
     const hrAuthor = authorsMapper.get(author);
+    useSignalEffect(() => {
+        isMessageSignal ? message.value :  message;  // Subscribe an effect to signal change
+        if (autoscroll) {
+            messageContainerRef?.current?.scrollIntoView()
+        }
+    });
     return (
-        <div className={styles[`${author}MessageContainer`]}>
+        <div className={styles[`${author}MessageContainer`]} ref={messageContainerRef}>
             {
                 author === "system" ?
                     <b>Chat context</b> :

@@ -1,0 +1,12 @@
+.model-selector-container {
+    padding: 0.5rem 0;
+}
+.model-selector {
+    border: 0;
+    text-align: center;
+    font-size: 1.2rem;
+    border-radius: 1rem;
+}
+.model-selector-option {
+    font-size: 1rem;
+}

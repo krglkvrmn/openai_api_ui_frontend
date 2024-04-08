@@ -1,7 +1,7 @@
 import {Signal} from "@preact/signals-react";
 import {useMutation, useQuery} from "react-query";
 import {createMessageRequest, createNewChatRequest, getChatRequest, updateChatRequest} from "../../services/backendAPI";
-import ModelSelector from "../control/ModelSelector";
+import ModelSelector from "../control/ModelSelector/ModelSelector.tsx";
 import {optimisticQueryUpdateConstructor} from "../../utils/optimisticUpdates";
 import {MessageList} from "./MessageList";
 import React, {useEffect, useState} from "react";
@@ -24,6 +24,10 @@ import {queryClient} from "../../queryClient.ts";
 import styles from "./style.module.css";
 import {PromptsManager} from "../control/PromptsManager/PromptsManager.tsx";
 import {ElementOrLoader} from "../ui/Buttons/ElementOrLoader.tsx";
+import {LoadingError} from "../ui/InfoPanels/Error.tsx";
+import {APIKeyErrors} from "../control/Errors/APIKeyErrors.tsx";
+import {RegenerateMessageButton} from "../ui/Buttons/RegenerateMessageButton.tsx";
+import {AbortMessageGenerationButton} from "../ui/Buttons/AbortMessageGenerationButton.tsx";
 
 
 type TuseChatReturn = {
@@ -34,6 +38,7 @@ type TuseChatReturn = {
     isChatError: boolean,
     isChatSuccess: boolean,
     dispatchers: {
+        reloadChat: () => void,
         switchModel: ({chatId, newModel}: {chatId: ChatIdType, newModel: string}) => void,
         addMessage: ({chatId, author, text}: {chatId: ChatIdType, author: MessageAuthor, text: string}) => void,
         abortGeneration: () => void,
@@ -69,12 +74,13 @@ function useChat(chatId: ChatIdType): TuseChatReturn {
         streamingMessage, streamingState, streamMessage,
         reset: resetStreamingMessage, abort: abortStreamingMessage
     } = useStreamingMessage(chatId);
-    const { data: queryData, isLoading, isError, isSuccess } = useQuery({
+    const { data: queryData, refetch, isLoading, isError, isSuccess } = useQuery({
         queryKey: ['chats', chatId],
         queryFn: async ({ queryKey }) => {
+            // await new Promise((resolve, reject) => setTimeout(() => resolve(1), 100000));
             return await getChatRequest(queryKey[1] as number);
         },
-        onError: () => navigate('/chat/new'),
+        // onError: () => navigate('/chat/new'),
         enabled: !isDefault
     });
     const data: ChatAny = queryData === undefined ? defaultChat : queryData;
@@ -197,6 +203,7 @@ function useChat(chatId: ChatIdType): TuseChatReturn {
 
     function onMessageSubmit(mutateData: { chatId: ChatIdType, author: MessageAuthor, text: string }): void {
         if (streamingState.value.status !== "generating") {
+            streamingState.value = {status: "ready"};
             isDefault ? createChatMutation.mutate(mutateData) : addMessageMutation.mutate(mutateData);
         }
     }
@@ -241,6 +248,7 @@ function useChat(chatId: ChatIdType): TuseChatReturn {
         isChatError: isError,
         isChatSuccess: isSuccess,
         dispatchers: {
+            reloadChat: refetch,
             switchModel: switchModelMutation.mutate,
             addMessage: onMessageSubmit,
             abortGeneration: abortStreamingMessage,
@@ -258,39 +266,43 @@ export default function Chat() {
     const queryParams = useParams();
     const chatId = parseChatId(queryParams.chatId);
     const { data, streamingMessage, streamingState, isChatLoading, isChatError, dispatchers } = useChat(chatId);
-    const { switchModel, addMessage, generateResponse, abortGeneration } = dispatchers;
+    const { reloadChat, switchModel, addMessage, generateResponse, abortGeneration } = dispatchers;
     const messages: (MessageAny | Signal<MessageCreate>)[] = [...data.messages];
     if (!['ready', 'abort', 'error'].includes(streamingState.value.status)) {
         messages.push(streamingMessage);
     }
     return (
         <ChatContext.Provider value={data}>
+            <div className={styles.apiKeyErrorsContainer}>
+                <APIKeyErrors apiKeysErrorType={streamingState.value.error} />
+            </div>
             <div className={styles.chatContainer}>
-                <p>{streamingState.value.error}</p>
-                    <ElementOrLoader isLoading={isChatLoading}>
-                        {
-                            isChatError ? "Error occurred while loading chat contents" :
-                                <MessageList messages={messages}/>
-                        }
-                    </ElementOrLoader>
+                <ElementOrLoader isLoading={isChatLoading}>
+                    {
+                        isChatError ?
+                            <LoadingError errorText="An error occurred while loading a chat" reloadAction={reloadChat}/> :
+                            <MessageList messages={messages}/>
+                    }
+                </ElementOrLoader>
 
             </div>
-                <div className={styles.chatControlFooter}>
-                    <ModelSelector activeModel={data.model}
-                                   modelSwitchHandler={(newModel: string) => switchModel({chatId: data.id, newModel})}/>
-                    <PromptsManager promptSubmitHandler={(text, author) => addMessage({chatId: data.id, text, author})}
-                                    allowSystemPrompt={data.messages.length === 0} />
+            <div className={styles.chatControlFooter}>
+                <ModelSelector activeModel={data.model}
+                               modelSwitchHandler={(newModel: string) => switchModel({chatId: data.id, newModel})}/>
+                <PromptsManager promptSubmitHandler={(text, author) => addMessage({chatId: data.id, text, author})}
+                                allowSystemPrompt={data.messages.length === 0}
+                                active={streamingState.value.status !== "generating"} />
 
-                    {
-                        streamingState.value.status !== "generating" && data.messages.length > 0 &&
-                        data.messages[data.messages.length - 1].author === "user" &&
-                        <button onClick={generateResponse}>Regenerate</button>
-                    }
-                    {
-                        streamingState.value.status === "generating" &&
-                        <button onClick={abortGeneration}>Abort generation</button>
-                    }
-                </div>
+                {
+                    streamingState.value.status !== "generating" && data.messages.length > 0 &&
+                    data.messages[data.messages.length - 1].author === "user" &&
+                    <RegenerateMessageButton onClick={generateResponse} />
+                }
+                {
+                    streamingState.value.status === "generating" &&
+                    <AbortMessageGenerationButton onClick={abortGeneration} />
+                }
+            </div>
         </ChatContext.Provider>
     )
 }

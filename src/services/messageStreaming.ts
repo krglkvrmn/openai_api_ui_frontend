@@ -6,6 +6,7 @@ import {refreshRetryOnUnauthorized} from "./auth";
 import {useOneTimeMemo} from "../hooks/useOneTimeMemo";
 import {ChatFullStream, MessageAuthor, MessageCreate} from "../types/dataTypes";
 import {BACKEND_ORIGIN} from "../configuration/config.ts";
+import {APIKeyErrorType} from "../types/errorTypes.ts";
 
 
 type RequestStreamingCompletionParamsType = {
@@ -33,7 +34,7 @@ type CompletionEventDeltaType = {
 export type StreamingStatusType = "ready" | "generating" | "complete" | "abort" | "error";
 export type StreamingStateType = {
     status: StreamingStatusType,
-    error?: string
+    error?: APIKeyErrorType
 }
 
 type TuseModelStreamingMessageReturn = {
@@ -69,7 +70,7 @@ async function requestStreamingCompletion(
         return { location: response.headers['location'], data: response.data };
     } catch (error) {
         if (isAxiosError(error) && error.response?.status === 400 && error.response?.data.detail === 'API key missing') {
-           return { error: 'Set an API key to make requests!' };
+           return { error: 'api_key_unset' };
         }
         throw error;
     }
@@ -103,10 +104,7 @@ export function useStreamingMessage(identifier: number | null): TuseModelStreami
                     reject(event);
                 }
                 if ('error' in eventData) {
-                    switch (eventData.error.code) {
-                        case 'invalid_api_key':
-                            streamingState.value = {status: "error", error: "Invalid API key"};
-                    }
+                    streamingState.value = {status: "error", error: eventData.error.code};
                     eventSource.close();
                     reject(event);
                 }

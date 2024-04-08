@@ -1,0 +1,7 @@
+.user-info-container {
+    display: flex;
+    flex-direction: column;
+}
+.guest-info-container {
+    text-align: center;
+}

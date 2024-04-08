@@ -1,3 +1,6 @@
+/*@import "src/components/ui/Indicators/style.module.css";*/
+
+
 .button-container {
     display: flex;
     flex-direction: column;
@@ -12,7 +15,8 @@
     min-height: 2.5em;
     font-size: large;
     border-radius: 0.5rem;
-    background-color: #61dafb;
+    background-color: var(--primary-color);
+    color: var(--primary-color-contrast);
     cursor: pointer;
     border-width: 0;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
@@ -23,7 +27,7 @@
 }
 
 .form-submit-button:hover {
-    filter: brightness(90%);
+    background-color: var(--primary-color-light);
 }
 
 .guest-login-button {
@@ -59,7 +63,7 @@
 }
 
 .icon-button > svg:hover {
-    transform: scale(1.2);
+    transform: scale(1.1);
 }
 
 
@@ -85,5 +89,25 @@
 }
 
 .loadable-element-container {
+    margin: auto;
     width: 100%;
+    height: 100%;
 }
+
+
+.new-chat-button-container {}
+
+.reload-button-container {
+    margin: 0 0.5rem;
+}
+.reload-button-container svg {
+    width: 1.5rem;
+}
+
+.switch-prompt-button-container {}
+
+.prompt-submit-button-container {}
+.prompt-submit-button-container svg {}
+
+.regenerate-message-button-container {}
+.abort-message-generation-button-container {}

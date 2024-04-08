@@ -4,16 +4,17 @@ import {ChatController} from "./ChatController/ChatController.tsx";
 import {ActiveChatIndexProvider} from "../../contexts/ActiveChatIndexProvider";
 import styles from "./style.module.css";
 import {Sidebar} from "../ui/Layout/Sidebar/Sidebar.tsx";
-import {LogoutButton} from "../ui/Buttons/LogoutButton.tsx";
-import {Link} from "react-router-dom";
 import {SystemPromptProvider} from "../../contexts/SystemPromptProvider.tsx";
 import PromptLibrary from "../control/PromptLibrary/PromptLibrary.tsx";
-
+import {useDialog} from "../../hooks/useDialog.ts";
+import {LoginInfo} from "../profile/LoginInfo/LoginInfo.tsx";
+import {AccountSettingsModal} from "../profile/AccountSettingsModal/AccountSettingsModal.tsx";
+import {AuthActionsPopupTriggerButton} from "../profile/AuthActionsPopupButton/AuthActionsPopupTriggerButton.tsx";
 
 export default function ChatApp() {
-    const {authState, authDispatchers} = useAuth();
-    const {logOut} = authDispatchers;
-
+    const { authDispatchers } = useAuth();
+    const { logOut } = authDispatchers;
+    const { dialogRef, openDialog, closeDialog } = useDialog("modal");
     return (
         <div className={styles.chatAppWrapper}>
             <ActiveChatIndexProvider>
@@ -22,14 +23,9 @@ export default function ChatApp() {
                         <Sidebar side="left">
                             <ChatsManager />
 
-                            <div className={styles.authSection}>
-                                <>
-                                    <p>
-                                        {"You are logged in as "}
-                                        { authState ? <Link to="/profile">{authState?.user?.username}</Link> : authState }
-                                    </p>
-                                    <LogoutButton onClick={logOut} />
-                                </>
+                            <div className={styles.mainSidebarAuthInfoControls}>
+                                <LoginInfo />
+                                <AuthActionsPopupTriggerButton onAccountSettingsClick={openDialog} onLogoutClick={logOut} />
                             </div>
                         </Sidebar>
                         <div className={styles.chatMainContent}>
@@ -41,6 +37,7 @@ export default function ChatApp() {
                     </>
                 </SystemPromptProvider>
             </ActiveChatIndexProvider>
+            <AccountSettingsModal dialogRef={dialogRef} closeDialog={closeDialog} />
         </div>
     )
 }

@@ -6,8 +6,6 @@ import LoginPage from './pages/LoginPage/LoginPage';
 import {AuthProvider} from './contexts/AuthProvider';
 import ChatPage from './pages/ChatPage/ChatPage';
 import {RequireAuth, RequireNoAuth} from "./components/control/RequireAuth";
-import {ReactQueryDevtools} from 'react-query/devtools'
-import {ProfilePage} from './pages/ProfilePage/ProfilePage';
 import {queryClient} from "./queryClient.ts";
 import {RequireVerification} from "./components/control/RequireVerification.tsx";
 import {VerificationPage} from "./pages/VerificationPage/VerificationPage.tsx";
@@ -26,7 +24,6 @@ function App() {
               <Route path="/" element={<RequireVerification />}>
                 <Route path="/chat" element={<Navigate to="/chat/new" />}/>
                 <Route path="/chat/:chatId" element={<ChatPage />}/>
-                <Route path='/profile' element={<ProfilePage />}/>
               </Route>
             </Route>
             <Route path="/" element={<RequireNoAuth />}>
@@ -38,7 +35,7 @@ function App() {
           </Routes>
         </AuthProvider>
       </BrowserRouter>
-      <ReactQueryDevtools initialIsOpen={false} />
+      {/*<ReactQueryDevtools initialIsOpen={false} />*/}
     </QueryClientProvider>
   );
 }

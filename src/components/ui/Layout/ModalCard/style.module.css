@@ -2,7 +2,7 @@
     display: flex;
     min-height: 100vh;
     justify-content: center;
-    background-color: #DDD;
+    background-color: var(--background-color-modal);
 }
 
 .modal-card-base {
@@ -17,15 +17,16 @@
     flex-direction: column;
     justify-content: space-between;
     align-content: center;
-    border-style: solid;
+    /*border-style: solid;*/
     border-radius: 1rem;
-    background-color: white;
-    border-color: #1a1818;
-    box-shadow: 5px 5px 15px gray;
+    background-color: var(--background-color);
+    border-color: var(--divider-color);
+    color: var(--text-color);
+    /*box-shadow: 5px 5px 15px gray;*/
 }
 
 .modal-card-base > hr {
-    border-color: rgba(220,220,220,0.49);
+    border-color: var(--divider-color);
     border-radius: 1px;
     border-width: 1px;
     padding: 0;

@@ -12,11 +12,14 @@ import styles from "./style.module.css";
 import {DeleteButton} from "../../ui/Buttons/DeleteButton.tsx";
 import {ConfirmButton} from "../../ui/Buttons/ConfirmButton.tsx";
 import {EditButton} from "../../ui/Buttons/EditButton.tsx";
-import {AddButton} from "../../ui/Buttons/AddButton.tsx";
+import {NewChatButton} from "../../ui/Buttons/NewChatButton.tsx";
+import {ElementOrLoader} from "../../ui/Buttons/ElementOrLoader.tsx";
+import {LoadingError} from "../../ui/InfoPanels/Error.tsx";
 
 
 type ChatHistoryRecordPropsType = {
     title: string,
+    isActive: boolean,
     chatActivationHandler?: () => void,
     chatDeleteHandler?: () => void,
     chatRenameHandler?: (name: string) => void
@@ -26,6 +29,7 @@ type TuseEditableContentRefReturn = [boolean, React.RefObject<HTMLElement>, () =
 
 
 export type TuseChatsDispatchers = {
+    reloadChats: () => void,
     activateChat: (chatIndex: number | null) => void,
     deleteChat: (chatIndex: number) => void,
     renameChat: ({chatIndex, name}: {chatIndex: number, name: string}) => void,
@@ -33,6 +37,7 @@ export type TuseChatsDispatchers = {
 
 export type TuseChatsReturn = {
     chats: ChatInfoRead[] | undefined,
+    activeChatIndex: number | null,
     isChatsLoading: boolean,
     isChatsError: boolean,
     isChatsSuccess: boolean,
@@ -44,12 +49,11 @@ export type TuseChatsReturn = {
 function useChats(): TuseChatsReturn {
     const queryParams = useParams();
     const navigate = useNavigate();
-    const { data, isSuccess, isLoading, isError } = useQuery({
+    const { data, isSuccess, isLoading, isError, refetch } = useQuery({
         queryKey: ['chats'],
         queryFn: async () => {
             return await getAllChatsRequest();
         },
-        placeholderData: []
     });
     const [defaultActiveChatIndex, setActiveChatIndex] = useActiveChatIndex();
     let activeChatIndex: number | null = defaultActiveChatIndex;
@@ -129,10 +133,12 @@ function useChats(): TuseChatsReturn {
     });
     return {
         chats: data,
+        activeChatIndex: activeChatIndex,
         isChatsLoading: isLoading,
         isChatsError: isError,
         isChatsSuccess: isSuccess,
         dispatchers: {
+            reloadChats: refetch,
             activateChat: activateChat,
             deleteChat: deleteChatMutation.mutate,
             renameChat: renameChatMutation.mutate,
@@ -165,41 +171,45 @@ function useEditableContentRef(editedValueCallback?: (value: string) => void): T
 }
 
 export default function ChatsManager() {
-    const { chats, isChatsLoading, isChatsSuccess, isChatsError, dispatchers } = useChats();
-    const { activateChat, deleteChat, renameChat } = dispatchers;
+    const { chats, activeChatIndex, isChatsLoading, isChatsSuccess, isChatsError, dispatchers } = useChats();
+    const { activateChat, deleteChat, renameChat, reloadChats } = dispatchers;
     return (
         <div className={styles.chatHistoryContainer}>
             <div className={styles.controlButtonsContainer}>
-                <AddButton onClick={() => activateChat(null)} />
+                <NewChatButton onClick={() => activateChat(null)} />
             </div>
             <div className={styles.chatHistoryRecordsContainer}>
-                {
-                    isChatsLoading ? <p>"Loading chats..."</p> :
-                    isChatsError ? "An error occurred while loading chats" :
-                    isChatsSuccess && chats !== undefined ?
-                    chats.map((chat, index) => {
-                        return (
-                            <ChatHistoryRecord key={index}
-                                               title={chat.title}
-                                               chatActivationHandler={() => activateChat(index)}
-                                               chatDeleteHandler={() => deleteChat(index)}
-                                               chatRenameHandler={ (name: string) => {
-                                                    renameChat({chatIndex: index, name: name})
-                                               }}/>
-                        );
-                    }) : null
-                }
+                <ElementOrLoader isLoading={isChatsLoading}>
+                    {
+                        isChatsError ? <LoadingError errorText="An error occurred while loading chats"
+                                                     reloadAction={reloadChats} /> :
+                            isChatsSuccess && chats !== undefined ?
+                                chats.map((chat, index) => {
+                                    return (
+                                        <ChatHistoryRecord key={index}
+                                                           title={chat.title}
+                                                           isActive={activeChatIndex === index}
+                                                           chatActivationHandler={() => activateChat(index)}
+                                                           chatDeleteHandler={() => deleteChat(index)}
+                                                           chatRenameHandler={(name: string) => {
+                                                               renameChat({chatIndex: index, name: name})
+                                                           }}/>
+                                    );
+                                }) : null
+                    }
+                </ElementOrLoader>
             </div>
         </div>
     )
 }
 
 function ChatHistoryRecord(
-    { title, chatActivationHandler, chatDeleteHandler, chatRenameHandler }: ChatHistoryRecordPropsType
+    { title, isActive, chatActivationHandler, chatDeleteHandler, chatRenameHandler }: ChatHistoryRecordPropsType
 ) {
     const [isEditing, contentRef, onEditStart, onEditEnd] = useEditableContentRef(chatRenameHandler);
+    const chatHistoryContainerClassName = isActive ? styles.chatHistoryRecordContainerActive : styles.chatHistoryRecordContainer;
     return (
-        <div className={styles.chatHistoryRecordContainer}>
+        <div className={chatHistoryContainerClassName}>
             <div className={styles.chatHistoryRecordTitleContainer}
                  onClick={funcClosureOrUndefined(chatActivationHandler)}>
                 <b className={styles.chatHistoryRecordTitle}

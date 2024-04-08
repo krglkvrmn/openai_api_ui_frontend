@@ -9,7 +9,7 @@
     flex-direction: column;
     flex-grow: 1;
     justify-content: space-between;
-    /*margin: 1rem 0;*/
+    height: 100%;
 }
 
 .chat-api-key-form-header {

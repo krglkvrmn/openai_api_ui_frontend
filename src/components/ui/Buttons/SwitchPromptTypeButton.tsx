@@ -2,8 +2,8 @@ import styles from "./style.module.css";
 import {PromptType} from "../../../types/types.ts";
 import {IconButton} from "./IconButton.tsx";
 import {GoGear} from "react-icons/go";
-import {TfiWrite} from "react-icons/tfi";
 import {funcClosureOrUndefined} from "../../../utils/functional.ts";
+import {MdOutlineModeEditOutline} from "react-icons/md";
 
 
 export function SwitchPromptTypeButton(
@@ -14,7 +14,7 @@ export function SwitchPromptTypeButton(
         <div className={styles.switchPromptButtonContainer}>
             {
                 activePromptType === "user" &&
-                <IconButton Icon={TfiWrite} mode="dark" onClick={funcClosureOrUndefined(activePromptTypeSetter, "system")}/>
+                <IconButton Icon={MdOutlineModeEditOutline} mode="dark" onClick={funcClosureOrUndefined(activePromptTypeSetter, "system")}/>
             }
             {
                 activePromptType === "system" &&

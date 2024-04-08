@@ -1,9 +1,11 @@
-.api-key-form-container {}
+.api-key-form-container {
+    width: 100%;
+}
 
 .api-key-form {
     display: flex;
-    justify-content: space-between;
     padding: 0 1rem;
+    justify-content: space-between;
     box-sizing: border-box;
     border: 2px black solid;
     width: 100%;
@@ -11,6 +13,8 @@
     align-items: center;
 }
 
-.api-key-form .loader {
-    width: 2rem;
+.form-submit-button-container {
+    margin-left: 1rem;
+    justify-self: flex-end;
 }
+

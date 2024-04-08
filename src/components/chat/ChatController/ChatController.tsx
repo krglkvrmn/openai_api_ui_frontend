@@ -12,14 +12,14 @@ export function ChatController() {
     return (
         <div className={styles.chatController} >
             <div className={styles.chatContent}>
-                <CollapsableEdgeElement side="top">
-                    {
-                        !isSavedKeyExists &&
+                {
+                    !isSavedKeyExists &&
+                        <CollapsableEdgeElement side="top">
                             <div className={styles.chatApiKeyFormHeader}>
                                 <APIKeyForm keySaveHandler={saveApiKey} />
                             </div>
-                    }
-                </CollapsableEdgeElement>
+                        </CollapsableEdgeElement>
+                }
                 <Chat />
             </div>
         </div>

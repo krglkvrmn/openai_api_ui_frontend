@@ -20,7 +20,9 @@ export type UserSchema = {
     is_active?: boolean,
     is_superuser?: boolean,
     is_verified?: boolean,
-    is_guest?: boolean
+    is_guest?: boolean,
+    datetime_registered: Date,
+    lifetime: number | null
 };
 
 export type ResponseDetails = {
@@ -72,7 +74,11 @@ export async function refresh(): Promise<undefined> {
 
 export async function getCurrentUser(): Promise<UserSchema> {
     const response = await axios.get(BACKEND_ORIGIN + '/users/me', {withCredentials: true});
-    return {...response.data, username: response.data.email.split('@')[0]};
+    return {
+        ...response.data,
+        username: response.data.email.split('@')[0],
+        datetime_registered: new Date(response.data.datetime_registered + 'Z')
+    };
 }
 
 export async function getOIDCAuthorizationURL(oidcProvider: OIDCProviderType): Promise<string> {

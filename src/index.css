@@ -1,18 +1,54 @@
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+  sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+  monospace;
 }
 
 :root {
-  --hover-bg-light: #e0e0e0;
-  --hover-bg-dark: #101010;
+    --background-color-modal: #121212;
+    --background-color: #282828;
+
+    --text-color: #fff;
+    --text-color-secondary: rgba(255, 255, 255, 0.7);
+    --text-color-disabled: rgba(255, 255, 255, 0.5);
+
+    --primary-color: #3fb4ef;
+    --primary-color-light: rgb(101, 195, 242);
+    --primary-color-dark: rgb(44, 125, 167);
+    --primary-color-contrast: rgba(0, 0, 0, 0.87);
+
+    --secondary-color: #9c27b0;
+    --secondary-color-light: rgb(175, 82, 191);
+    --secondary-color-dark: rgb(109, 27, 123);
+    --secondary-color-contrast: #fff;
+
+    --error-color: #d32f2f;
+    --error-color-light: rgb(219, 88, 88);
+    --error-color-dark: rgb(147, 32, 32);
+    --error-color-contrast: #fff;
+
+    --warning-color: #ffa726;
+    --warning-color-light: #ffb74d;
+    --warning-color-dark: #f57c00;
+    --warning-color-contrast: rgba(0, 0, 0, 0.87);
+
+    --info-color: #0288d1;
+    --info-color-light: rgb(52, 159, 218);
+    --info-color-dark: rgb(1, 95, 146);
+    --info-color-contrast: #fff;
+
+    --success-color: #66bb6a;
+    --success-color-light: #81c784;
+    --success-color-dark: #388e3c;
+    --success-color-contrast: rgba(0, 0, 0, 0.87);
+
+    --divider-color: rgba(255, 255, 255, 0.12);
 }

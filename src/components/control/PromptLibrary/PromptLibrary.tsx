@@ -7,9 +7,10 @@ import {
 import {optimisticQueryUpdateConstructor} from "../../../utils/optimisticUpdates.ts";
 import {SystemPromptRead} from "../../../types/dataTypes.ts";
 import styles from "./style.module.css";
-import {Spinner} from "../../ui/Indicators/Spinner.tsx";
 import {DeleteButton} from "../../ui/Buttons/DeleteButton.tsx";
 import {useSystemPrompt} from "../../../hooks/contextHooks.ts";
+import {ElementOrLoader} from "../../ui/Buttons/ElementOrLoader.tsx";
+import {LoadingError} from "../../ui/InfoPanels/Error.tsx";
 
 
 type PromptLibraryRecordProps = {
@@ -56,16 +57,18 @@ export default function PromptLibrary() {
 
     return (
         <div className={styles.promptLibraryContainer}>
-            {
-                systemPromptsLibraryQuery.isLoading ? <Spinner /> :
-                systemPromptsLibraryQuery.isError ? "Error occurred while loading prompts" :
-                systemPromptsLibraryQuery.isSuccess ? (
-                    systemPromptsLibraryQuery.data.map((prompt) => {
-                    return <PromptLibraryRecord key={prompt.id} prompt={prompt.content}
-                                                 promptSelectionCallback={funcClosureOrUndefined(setSystemPromptValue, prompt.content)}
-                                                 promptDeleteHandler={funcClosureOrUndefined(deleteSystemPrompt, prompt.id)}/>
-                })) : null
-            }
+            <ElementOrLoader isLoading={systemPromptsLibraryQuery.isLoading}>
+                {
+                    systemPromptsLibraryQuery.isError ? <LoadingError errorText="An error occurred while loading a prompt library"
+                                                                      reloadAction={() => systemPromptsLibraryQuery.refetch()}/> :
+                    systemPromptsLibraryQuery.isSuccess ? (
+                        systemPromptsLibraryQuery.data.map((prompt) => {
+                        return <PromptLibraryRecord key={prompt.id} prompt={prompt.content}
+                                                     promptSelectionCallback={funcClosureOrUndefined(setSystemPromptValue, prompt.content)}
+                                                     promptDeleteHandler={funcClosureOrUndefined(deleteSystemPrompt, prompt.id)}/>
+                    })) : null
+                }
+            </ElementOrLoader>
         </div>
     );
 }
@@ -77,7 +80,7 @@ function PromptLibraryRecord({prompt, promptSelectionCallback, promptDeleteHandl
                 <b className={styles.promptLibraryRecordTitle}>{prompt}</b>
             </div>
             <div className={styles.promptLibraryRecordControlsContainer}>
-                <DeleteButton onClick={promptDeleteHandler} />
+                <DeleteButton onClick={promptDeleteHandler} mode="light" />
             </div>
         </div>
     );

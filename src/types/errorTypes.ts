@@ -1,0 +1,1 @@
+export type APIKeyErrorType = "api_key_unset" | "invalid_api_key" | string | undefined;

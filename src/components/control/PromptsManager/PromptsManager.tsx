@@ -7,8 +7,8 @@ import {SystemPrompt, UserPrompt} from "../Prompt/Prompt.tsx";
 import styles from "./style.module.css";
 
 export function PromptsManager(
-    {promptSubmitHandler, allowSystemPrompt}:
-        { promptSubmitHandler: (text: string, author: MessageAuthor) => void, allowSystemPrompt: boolean }
+    {promptSubmitHandler, allowSystemPrompt, active}:
+    { promptSubmitHandler: (text: string, author: MessageAuthor) => void, allowSystemPrompt: boolean, active?: boolean }
 ) {
     const [systemPromptValue, setSystemPromptValue] = useSystemPrompt();
     const [activePromptType, setActivePromptType] = useState<PromptType>("user");
@@ -23,7 +23,8 @@ export function PromptsManager(
                                     activePromptTypeSetter={allowSystemPrompt ? setActivePromptType : undefined}/>
             {
                 activePromptType === "user" &&
-                <UserPrompt submitHandler={prompt => promptSubmitHandler(prompt, 'user')}/>
+                <UserPrompt submitHandler={prompt => promptSubmitHandler(prompt, 'user')}
+                            active={active} />
             }
             {
                 activePromptType === "system" && allowSystemPrompt &&
@@ -33,7 +34,8 @@ export function PromptsManager(
                                   promptSubmitHandler(prompt, 'system');
                                   setSystemPromptValue('');
                                   setActivePromptType("user")
-                              }}/>
+                              }}
+                              active={active} />
             }
         </div>
     );

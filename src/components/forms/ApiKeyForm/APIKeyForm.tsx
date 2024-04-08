@@ -23,6 +23,7 @@ export function APIKeyForm({keySaveHandler}: {keySaveHandler: (apiToken: string)
             try {
                 setIsLoading(true);
                 await keySaveHandler(formData.api_key);
+                setLocalApiKey("");
             } catch (error) {
                 console.error('Error while saving an API key:', error);
                 throw error;
@@ -37,11 +38,14 @@ export function APIKeyForm({keySaveHandler}: {keySaveHandler: (apiToken: string)
             <ValidationErrorsList errors={validationErrors} />
             <form onSubmit={onFormSubmit} className={styles.apiKeyForm}>
                 <APIKeyInput id="api-key-input" onChange={(e: React.ChangeEvent<HTMLInputElement>) => setLocalApiKey(e.target.value)}/>
-                <ElementOrLoader isLoading={isLoading}>
-                    {
-                        localAPIKey.value !== "" && <APIKeySubmitButton />
-                    }
-                </ElementOrLoader>
+                {
+                    localAPIKey.value !== "" &&
+                    <div className={styles.formSubmitButtonContainer}>
+                        <ElementOrLoader isLoading={isLoading}>
+                            <APIKeySubmitButton />
+                        </ElementOrLoader>
+                    </div>
+                }
             </form>
         </div>
     );

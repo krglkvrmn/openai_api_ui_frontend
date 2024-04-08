@@ -1,5 +1,7 @@
 import {UserErrors} from "../../../types/types.ts";
 import styles from "./style.module.css";
+import {ReloadButton} from "../Buttons/ReloadButton.tsx";
+import React from "react";
 
 
 export default function FormError({error}: {error: string | undefined | null}) {
@@ -28,5 +30,14 @@ export function ValidationErrorsList({errors}: { errors: UserErrors }) {
                     })
                 }
             </ul>
+    );
+}
+
+export function LoadingError({errorText, reloadAction}: {errorText: string, reloadAction: React.MouseEventHandler}) {
+    return (
+        <div className={styles.loadingErrorContainer}>
+            <p>{errorText}</p>
+            <ReloadButton onClick={reloadAction}/>
+        </div>
     );
 }
