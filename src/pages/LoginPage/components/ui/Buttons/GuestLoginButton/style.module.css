@@ -1,4 +1,4 @@
-@import "../style.module.css";
+@import "../../../../../../components/ui/Buttons/Generic/style.module.css";
 
 .guest-login-button {
     margin: 5px;

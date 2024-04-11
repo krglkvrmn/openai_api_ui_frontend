@@ -7,7 +7,7 @@ import {FormInfo} from "../../components/ui/InfoDisplay/Info/Info.tsx";
 import {ModalCard} from "../../components/layout/ModalCard/ModalCard.tsx";
 import styles from "./style.module.css";
 import globalStyles from "../../styles/global-styles.module.css";
-import {GuestLoginButton} from "../../components/ui/Buttons/Generic/GuestLoginButton/GuestLoginButton.tsx";
+import {GuestLoginButton} from "./components/ui/Buttons/GuestLoginButton/GuestLoginButton.tsx";
 import {ElementOrLoader} from "../../components/ui/Loaders/ElementOrLoader/ElementOrLoader.tsx";
 import {AuthFormNavigator} from "../../components/layout/AuthFormNavigator/AuthFormNavigator.tsx";
 
