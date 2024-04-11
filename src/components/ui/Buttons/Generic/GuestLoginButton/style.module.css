@@ -1,0 +1,16 @@
+@import "../style.module.css";
+
+.guest-login-button {
+    margin: 5px;
+    height: 2rem;
+    font-size: 19px;
+    align-self: center;
+    cursor: pointer;
+    border: 0px;
+    border-radius: 3px;
+    box-shadow: rgba(0, 0, 0, 0.5) 0px 1px 2px;
+}
+
+.guest-login-button:hover {
+    filter: brightness(90%);
+}

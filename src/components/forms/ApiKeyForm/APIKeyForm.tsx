@@ -1,13 +1,13 @@
 import {useForm} from "../../../hooks/useForm";
 import {useLocalAPIKey} from "../../../hooks/contextHooks";
 import {ValidatorType} from "../../../types/types.ts";
-import {apiKeyNotEmptyValidator} from "../../../vallidation/formValidators.ts";
+import {apiKeyNotEmptyValidator} from "../formValidators.ts";
 import styles from "./style.module.css";
 import React, {useState} from "react";
-import {ValidationErrorsList} from "../../ui/InfoPanels/Error.tsx";
-import {ElementOrLoader} from "../../ui/Buttons/ElementOrLoader.tsx";
-import {APIKeyInput} from "../Elements/Inputs.tsx";
-import {APIKeySubmitButton} from "../../ui/Buttons/APIKeySubmitButton.tsx";
+import {ValidationErrorsList} from "../../ui/InfoDisplay/Errors/Errors.tsx";
+import {ElementOrLoader} from "../../ui/Loaders/ElementOrLoader/ElementOrLoader.tsx";
+import {APIKeyInput} from "../FormElements/Inputs.tsx";
+import {APIKeySubmitButton} from "../../../pages/ChatPage/ui/Buttons/APIKeySubmitButton/APIKeySubmitButton.tsx";
 
 
 const validators: ValidatorType[] = [

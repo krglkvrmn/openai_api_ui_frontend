@@ -3,12 +3,12 @@ import {useAuth} from "../../../hooks/contextHooks.ts";
 import {FormEvent, useState} from "react";
 import {UserErrors, ValidatorType} from "../../../types/types.ts";
 import {Link} from "react-router-dom";
-import {passwordsLengthValidator, passwordsMatchValidator} from "../../../vallidation/formValidators.ts";
-import {NewPasswordInput, RepeatPasswordInput} from "../Elements/Inputs.tsx";
+import {passwordsLengthValidator, passwordsMatchValidator} from "../formValidators.ts";
+import {NewPasswordInput, RepeatPasswordInput} from "../FormElements/Inputs.tsx";
 import commonFormStyles from "../common-form-styles.module.css";
-import FormError, {ValidationErrorsList} from "../../ui/InfoPanels/Error.tsx";
-import {ElementOrLoader} from "../../ui/Buttons/ElementOrLoader.tsx";
-import {FormSubmitButton} from "../../ui/Buttons/FormSubmitButton.tsx";
+import FormError, {ValidationErrorsList} from "../../ui/InfoDisplay/Errors/Errors.tsx";
+import {ElementOrLoader} from "../../ui/Loaders/ElementOrLoader/ElementOrLoader.tsx";
+import {FormSubmitButton} from "../../ui/Buttons/Generic/FormSubmitButton/FormSubmitButton.tsx";
 import styles from "./style.module.css";
 
 

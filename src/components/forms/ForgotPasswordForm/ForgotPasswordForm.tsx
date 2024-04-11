@@ -2,12 +2,12 @@ import {useForm} from "../../../hooks/useForm.ts";
 import {useAuth} from "../../../hooks/contextHooks.ts";
 import {FormEvent, useState} from "react";
 import {UserErrors} from "../../../types/types.ts";
-import {EmailInput} from "../Elements/Inputs.tsx";
+import {EmailInput} from "../FormElements/Inputs.tsx";
 import {useNavigate} from "react-router-dom";
-import FormError, {ValidationErrorsList} from "../../ui/InfoPanels/Error.tsx";
+import FormError, {ValidationErrorsList} from "../../ui/InfoDisplay/Errors/Errors.tsx";
 import commonFormStyles from "../common-form-styles.module.css";
-import {FormSubmitButton} from "../../ui/Buttons/FormSubmitButton.tsx";
-import {ElementOrLoader} from "../../ui/Buttons/ElementOrLoader.tsx";
+import {FormSubmitButton} from "../../ui/Buttons/Generic/FormSubmitButton/FormSubmitButton.tsx";
+import {ElementOrLoader} from "../../ui/Loaders/ElementOrLoader/ElementOrLoader.tsx";
 
 
 type TuseForgotPasswordFormReturn = {

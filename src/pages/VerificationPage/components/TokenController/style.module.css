@@ -1,0 +1,13 @@
+.verification-confirmation {
+    align-self: center;
+}
+
+.verification-error {
+    align-self: center;
+}
+
+.verification-info-block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}

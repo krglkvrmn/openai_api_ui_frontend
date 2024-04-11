@@ -1,0 +1,8 @@
+.verification-request-controller-container {}
+.verification-request-controller-container > h2 {
+    align-self: center;
+    text-align: center;
+}
+.counter-text {
+    text-align: center;
+}

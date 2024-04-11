@@ -3,11 +3,11 @@ import { useForm } from "../../../hooks/useForm.ts";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../../hooks/contextHooks.ts";
 import {UserErrors, ValidatorType} from "../../../types/types.ts";
-import {EmailInput, PasswordInput} from "../Elements/Inputs.tsx";
-import FormError, {ValidationErrorsList} from "../../ui/InfoPanels/Error.tsx";
+import {EmailInput, PasswordInput} from "../FormElements/Inputs.tsx";
+import FormError, {ValidationErrorsList} from "../../ui/InfoDisplay/Errors/Errors.tsx";
 import commonFormStyles from "../common-form-styles.module.css";
-import {FormSubmitButton} from "../../ui/Buttons/FormSubmitButton.tsx";
-import {ElementOrLoader} from "../../ui/Buttons/ElementOrLoader.tsx";
+import {FormSubmitButton} from "../../ui/Buttons/Generic/FormSubmitButton/FormSubmitButton.tsx";
+import {ElementOrLoader} from "../../ui/Loaders/ElementOrLoader/ElementOrLoader.tsx";
 
 
 type TuseLoginFormReturn = {

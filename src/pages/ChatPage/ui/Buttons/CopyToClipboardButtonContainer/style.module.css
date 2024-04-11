@@ -1,0 +1,11 @@
+.copy-to-clipboard-button-container {}
+.successful-copy-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+}
+
+.successful-copy-container svg {
+    padding-right: 0.25rem;
+}

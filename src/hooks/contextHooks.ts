@@ -1,8 +1,8 @@
 import React, {useContext} from "react";
 import { AuthContext } from "../contexts/AuthProvider";
-import { LocalAPIKeyContext } from "../contexts/LocalAPIKeyProvider.tsx";
-import { ActiveChatIndexContext } from "../contexts/ActiveChatIndexProvider";
-import {SystemPromptContext} from "../contexts/SystemPromptProvider.tsx";
+import { LocalAPIKeyContext } from "../pages/ChatPage/contexts/LocalAPIKeyProvider.tsx";
+import { ActiveChatIndexContext } from "../pages/ChatPage/contexts/ActiveChatIndexProvider.tsx";
+import {SystemPromptContext} from "../pages/ChatPage/contexts/SystemPromptProvider.tsx";
 
 
 export function createContextHook<T>(context: React.Context<T | null>, onNotSetErrorMessage: string): () => T {

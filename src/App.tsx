@@ -5,9 +5,9 @@ import RegisterPage from './pages/RegisterPage/RegisterPage';
 import LoginPage from './pages/LoginPage/LoginPage';
 import {AuthProvider} from './contexts/AuthProvider';
 import ChatPage from './pages/ChatPage/ChatPage';
-import {RequireAuth, RequireNoAuth} from "./components/control/RequireAuth";
+import {RequireAuth, RequireNoAuth} from "./components/hoc/RequireAuth.tsx";
 import {queryClient} from "./queryClient.ts";
-import {RequireVerification} from "./components/control/RequireVerification.tsx";
+import {RequireVerification} from "./components/hoc/RequireVerification.tsx";
 import {VerificationPage} from "./pages/VerificationPage/VerificationPage.tsx";
 import {ForgotPasswordPage} from "./pages/ForgotPasswordPage/ForgotPasswordPage.tsx";
 

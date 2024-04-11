@@ -1,5 +1,5 @@
-import {VerificationController} from "../../components/control/VerificationController/VerificationController.tsx";
-import {ModalCard} from "../../components/ui/Layout/ModalCard/ModalCard.tsx";
+import {ModalCard} from "../../components/layout/ModalCard/ModalCard.tsx";
+import {VerificationController} from "./VerificationController.tsx";
 
 
 export function VerificationPage() {

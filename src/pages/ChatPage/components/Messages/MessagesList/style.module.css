@@ -1,0 +1,8 @@
+.messages-list {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow-y: scroll;
+    overflow-wrap: anywhere;
+    padding: 0 2rem 0 0;  /* Scrollbar spacing */
+}
