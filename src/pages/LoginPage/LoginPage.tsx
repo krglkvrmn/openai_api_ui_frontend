@@ -14,7 +14,7 @@ import {AuthFormNavigator} from "../../components/layout/AuthFormNavigator/AuthF
 export default function LoginPage() {
     const location = useLocation();
     // const { error: guestLoginError, loginAsGuest } = useGuestLogin();
-    const { guestLogInError, authDispatchers, dispatchersStatuses } = useAuth();
+    const { guestLogInError, oidcLoginError, authDispatchers, dispatchersStatuses } = useAuth();
     const { oidcLogin, logInAsGuest } = authDispatchers;
     const isGuestLoginLoading = dispatchersStatuses.loginAsGuest === "loading";
 
@@ -39,6 +39,7 @@ export default function LoginPage() {
                         <GithubLoginButton align="center"
                                            size="2rem"
                                            onClick={() => oidcLogin('github')}/>
+                        <FormError error={oidcLoginError} />
                     </ElementOrLoader>
                 </div>
                 <span>Or</span>

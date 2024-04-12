@@ -13,8 +13,9 @@ code {
 }
 
 :root {
-    --background-color-modal: #121212;
-    --background-color: #282828;
+    --background-color: #121212;
+    --background-color-modal: #282828;
+    --background-color-text-field: #262626;
 
     --text-color: #fff;
     --text-color-secondary: rgba(255, 255, 255, 0.7);

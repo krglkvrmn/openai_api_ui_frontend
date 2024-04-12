@@ -1,3 +1,8 @@
 .successful-reset-password-message {
     text-align: center;
+    line-height: 1.5rem;
+}
+
+.successful-reset-password-message a {
+    color: var(--secondary-color);
 }

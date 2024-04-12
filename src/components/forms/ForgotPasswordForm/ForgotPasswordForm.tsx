@@ -12,7 +12,7 @@ import {ElementOrLoader} from "../../ui/Loaders/ElementOrLoader/ElementOrLoader.
 
 type TuseForgotPasswordFormReturn = {
     validationErrors: UserErrors,
-    passwordResetError: string | null,
+    requestPasswordResetError: string | null,
     onFormSubmit: (event: FormEvent<HTMLFormElement>) => void,
     isSuccess: null | boolean,
     isLoading: boolean
@@ -22,7 +22,7 @@ type TuseForgotPasswordFormReturn = {
 
 function useForgotPasswordForm(): TuseForgotPasswordFormReturn {
     const navigate = useNavigate();
-    const { passwordResetError, authDispatchers } = useAuth();
+    const { requestPasswordResetError, authDispatchers } = useAuth();
     const { requestPasswordReset } = authDispatchers;
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const { validationErrors, onFormSubmit, isSuccess } = useForm({
@@ -41,11 +41,11 @@ function useForgotPasswordForm(): TuseForgotPasswordFormReturn {
         }
     });
 
-    return { validationErrors, passwordResetError, onFormSubmit, isSuccess, isLoading };
+    return { validationErrors, requestPasswordResetError, onFormSubmit, isSuccess, isLoading };
 }
 
 export function ForgotPasswordForm() {
-    const { validationErrors, passwordResetError, onFormSubmit, isLoading } = useForgotPasswordForm();
+    const { validationErrors, requestPasswordResetError, onFormSubmit, isLoading } = useForgotPasswordForm();
     return (
         <div className={commonFormStyles.authFormContainer}>
             <ValidationErrorsList errors={validationErrors} />
@@ -58,7 +58,7 @@ export function ForgotPasswordForm() {
                     <FormSubmitButton>Continue</FormSubmitButton>
                 </ElementOrLoader>
             </form>
-            <FormError error={passwordResetError} />
+            <FormError error={requestPasswordResetError} />
         </div>
     );
 }

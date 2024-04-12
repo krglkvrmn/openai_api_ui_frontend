@@ -3,6 +3,10 @@
     margin-top: 1rem;
 }
 
+.auth-form-nav-container a {
+    color: var(--primary-color-dark);
+}
+
 .auth-form-nav-container-single-item {
     composes: auth-form-nav-container;
     justify-content: center;
@@ -11,3 +15,4 @@
     composes: auth-form-nav-container;
     justify-content: space-between;
 }
+

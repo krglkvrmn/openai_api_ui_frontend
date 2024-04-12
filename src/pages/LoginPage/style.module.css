@@ -5,7 +5,8 @@
 
 .alternative-login-options-container > span {
     align-self: center;
-    margin: 0.5rem 0;
+    margin: 0.75rem 0;
+    color: var(--text-color-secondary);
 }
 
 .social-logins-container {

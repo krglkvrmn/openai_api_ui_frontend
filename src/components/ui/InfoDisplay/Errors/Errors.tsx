@@ -23,7 +23,7 @@ export function ValidationErrorsList({errors}: { errors: UserErrors }) {
                 {
                     errors.map((error, index) => {
                         return (
-                            <li className={styles.authFormValidationErrorsListItem}>
+                            <li key={index} className={styles.authFormValidationErrorsListItem}>
                                 <FormError key={index} error={error}/>
                             </li>
                         );

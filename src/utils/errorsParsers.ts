@@ -1,6 +1,6 @@
 import axios from "axios";
 import { AxiosError } from "axios";
-import { ResponseDetails } from "../services/auth";
+import {OIDCProviderType, ResponseDetails} from "../services/auth";
 
 export type AuthErrors = {
     logInError: string | null,
@@ -61,4 +61,22 @@ export function parsePasswordResetError(passwordResetError: AxiosError<ResponseD
         }
     }
     return passwordResetError ? "Unknown error" : null;
+}
+
+export function parseRequestPasswordResetError(requestPasswordResetError: AxiosError<ResponseDetails> | unknown): string | null {
+    if (axios.isAxiosError(requestPasswordResetError)) {
+        return "Unable to request password reset";
+    }
+    return "Unknown error";
+}
+
+export function parseOidcLoginError(
+    oidcLoginError: AxiosError<ResponseDetails> | unknown,
+    oidcProvider: OIDCProviderType
+): string | null {
+    if (axios.isAxiosError(oidcLoginError)) {
+        const providerFormatted = oidcProvider.charAt(0).toUpperCase() + oidcProvider.slice(1);
+        return 'Unable to log in with ' + providerFormatted
+    }
+    return "Unknown error";
 }

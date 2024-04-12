@@ -21,8 +21,8 @@ import {
 } from "../services/auth";
 import {
     parseLogInError,
-    parseLogOutError,
-    parsePasswordResetError,
+    parseLogOutError, parseOidcLoginError,
+    parsePasswordResetError, parseRequestPasswordResetError,
     parseSignUpError,
     parseVerificationError
 } from "../utils/errorsParsers";
@@ -52,7 +52,9 @@ type AuthContextValue = {
     logOutError: string | null,
     signUpError: string | null,
     verificationError: string | null,
+    requestPasswordResetError: string | null,
     passwordResetError: string | null,
+    oidcLoginError: string | null,
     authDispatchers: {
         logIn: (formData: LoginFormDataType) => Promise<LoginResponse>,
         logInAsGuest: () => Promise<void>,
@@ -87,7 +89,9 @@ export function AuthProvider({ children }: {children: React.ReactElement}) {
     const [logOutError, setLogOutError] = useState<string | null>(null);
     const [signUpError, setSignUpError] = useState<string | null>(null);
     const [verificationError, setVerificationError] = useState<string | null>(null);
+    const [requestPasswordResetError, setRequestPasswordResetError] = useState<string | null>(null);
     const [passwordResetError, setPasswordResetError] = useState<string | null>(null);
+    const [oidcLoginError, setOidcLoginError] = useState<string | null>(null);
     const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
     const { data, isFetched } = useQuery({
         queryKey: ["authData"],
@@ -141,9 +145,13 @@ export function AuthProvider({ children }: {children: React.ReactElement}) {
         onMutate: () => {
             setSignUpError(null);
             setLogInError(null);
+            setOidcLoginError(null);
         },
         onSuccess: async () => {
             await queryClient.invalidateQueries('authData');
+        },
+        onError: async (error, variables) => {
+            setOidcLoginError(parseOidcLoginError(error, variables));
         }
     });
 
@@ -162,6 +170,12 @@ export function AuthProvider({ children }: {children: React.ReactElement}) {
         onMutate: () => setVerificationError(null),
         onError: error => setVerificationError(parseVerificationError(error)),
         onSettled: async () => await queryClient.invalidateQueries('authData')
+    });
+
+    const requestPasswordResetMutation = useMutation({
+        mutationFn: requestPasswordReset,
+        onMutate: () => setRequestPasswordResetError(null),
+        onError: (error) => setRequestPasswordResetError(parseRequestPasswordResetError(error))
     });
 
     const resetPasswordMutation = useMutation({
@@ -197,6 +211,7 @@ export function AuthProvider({ children }: {children: React.ReactElement}) {
         setVerificationError(null);
         setPasswordResetError(null);
         setLogOutError(null);
+        setOidcLoginError(null);
     }, [location.pathname]);
 
     return (
@@ -207,7 +222,8 @@ export function AuthProvider({ children }: {children: React.ReactElement}) {
                 isRefreshing: refreshMutation.isLoading,
                 user: data 
             },
-            logInError, guestLogInError, logOutError, signUpError, verificationError, passwordResetError,
+            logInError, guestLogInError, logOutError, signUpError,
+            verificationError, requestPasswordResetError, passwordResetError, oidcLoginError,
             authDispatchers: {
                 logIn: logInMutation.mutateAsync,
                 logInAsGuest,
@@ -216,7 +232,7 @@ export function AuthProvider({ children }: {children: React.ReactElement}) {
                 oidcLogin: oidcLoginMutation.mutateAsync,
                 requestVerification: requestVerification,
                 verify: verificationMutation.mutateAsync,
-                requestPasswordReset: requestPasswordReset,
+                requestPasswordReset: requestPasswordResetMutation.mutateAsync,
                 resetPassword: resetPasswordMutation.mutateAsync
             },
             dispatchersStatuses: {

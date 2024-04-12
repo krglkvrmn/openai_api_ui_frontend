@@ -1,5 +1,5 @@
 .form-error-container {
-    margin: 1rem 0;
+    margin-top: 1rem;
 }
 
 
@@ -14,18 +14,25 @@
 
 .form-error {
     composes: error-panel;
-    color: #f12626;
+    color: var(--error-color);
     text-align: center;
+    margin-top: 0.5rem;
 }
 
 .auth-form-validation-errors-list {
-    margin: 0.5rem 0;
+    margin-top: 0;
+    margin-bottom: 0.5rem;
     padding: 0;
 }
+
 
 .auth-form-validation-errors-list-item {
     list-style-type: none;
     text-align: center;
+}
+
+.auth-form-validation-errors-list-item .form-error-container {
+    margin: 0;
 }
 
 .auth-form-validation-errors-list-item > .info-panel-container {

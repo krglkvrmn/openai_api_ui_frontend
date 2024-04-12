@@ -5,6 +5,15 @@
     padding: 0 1rem;
     margin: 0.25rem 0;
     border-radius: 0.5rem;
+    color: var(--text-color-secondary);
+    background-color: var(--background-color-text-field);
+    border-width: 3px;
+    border-color: var(--divider-color);
+}
+
+.string-form-input:focus {
+    outline: none;
+    box-shadow: 1px 1px 1px var(--divider-color);
 }
 
 .api-key-input {

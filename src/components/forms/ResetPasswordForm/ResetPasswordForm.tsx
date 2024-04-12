@@ -52,7 +52,10 @@ export function ResetPasswordForm({token}: { token: string }) {
         <div>
             {
                 isSuccess ?
-                    <p className={styles.successfulResetPasswordMessage}>You successfully set the new password. You can <Link to='/login'>Log in</Link> or close this page</p> :
+                    <p className={styles.successfulResetPasswordMessage}>
+                        <h3>You successfully set the new password!</h3>
+                        <span>You can now <Link to='/login'>Log in</Link> or close this page</span>
+                    </p> :
                     <div className={commonFormStyles.authFormContainer}>
                         <form className={commonFormStyles.authForm} onSubmit={onFormSubmit}>
                             <ValidationErrorsList errors={validationErrors}/>
