@@ -70,6 +70,13 @@ export function parseRequestPasswordResetError(requestPasswordResetError: AxiosE
     return "Unknown error";
 }
 
+export function parseVerificationRequestError(verificationRequestError: AxiosError<ResponseDetails> | unknown): string | null {
+    if (axios.isAxiosError(verificationRequestError)) {
+        return "Unable to request account verification";
+    }
+    return "Unknown error";
+}
+
 export function parseOidcLoginError(
     oidcLoginError: AxiosError<ResponseDetails> | unknown,
     oidcProvider: OIDCProviderType

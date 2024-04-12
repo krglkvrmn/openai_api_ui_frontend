@@ -7,21 +7,30 @@ import {ElementOrLoader} from "../../../../components/ui/Loaders/ElementOrLoader
 import {GenericButton} from "../../../../components/ui/Buttons/Generic/GenericButton/GenericButton.tsx";
 import {FormInfo} from "../../../../components/ui/InfoDisplay/Info/Info.tsx";
 import styles from "./style.module.css";
+import {parseVerificationRequestError} from "../../../../utils/errorsParsers.ts";
+import FormError from "../../../../components/ui/InfoDisplay/Errors/Errors.tsx";
 
 
 function VerificationRequestAction(
     { requestVerification }:
     { requestVerification: () => Promise<void> }
 ) {
+    const [verificationRequestError, setVerificationRequestError] = useState<string | null>(null);
     const [nextRequestTime, setNextRequestTime] = useLocalStorage('__nrt', 0);
     const {count, startCountdown, resetCountdown, isFinished} = useCountdown();
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
     async function onRequestVerification(): Promise<void> {
-        setIsLoading(true)
-        await requestVerification();
-        setNextRequestTime(new Date().getTime() + 60000);
-        setIsLoading(false)
+        setIsLoading(true);
+        setVerificationRequestError(null);
+        try {
+            await requestVerification();
+            setNextRequestTime(new Date().getTime() + 60000);
+        } catch (error) {
+            setVerificationRequestError(parseVerificationRequestError(error));
+        } finally {
+            setIsLoading(false)
+        }
     }
 
     useEffect(() => {
@@ -36,6 +45,7 @@ function VerificationRequestAction(
         isFinished.value ?
             <ElementOrLoader isLoading={isLoading}>
                 <GenericButton onClick={onRequestVerification}>Continue</GenericButton>
+                <FormError error={verificationRequestError} />
             </ElementOrLoader> :
             <>
                 <FormInfo infoMessage="An email with verification instructions was sent to this email"/>
