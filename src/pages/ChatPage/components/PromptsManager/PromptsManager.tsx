@@ -7,35 +7,37 @@ import {SystemPrompt, UserPrompt} from "../Prompt/Prompt.tsx";
 import styles from "./style.module.css";
 
 export function PromptsManager(
-    {promptSubmitHandler, allowSystemPrompt, active}:
-    { promptSubmitHandler: (text: string, author: MessageAuthor) => void, allowSystemPrompt: boolean, active?: boolean }
+    {promptSubmitHandler, allowPromptSelection, active}:
+    { promptSubmitHandler: (text: string, author: MessageAuthor) => void, allowPromptSelection: boolean, active?: boolean }
 ) {
     const [systemPromptValue, setSystemPromptValue] = useSystemPrompt();
     const [activePromptType, setActivePromptType] = useState<PromptType>("user");
 
     useEffect(() => {
-        systemPromptValue && setActivePromptType("system");
+        systemPromptValue && allowPromptSelection && setActivePromptType("system");
     }, [systemPromptValue]);
-
     return (
         <div className={styles.promptsManagerContainer}>
-            <SwitchPromptTypeButton activePromptType={allowSystemPrompt ? activePromptType : "user"}
-                                    activePromptTypeSetter={allowSystemPrompt ? setActivePromptType : undefined}/>
             {
-                activePromptType === "user" &&
-                <UserPrompt submitHandler={prompt => promptSubmitHandler(prompt, 'user')}
-                            active={active} />
+                allowPromptSelection &&
+                    <SwitchPromptTypeButton activePromptType={activePromptType}
+                                            activePromptTypeSetter={allowPromptSelection ? setActivePromptType : undefined}/>
             }
             {
-                activePromptType === "system" && allowSystemPrompt &&
-                <SystemPrompt promptValue={systemPromptValue}
-                              promptValueChangeHandler={setSystemPromptValue}
-                              submitHandler={prompt => {
-                                  promptSubmitHandler(prompt, 'system');
-                                  setSystemPromptValue('');
-                                  setActivePromptType("user")
-                              }}
-                              active={active} />
+                (activePromptType === "user" || !allowPromptSelection) &&
+                    <UserPrompt submitHandler={prompt => promptSubmitHandler(prompt, 'user')}
+                                active={active} />
+            }
+            {
+                activePromptType === "system" && allowPromptSelection &&
+                    <SystemPrompt promptValue={systemPromptValue}
+                                  promptValueChangeHandler={setSystemPromptValue}
+                                  submitHandler={prompt => {
+                                      promptSubmitHandler(prompt, 'system');
+                                      setSystemPromptValue('');
+                                      setActivePromptType("user")
+                                  }}
+                                  active={active} />
             }
         </div>
     );

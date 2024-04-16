@@ -1,4 +1,5 @@
 import styles from "./style.module.css";
+import {useDialog} from "../../../../hooks/useDialog.ts";
 
 
 const modelOptions = ['gpt-3.5-turbo', 'gpt-4']
@@ -10,15 +11,29 @@ type ModelSelectorProps = {
 }
 
 export default function ModelSelector({activeModel, modelSwitchHandler}: ModelSelectorProps) {
+    const { isOpened, dialogRef, openDialog, closeDialog } = useDialog("popup");
     return (
         <div className={styles.modelSelectorContainer}>
-            <select name="model" className={styles.modelSelector} value={activeModel}
-                    onChange={e => modelSwitchHandler === undefined ? undefined : modelSwitchHandler(e.target.value)}>
-                {modelOptions.map(model => {
-                    return <option className={styles.modelSelectorOption}
-                                   key={model} value={model}>{model.toUpperCase()}</option>;
-                })}
-            </select>
+            <div className={styles.modelSelectorPopupTriggerButtonContainer}>
+                <button onClick={isOpened ? closeDialog : openDialog}
+                        className={styles.modelSelectorPopupTriggerButton}>
+                    {activeModel?.toUpperCase()}
+                </button>
+            </div>
+            <dialog ref={dialogRef} className={styles.modelSelectorPopup}>
+                {
+                    modelOptions.map((model, index) => (
+                        <button key={index} className={styles.modelSelectionButton}
+                                onClick={() => {
+                                    modelSwitchHandler && modelSwitchHandler(model);
+                                    closeDialog();
+                                }}>
+                            {model.toUpperCase()}
+                        </button>
+                    ))
+                }
+            </dialog>
         </div>
-    )
+
+    );
 }

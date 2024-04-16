@@ -31,15 +31,18 @@ export default function ChatApp() {
                     <SystemPromptProvider>
                         <>
                             <Sidebar side="left">
-                                <ChatsManager />
-
+                                <ChatsManager/>
+                                <div className={styles.loginInfoDividerContainer}>
+                                    <hr/>
+                                </div>
                                 <div className={styles.mainSidebarAuthInfoControls}>
-                                    <LoginInfo />
-                                    <AuthActionsPopupTriggerButton onAccountSettingsClick={openDialog} onLogoutClick={logOut} />
+                                    <LoginInfo/>
+                                    <AuthActionsPopupTriggerButton onAccountSettingsClick={openDialog}
+                                                                   onLogoutClick={logOut}/>
                                 </div>
                             </Sidebar>
                             <div className={styles.chatContent}>
-                                {
+                            {
                                     !isSavedKeyExists &&
                                     <CollapsableEdgeElement side="top">
                                         <div className={styles.chatApiKeyFormHeader}>

@@ -14,11 +14,11 @@ export function SwitchPromptTypeButton(
         <div className={styles.switchPromptButtonContainer}>
             {
                 activePromptType === "user" &&
-                <IconButton Icon={MdOutlineModeEditOutline} mode="dark" onClick={funcClosureOrUndefined(activePromptTypeSetter, "system")}/>
+                <IconButton Icon={MdOutlineModeEditOutline} onClick={funcClosureOrUndefined(activePromptTypeSetter, "system")}/>
             }
             {
                 activePromptType === "system" &&
-                <IconButton Icon={GoGear} mode="dark" onClick={funcClosureOrUndefined(activePromptTypeSetter,"user")}/>
+                <IconButton Icon={GoGear} onClick={funcClosureOrUndefined(activePromptTypeSetter,"user")}/>
             }
         </div>
     );

@@ -23,7 +23,7 @@ export function CopyToClipboardButton({text}: { text: string }) {
                     <div className={styles.successfulCopyContainer}>
                         <IoMdCheckmarkCircleOutline/><span>Copied!</span>
                     </div> :
-                    <IconButton Icon={IoIosCopy} mode="light" onClick={copyToClipboard}/>
+                    <IconButton Icon={IoIosCopy} onClick={copyToClipboard}/>
             }
         </div>
     );

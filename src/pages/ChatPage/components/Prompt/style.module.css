@@ -2,8 +2,9 @@
     display: flex;
     align-items: flex-end;
     width: 100%;
-    background-color: white;
+    background-color: transparent;
     border-radius: 1rem;
+    gap: 1rem;
 }
 
 .prompt-input-container {
@@ -16,13 +17,16 @@
 
 .prompt-container textarea {
     width: 100%;
+    background-color: transparent;
+    color: var(--text-color);
     min-width: 100px;
-    padding: 0;
+    padding: 0 0.55rem 0 0;
     box-sizing: border-box;
     line-height: 20px;
     min-height: 20px;
     max-height: 20em;
     overflow-y: scroll;
+    scrollbar-color: var(--background-color-active) transparent;
     border: none;
     resize: none;
 }
@@ -30,8 +34,3 @@
 .prompt-container textarea:focus {
     outline: none;
 }
-
-.prompt-container button {
-
-}
-

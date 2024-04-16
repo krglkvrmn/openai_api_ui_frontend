@@ -4,5 +4,12 @@
     height: 100%;
     overflow-y: scroll;
     overflow-wrap: anywhere;
-    padding: 0 2rem 0 0;  /* Scrollbar spacing */
+    scrollbar-width: thin;
+    scrollbar-color: var(--background-color-active) transparent;
+    padding: 0 2rem;  /* Scrollbar spacing */
+}
+
+.messages-list-item-container {}
+.messages-list-item-container-loading {
+    margin: auto;
 }

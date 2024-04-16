@@ -1,2 +1,4 @@
 .prompt-submit-button-container {}
-.prompt-submit-button-container svg {}
+.prompt-submit-button-container svg {
+    color: var(--primary-color);
+}

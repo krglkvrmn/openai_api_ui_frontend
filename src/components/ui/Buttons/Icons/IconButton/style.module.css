@@ -1,8 +1,8 @@
 .icon-button {
     background-color: transparent;
-    filter: invert(100%);
     padding: 0;
     border: 0;
+    color: var(--text-color-secondary);
 }
 
 .icon-button > svg {

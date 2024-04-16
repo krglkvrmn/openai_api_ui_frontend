@@ -36,7 +36,8 @@ export function APIKeyForm({keySaveHandler}: {keySaveHandler: (apiToken: string)
     return (
         <div className={styles.apiKeyFormContainer}>
             <ValidationErrorsList errors={validationErrors} />
-            <form onSubmit={onFormSubmit} className={styles.apiKeyForm}>
+            <form method={undefined} onSubmit={onFormSubmit} className={styles.apiKeyForm}>
+                <label htmlFor="api-key-input" hidden>OpenAI API key</label>
                 <APIKeyInput id="api-key-input" onChange={(e: React.ChangeEvent<HTMLInputElement>) => setLocalApiKey(e.target.value)}/>
                 {
                     localAPIKey.value !== "" &&

@@ -1,1 +1,5 @@
 .expand-collapse-button-container {}
+
+.expand-collapse-button-container svg {
+    color: var(--text-color-secondary);
+}

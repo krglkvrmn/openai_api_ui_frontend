@@ -6,7 +6,7 @@ import {MdOutlineReplay} from "react-icons/md";
 export function RegenerateMessageButton({onClick}: { onClick?: React.MouseEventHandler }) {
     return (
         <div className={styles.regenerateMessageButtonContainer} title="Regenerate message">
-            <IconButton Icon={MdOutlineReplay} mode="dark" onClick={onClick}/>
+            <IconButton Icon={MdOutlineReplay} onClick={onClick}/>
         </div>
     );
 }

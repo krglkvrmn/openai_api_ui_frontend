@@ -1,12 +1,69 @@
-.model-selector-container {
-    padding: 0.5rem 0;
+@keyframes popup-fade-in {
+    from {
+        opacity: 0;
+        bottom: 50%;
+    }
+    to {
+        bottom: 150%;
+    }
 }
-.model-selector {
+@keyframes popup-fade-out {
+    from {
+        opacity: 100%;
+        bottom: 150%;
+        display: block;
+    }
+    to {
+        opacity: 0;
+        bottom: 50%;
+    }
+}
+
+.model-selector-container {
+    width: 10rem;
+    position: relative;
+}
+.model-selector-popup-trigger-button-container {}
+.model-selector-popup-trigger-button {
+    width: 100%;
+    padding: 0.5rem 0.5rem 0.3rem 0.5rem;
+    background-color: transparent;
+    color: var(--text-color);
+    font-size: 1.1rem;
+    border-radius: 0.5rem;
     border: 0;
-    text-align: center;
-    font-size: 1.2rem;
+}
+.model-selector-popup-trigger-button:hover {
+    background-color: var(--background-color-active);
+}
+.model-selector-popup {
+    position: absolute;
+    width: 100%;
+    background-color: var(--background-color);
+    border-color: var(--divider-color);
+    border-width: 2px;
+    padding: 0.5rem;
     border-radius: 1rem;
 }
-.model-selector-option {
-    font-size: 1rem;
+.model-selector-popup[open] {
+    display: block;
+    bottom: 150%;
+    animation: popup-fade-in 0.25s ease;
+}
+.model-selector-popup:not([open]) {
+    bottom: 50%;
+    animation: popup-fade-out 0.1s ease;
+}
+
+.model-selection-button {
+    width: 100%;
+    padding: 0.5rem 0.25rem;
+    border: 0;
+    border-radius: 0.5rem;
+    background-color: transparent;
+    color: var(--text-color-secondary);
+    font-size: 1.1rem;
+}
+.model-selection-button:hover {
+    background-color: var(--background-color-active);
 }

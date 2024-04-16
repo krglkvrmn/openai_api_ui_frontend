@@ -41,11 +41,13 @@ export function AuthActionsPopupTriggerButton(
 
     return (
         <div className={styles.authActionsPopupTriggerButtonContainer}>
-            <IconButton Icon={MdOutlineMoreHoriz} onClick={isOpened ? closeDialog : openDialog}/>
             <dialog ref={dialogRef} className={styles.authActionsPopup}>
-                <AccountSettingsButton onClick={clickHandlerConstructor(onAccountSettingsClick)} />
-                <LogoutButton onClick={clickHandlerConstructor(onLogoutClick)} />
+                <AccountSettingsButton onClick={clickHandlerConstructor(onAccountSettingsClick)}/>
+                <LogoutButton onClick={clickHandlerConstructor(onLogoutClick)}/>
             </dialog>
+            <div className={styles.buttonContainer}>
+                <IconButton Icon={MdOutlineMoreHoriz} onClick={isOpened ? closeDialog : openDialog}/>
+            </div>
         </div>
     );
 }

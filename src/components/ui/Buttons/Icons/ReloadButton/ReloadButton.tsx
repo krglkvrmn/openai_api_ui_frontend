@@ -6,7 +6,7 @@ import {IoReload} from "react-icons/io5";
 export function ReloadButton({onClick}: { onClick?: React.MouseEventHandler }) {
     return (
         <div className={styles.reloadButtonContainer} title="Retry">
-            <IconButton Icon={IoReload} mode="dark" onClick={onClick}/>
+            <IconButton Icon={IoReload} onClick={onClick}/>
         </div>
     );
 }

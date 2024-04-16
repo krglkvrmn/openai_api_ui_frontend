@@ -6,7 +6,7 @@ import styles from "./style.module.css";
 export function ConfirmButton({onClick}: { onClick?: React.MouseEventHandler }) {
     return (
         <div className={styles.confirmButtonContainer}>
-            <IconButton Icon={IoMdCheckmark} mode="light" onClick={onClick}/>
+            <IconButton Icon={IoMdCheckmark} onClick={onClick}/>
         </div>
     );
 }

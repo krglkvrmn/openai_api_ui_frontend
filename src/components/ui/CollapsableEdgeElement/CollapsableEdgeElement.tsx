@@ -25,7 +25,7 @@ export function CollapsableEdgeElement({children, side}: {
         <div className={className}>
             <div className={styles.expandCollapseButtonContainer}>
                 <ExpandCollapseButton onClick={() => setIsHidden(prev => !prev)}
-                                      side={side} mode="dark"/>
+                                      side={side}/>
             </div>
             <div className={styles.collapsableEdgeElementContent}>
                 {children}

@@ -4,7 +4,7 @@
     flex-direction: column;
     overflow-y: scroll;
     scrollbar-width: thin;
-    scrollbar-color: white black;
+    scrollbar-color: var(--background-color-active) transparent;
     padding: 1rem 1rem 1rem 0;
 }
 

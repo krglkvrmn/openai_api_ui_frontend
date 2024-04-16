@@ -6,6 +6,15 @@
     overflow-y: clip;
 }
 
+.controls-divider-container {
+    margin-right: 0.5rem;
+}
+
+.controls-divider-container hr {
+    border-color: var(--divider-color);
+    width: 100%;
+}
+
 .control-buttons-container {
     display: flex;
     justify-content: space-evenly;
@@ -24,7 +33,7 @@
     margin-top: 1rem;
     overflow-y: scroll;
     scrollbar-width: thin;
-    scrollbar-color: white black;
+    scrollbar-color: var(--background-color-active) transparent;
 }
 
 .chat-history-record-container {
@@ -34,10 +43,10 @@
 }
 .chat-history-record-container-active {
     composes: chat-history-record-container;
-    background-color: rgba(255, 255, 255, 0.05);
+    background-color: var(--background-color-active)
 }
 .chat-history-record-container:hover {
-    background-color: rgba(255, 255, 255, 0.05);
+    background-color: var(--background-color-active);
 }
 
 .chat-history-record-title-container {

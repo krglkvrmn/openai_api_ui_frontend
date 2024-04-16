@@ -6,7 +6,7 @@ import {IoMdAdd} from "react-icons/io";
 export function NewChatButton({onClick}: { onClick?: React.MouseEventHandler }) {
     return (
         <div className={styles.newChatButtonContainer} title="Create a new chat">
-            <IconButton Icon={IoMdAdd} mode="light" onClick={onClick}/>
+            <IconButton Icon={IoMdAdd} onClick={onClick}/>
         </div>
     );
 }

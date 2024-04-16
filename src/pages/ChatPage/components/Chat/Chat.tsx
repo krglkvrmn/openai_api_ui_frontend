@@ -290,7 +290,7 @@ export default function Chat() {
                 <ModelSelector activeModel={data.model}
                                modelSwitchHandler={(newModel: string) => switchModel({chatId: data.id, newModel})}/>
                 <PromptsManager promptSubmitHandler={(text, author) => addMessage({chatId: data.id, text, author})}
-                                allowSystemPrompt={data.messages.length === 0}
+                                allowPromptSelection={data.messages.length === 0}
                                 active={streamingState.value.status !== "generating"} />
 
                 {

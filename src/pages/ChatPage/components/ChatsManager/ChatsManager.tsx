@@ -178,6 +178,9 @@ export default function ChatsManager() {
             <div className={styles.controlButtonsContainer}>
                 <NewChatButton onClick={() => activateChat(null)} />
             </div>
+            <div className={styles.controlsDividerContainer}>
+                <hr/>
+            </div>
             <div className={styles.chatHistoryRecordsContainer}>
                 <ElementOrLoader isLoading={isChatsLoading}>
                     {

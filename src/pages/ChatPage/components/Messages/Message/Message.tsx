@@ -1,12 +1,12 @@
 import ReactMarkdown from "react-markdown";
 import {Prism as SyntaxHighlighter} from "react-syntax-highlighter";
-import {materialOceanic} from "react-syntax-highlighter/dist/esm/styles/prism";
 import {Signal} from "@preact/signals-core";
 import {MessageCreate} from "../../../../../types/dataTypes.ts";
 import {CopyToClipboardButton} from "../../../ui/Buttons/CopyToClipboardButtonContainer/CopyToClipboardButton.tsx";
 import React, {useRef} from "react";
 import {useSignalEffect} from "@preact/signals-react";
 import styles from "./style.module.css";
+import {twilight} from "react-syntax-highlighter/dist/cjs/styles/prism";
 
 
 function CodeBlockComponent({
@@ -22,15 +22,22 @@ function CodeBlockComponent({
     }
     const cleanedChildren = String(children).replace(/\n$/, '');
 
-
     return language ? (
             <div className={styles.highlightedCodeContainer}>
                 <div className={styles.codeActionsContainer}>
                     <span>{language}</span>
                     <CopyToClipboardButton text={cleanedChildren} />
                 </div>
-                <SyntaxHighlighter style={materialOceanic}
-                                   customStyle={{marginTop: 0, borderRadius: "0 0 1rem 1rem"}}
+                <SyntaxHighlighter style={twilight}
+                                   customStyle={{
+                                       marginTop: 0,
+                                       borderRadius: "0 0 1rem 1rem",
+                                       borderTopWidth: 0,
+                                       borderBottomWidth: "2px",
+                                       borderLeftWidth: "2px",
+                                       borderRightWidth: "2px",
+                                       borderColor: "rgb(84, 84, 84)"
+                                    }}
                                    language={language}
                                    PreTag="div"
                                    showLineNumbers
@@ -70,8 +77,8 @@ export default function Message(
         <div className={styles[`${author}MessageContainer`]} ref={messageContainerRef}>
             {
                 author === "system" ?
-                    <b>Chat context</b> :
-                    <b>{hrAuthor}</b>
+                    <b className={styles.messageAuthor}>Chat context</b> :
+                    <b className={styles.messageAuthor}>{hrAuthor}</b>
 
             }
             {

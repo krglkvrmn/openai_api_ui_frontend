@@ -4,7 +4,7 @@ body {
 
 .chat-app-page-wrapper {
     height: 100vh;
-    /*display: flex;*/
+    background-color: var(--background-color-modal);
 }
 .chat-app-wrapper {
     display: flex;
@@ -19,7 +19,7 @@ body {
     flex-grow: 1;
     justify-content: space-between;
     min-width: 10rem;
-    max-width: 50rem;
+    max-width: 60rem;
     height: 100%;
 }
 
@@ -32,8 +32,16 @@ body {
     /*position: relative;*/
 }
 
+.login-info-divider-container {
+    margin-right: 1rem;
+}
+.login-info-divider-container hr {
+    border-color: var(--divider-color);
+    width: 100%;
+}
 
 .chat-api-key-form-header {
+    margin-top: 0.25rem;
     display: flex;
     justify-content: center;
     width: 100%;

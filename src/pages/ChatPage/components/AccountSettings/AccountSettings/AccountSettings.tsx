@@ -1,12 +1,13 @@
 import {UserInfo} from "../UserInfo/UserInfo.tsx";
 import {APIKeysController} from "../APIKeys/APIKeysController.tsx";
+import styles from "./style.module.css";
 
 export function AccountSettings() {
     return (
-        <div>
-            <h2>Account information</h2>
+        <div className={styles.accountSettingsContainer}>
+            <h3>Account information</h3>
             <UserInfo/>
-            <h2>Your API keys</h2>
+            <h3>Your API keys</h3>
             <APIKeysController/>
         </div>
     );

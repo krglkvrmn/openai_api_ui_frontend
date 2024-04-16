@@ -5,9 +5,9 @@ export function LoginInfo() {
     return (
         <div>
             <p>
+                You are logged in as
                 {
-                    authState?.user?.username &&
-                    `You are logged in as ${authState?.user?.username}`
+                    authState?.user?.username && <b> {authState?.user?.username}</b>
                 }
             </p>
         </div>

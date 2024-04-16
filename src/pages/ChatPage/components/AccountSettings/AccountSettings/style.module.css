@@ -1,0 +1,4 @@
+.account-settings-container {}
+.account-settings-container h3 {
+    color: var(--text-color);
+}

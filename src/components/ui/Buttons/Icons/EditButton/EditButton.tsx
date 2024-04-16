@@ -6,7 +6,7 @@ import styles from "./style.module.css";
 export function EditButton({onClick}: { onClick?: React.MouseEventHandler }) {
     return (
         <div className={styles.editButtonContainer}>
-            <IconButton Icon={MdEdit} mode="light" onClick={onClick}/>
+            <IconButton Icon={MdEdit} onClick={onClick}/>
         </div>
     );
 }

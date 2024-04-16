@@ -4,7 +4,7 @@
     width: 20vw;
     min-width: 15rem;
     max-width: 25rem;
-    color: white;
+    color: var(--text-color);
     transition-duration: 0.25s;
     position: relative;
 }
@@ -16,5 +16,5 @@
     justify-content: space-between;
     flex-grow: 1;
     overflow-x: clip;
-    background-color: black;
+    background-color: var(--background-color);
 }

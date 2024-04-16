@@ -1,6 +1,6 @@
 import {useQueries, UseQueryResult} from "react-query";
 import {getMessageRequest} from "../../../../../services/backendAPI.ts";
-import Message from "../Messages/Message.tsx";
+import Message from "../Message/Message.tsx";
 import React, {useContext, useEffect, useRef, useState} from "react";
 import {ChatContext} from "../../Chat/Chat.tsx";
 import {Signal} from "@preact/signals-core";
@@ -54,7 +54,8 @@ export function MessagesList(
         <div className={styles.messagesList} onScroll={onScroll} ref={messageListRef}>
             {
                 messagesQueries.map((query, index) => {
-                    return <div key={index} className={styles.messagesListItemContainer}>
+                    return <div key={index}
+                                className={query.isLoading ? styles.messagesListItemContainerLoading : styles.messagesListItemContainer}>
                         <ElementOrLoader isLoading={query.isLoading}>
                             {
 

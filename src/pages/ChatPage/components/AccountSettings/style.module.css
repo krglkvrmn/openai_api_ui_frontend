@@ -1,20 +1,44 @@
-.account-settings-modal {}
-.account-settings-modal[open] {
-    display: flex;
+@keyframes modal-fade-in {
+    from { opacity: 0 }
+}
+@keyframes modal-fade-out {
+    from {
+        opacity: 100%;
+        display: flex;
+    }
+    to { opacity: 0 }
+}
+
+.account-settings-modal {
     flex-direction: column;
     align-items: center;
     border-radius: 1rem;
     width: 40rem;
+    background-color: var(--background-color);
+    border-color: var(--divider-color);
+    color: var(--text-color-secondary);
 }
-
-.account-settings-modal-footer {
+.account-settings-modal[open] {
     display: flex;
-    flex-direction: row;
-    justify-content: flex-end;
-    height: 50px;
-    width: 100%;
+    animation: modal-fade-in 0.25s ease;
+}
+.account-settings-modal:not([open]) {
+    animation: modal-fade-out 0.1s ease;
 }
 
-.account-settings-modal-footer button {
-    width: 5rem;
+.account-settings-modal hr {
+    width: 100%;
+    border-color: var(--divider-color);
+}
+
+.account-settings-modal-header {
+    display: flex;
+    align-items: flex-start;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.account-settings-modal-header h2 {
+    margin: 0;
+    color: var(--text-color);
 }

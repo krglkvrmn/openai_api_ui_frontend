@@ -1,0 +1,57 @@
+.message-container {
+    color: var(--text-color-secondary);
+}
+.user-message-container {
+    composes: message-container;
+}
+.system-message-container {
+    composes: message-container;
+    margin-bottom: 4rem;
+    background-color: var(--background-color-active);
+    border-radius: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem;
+}
+.assistant-message-container {
+    composes: message-container;
+}
+
+.highlighted-code-container {}
+
+.code-actions-container {
+    display: flex;
+    justify-content: space-between;
+    box-sizing: border-box;
+    align-items: center;
+    padding: 1rem;
+    background-color: #1a1818;
+    color: var(--text-color);
+    border-radius: 1rem 1rem 0 0;
+    height: 2.5rem;
+    border-left-width: 2px;
+    border-top-width: 2px;
+    border-right-width: 2px;
+    border-bottom-width: 0;
+    border-color: rgb(84, 84, 84);
+    border-style: solid;
+}
+
+.code-actions-container span {
+    font-style: italic;
+}
+
+.code-actions-container svg {
+    transition-duration: 0.25s;
+    height: 1.25rem;
+}
+
+.message-author {
+    color: var(--text-color);
+}
+
+.message-content {
+    text-wrap: normal;
+    white-space: pre-wrap;
+}

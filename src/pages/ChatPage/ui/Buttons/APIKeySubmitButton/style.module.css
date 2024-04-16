@@ -1,4 +1,5 @@
 .api-key-submit-button-container {}
 .api-key-submit-button-container svg {
     width: 1.5rem;
+    color: var(--text-color-secondary);
 }
