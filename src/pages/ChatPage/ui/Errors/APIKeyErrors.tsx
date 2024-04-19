@@ -1,12 +1,9 @@
 import FormError from "../../../../components/ui/InfoDisplay/Errors/Errors.tsx";
-import {Link} from "react-router-dom";
 import {APIKeyErrorType} from "../../../../types/errorTypes.ts";
-import {useLocalAPIKey} from "../../../../hooks/contextHooks.ts";
 import {ReactElement} from "react";
 import styles from "./style.module.css";
 
 export function APIKeyErrors({apiKeysErrorType}: {apiKeysErrorType: APIKeyErrorType}) {
-    const localAPIKey = useLocalAPIKey()[0];
     let element: ReactElement
     switch (apiKeysErrorType) {
         case 'api_key_unset':
@@ -14,10 +11,6 @@ export function APIKeyErrors({apiKeysErrorType}: {apiKeysErrorType: APIKeyErrorT
         case 'invalid_api_key':
             element = <>
                 <FormError error="Your API key is invalid"/>
-                {
-                    localAPIKey.value === "" &&
-                    <span>You can manage your API keys <Link to="/profile">here</Link></span>
-                }
             </>; break;
         default:
             element = <FormError error="Unknown problem with an API key" />
