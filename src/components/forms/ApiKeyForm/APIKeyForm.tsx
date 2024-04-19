@@ -32,13 +32,16 @@ export function APIKeyForm({keySaveHandler}: {keySaveHandler: (apiToken: string)
             }
         },
     });
-
     return (
-        <div className={styles.apiKeyFormContainer}>
+        <div className={styles.apiKeyFormContainer} >
             <ValidationErrorsList errors={validationErrors} />
-            <form method={undefined} onSubmit={onFormSubmit} className={styles.apiKeyForm}>
+            <form method={undefined} onSubmit={onFormSubmit} className={styles.apiKeyForm}
+                  data-tooltip="You do not need to save the key, the chat works as long as the key stays here"
+                  data-tooltip-direction="bottom">
                 <label htmlFor="api-key-input" hidden>OpenAI API key</label>
-                <APIKeyInput id="api-key-input" onChange={(e: React.ChangeEvent<HTMLInputElement>) => setLocalApiKey(e.target.value)}/>
+                <APIKeyInput id="api-key-input" value={localAPIKey.value}
+
+                             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setLocalApiKey(e.target.value)}/>
                 {
                     localAPIKey.value !== "" &&
                     <div className={styles.formSubmitButtonContainer}>

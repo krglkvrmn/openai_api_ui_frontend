@@ -2,6 +2,7 @@
     background-color: transparent;
     padding: 0;
     border: 0;
+    cursor: pointer;
     color: var(--text-color-secondary);
 }
 

@@ -90,7 +90,9 @@ function BasePrompt(
 
     return (
         <div className={styles.promptContainer}>
-            <div className={styles.promptInputContainer}>
+            <div className={styles.promptInputContainer}
+                data-tooltip="Some tooltip"
+                data-tooltip-direction="top">
                 <textarea placeholder={placeholder}
                           ref={promptInputRef}
                           value={typeof promptValue === "string" || typeof promptValue === "undefined" ? promptValue : promptValue.value}

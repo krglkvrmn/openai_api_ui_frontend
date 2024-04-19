@@ -55,7 +55,6 @@ export function APIKeyInput(props: React.InputHTMLAttributes<HTMLInputElement>) 
         name: "api_key",
         type: "password",
         placeholder: "Enter your OpenAI API key here",
-        title: "You do not need to save the key, the chat works as long as the key stays here",
         autoComplete: 'off',
         required: true
     }

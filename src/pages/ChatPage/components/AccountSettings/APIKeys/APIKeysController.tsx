@@ -1,7 +1,6 @@
-import { APIKeyForm } from "../../../../../components/forms/ApiKeyForm/APIKeyForm.tsx";
-import { APIKeysList } from "./APIKeysList.tsx";
-import { LocalAPIKeyProvider } from "../../../contexts/LocalAPIKeyProvider.tsx";
-import { useAPIKeys } from "../../../../../hooks/useAPIKeys.ts";
+import {APIKeyForm} from "../../../../../components/forms/ApiKeyForm/APIKeyForm.tsx";
+import {APIKeysList} from "./APIKeysList.tsx";
+import {useAPIKeys} from "../../../../../hooks/useAPIKeys.ts";
 import styles from "./style.module.css";
 import {ElementOrLoader} from "../../../../../components/ui/Loaders/ElementOrLoader/ElementOrLoader.tsx";
 
@@ -19,9 +18,7 @@ export function APIKeysController() {
                         isSuccess && apiKeys !== undefined ? (
                             isEmpty ?
                                 <>
-                                    <LocalAPIKeyProvider>
-                                        <APIKeyForm keySaveHandler={saveApiKey} />
-                                    </LocalAPIKeyProvider>
+                                    <APIKeyForm keySaveHandler={saveApiKey} />
                                     <p>You don't have any saved API keys. Submit it to the field above to save it to your profile</p>
                                 </> :
                                 <APIKeysList apiKeys={apiKeys} keyDeleteHandler={deleteApiKey}/>

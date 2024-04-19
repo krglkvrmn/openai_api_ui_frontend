@@ -16,6 +16,8 @@ export default function ModelSelector({activeModel, modelSwitchHandler}: ModelSe
         <div className={styles.modelSelectorContainer}>
             <div className={styles.modelSelectorPopupTriggerButtonContainer}>
                 <button onClick={isOpened ? closeDialog : openDialog}
+                        data-tooltip="Some tooltip"
+                        data-tooltip-direction="left"
                         className={styles.modelSelectorPopupTriggerButton}>
                     {activeModel?.toUpperCase()}
                 </button>
