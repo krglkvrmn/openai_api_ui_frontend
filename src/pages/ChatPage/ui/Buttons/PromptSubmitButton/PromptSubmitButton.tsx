@@ -6,7 +6,8 @@ import styles from "./style.module.css";
 
 export function PromptSubmitButton({onClick}: {onClick?: React.MouseEventHandler}) {
     return (
-        <div className={styles.promptSubmitButtonContainer} title="Ask ChatGPT">
+        <div className={styles.promptSubmitButtonContainer}
+             data-tooltip="Ask ChatGPT" data-tooltip-direction="top">
             <IconButton Icon={MdSend} onClick={onClick}/>
         </div>
 );

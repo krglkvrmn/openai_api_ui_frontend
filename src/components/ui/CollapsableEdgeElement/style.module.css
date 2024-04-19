@@ -1,6 +1,9 @@
 .expand-collapse-button-container {
     position: absolute;
 }
+.expand-collapse-button-container svg {
+    color: var(--text-color-secondary);
+}
 
 .collapsable-edge-element {
     transition-duration: 5s;

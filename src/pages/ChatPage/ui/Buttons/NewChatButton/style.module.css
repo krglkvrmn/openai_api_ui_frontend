@@ -1,2 +1,5 @@
 .new-chat-button-container {}
-.new-chat-button-container svg {}
+.new-chat-button-container svg {
+    color: var(--text-color);
+}
+

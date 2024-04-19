@@ -1,1 +1,4 @@
 .edit-button-container {}
+.edit-button-container svg {
+    color: var(--text-color);
+}

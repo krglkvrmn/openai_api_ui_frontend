@@ -3,7 +3,7 @@
     padding: 0;
     border: 0;
     cursor: pointer;
-    color: var(--text-color-secondary);
+    color: var(--text-color);
 }
 
 .icon-button > svg {

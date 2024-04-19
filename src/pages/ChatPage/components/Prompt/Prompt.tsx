@@ -50,7 +50,7 @@ export function SystemPrompt(
     return (
         <BasePrompt promptValue={promptValue}
                     promptValueChangeHandler={promptValueChangeHandler}
-                    placeholder="Enter your system prompt here"
+                    placeholder="Describe rules and context for this chat"
                     promptInputRef={promptInputRef}
                     onSubmit={onPromptSubmit}
                     active={active} />
@@ -90,9 +90,7 @@ function BasePrompt(
 
     return (
         <div className={styles.promptContainer}>
-            <div className={styles.promptInputContainer}
-                data-tooltip="Some tooltip"
-                data-tooltip-direction="top">
+            <div className={styles.promptInputContainer}>
                 <textarea placeholder={placeholder}
                           ref={promptInputRef}
                           value={typeof promptValue === "string" || typeof promptValue === "undefined" ? promptValue : promptValue.value}

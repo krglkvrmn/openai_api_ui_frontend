@@ -1,1 +1,4 @@
-.switch-prompt-button-container {}
+.switch-prompt-button-container { }
+.switch-prompt-button-container svg {
+    color: var(--text-color);
+}

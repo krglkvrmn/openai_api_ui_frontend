@@ -10,8 +10,19 @@ export function SwitchPromptTypeButton(
     {activePromptType, activePromptTypeSetter}:
     {activePromptType: PromptType, activePromptTypeSetter?: (promptType: PromptType) => void})
 {
+    let tooltip: string;
+    switch (activePromptType) {
+        case "user":
+            tooltip = "Switch to writing a chat context"; break;
+        case "system":
+            tooltip = "Switch to writing normal prompts"; break;
+        default:
+            throw new Error("Unknown prompt type")
+    }
     return (
-        <div className={styles.switchPromptButtonContainer}>
+        <div className={styles.switchPromptButtonContainer}
+             data-tooltip={tooltip}
+             data-tooltip-direction="top" >
             {
                 activePromptType === "user" &&
                 <IconButton Icon={MdOutlineModeEditOutline} onClick={funcClosureOrUndefined(activePromptTypeSetter, "system")}/>

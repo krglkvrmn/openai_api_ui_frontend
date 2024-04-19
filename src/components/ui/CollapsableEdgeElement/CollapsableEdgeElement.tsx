@@ -22,7 +22,7 @@ export function CollapsableEdgeElement({children, side}: {
 
     }, [side, isHidden]);
     return (
-        <div className={className}>
+        <aside className={className}>
             <div className={styles.expandCollapseButtonContainer}>
                 <ExpandCollapseButton onClick={() => setIsHidden(prev => !prev)}
                                       side={side}/>
@@ -30,6 +30,6 @@ export function CollapsableEdgeElement({children, side}: {
             <div className={styles.collapsableEdgeElementContent}>
                 {children}
             </div>
-        </div>
+        </aside>
     );
 }

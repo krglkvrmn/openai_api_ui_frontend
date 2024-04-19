@@ -20,13 +20,13 @@
 }
 
 .model-selector-container {
-    width: 10rem;
+    width: 11rem;
     position: relative;
 }
 .model-selector-popup-trigger-button-container {}
 .model-selector-popup-trigger-button {
     width: 100%;
-    padding: 0.5rem 0.5rem 0.3rem 0.5rem;
+    padding: 0.5rem;
     background-color: transparent;
     color: var(--text-color);
     font-size: 1.1rem;

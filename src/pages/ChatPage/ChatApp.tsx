@@ -41,7 +41,7 @@ export default function ChatApp() {
                                                                    onLogoutClick={logOut}/>
                                 </div>
                             </Sidebar>
-                            <div className={styles.chatContent}>
+                            <main className={styles.chatContent}>
                             {
                                     !isSavedKeyExists &&
                                     <CollapsableEdgeElement side="top">
@@ -51,7 +51,7 @@ export default function ChatApp() {
                                     </CollapsableEdgeElement>
                                 }
                                 <Chat/>
-                            </div>
+                            </main>
                             <Sidebar side="right">
                                 <PromptsLibrary/>
                             </Sidebar>

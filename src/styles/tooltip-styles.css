@@ -21,7 +21,7 @@
 
 [data-tooltip] {
     --tooltip-arrow-size: 12px;
-    --tooltip-background-color: var(--secondary-color-dark);
+    --tooltip-background-color: var(--info-color-dark);
     --tooltip-delay-time: 0.9s;
     --tooltip-animation-time: 0.1s;
     --tooltip-transition-time: calc(var(--tooltip-delay-time) + var(--tooltip-animation-time));
@@ -33,7 +33,7 @@
     display: none;
     position: absolute;
     box-sizing: border-box;
-    color: var(--text-color-secondary);
+    color: var(--info-color-contrast);
     content: attr(data-tooltip);
     max-width: 20rem;
     width: max-content;

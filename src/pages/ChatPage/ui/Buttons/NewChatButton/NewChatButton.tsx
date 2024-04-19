@@ -6,7 +6,7 @@ import {IoMdAdd} from "react-icons/io";
 export function NewChatButton({onClick}: { onClick?: React.MouseEventHandler }) {
     return (
         <div className={styles.newChatButtonContainer}
-             data-tooltip="Create new chat"
+             data-tooltip="Create a new chat"
              data-tooltip-direction="right"
         >
             <IconButton Icon={IoMdAdd} onClick={onClick}/>

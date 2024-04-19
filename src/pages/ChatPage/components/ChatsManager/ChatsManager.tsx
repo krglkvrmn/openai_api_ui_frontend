@@ -181,7 +181,7 @@ export default function ChatsManager() {
             <div className={styles.controlsDividerContainer}>
                 <hr/>
             </div>
-            <div className={styles.chatHistoryRecordsContainer}>
+            <nav className={styles.chatHistoryRecordsContainer}>
                 <ElementOrLoader isLoading={isChatsLoading}>
                     {
                         isChatsError ? <LoadingError errorText="An error occurred while loading chats"
@@ -201,7 +201,7 @@ export default function ChatsManager() {
                                 }) : null
                     }
                 </ElementOrLoader>
-            </div>
+            </nav>
         </div>
     )
 }
@@ -231,7 +231,7 @@ function ChatHistoryRecord(
                     <EditButton onClick={onEditStart}/> :
                     <ConfirmButton onClick={onEditEnd}/>
                 }
-                <DeleteButton onClick={funcClosureOrUndefined(chatDeleteHandler)} mode="light" />
+                <DeleteButton onClick={funcClosureOrUndefined(chatDeleteHandler)} />
             </div>
         </div>
     )

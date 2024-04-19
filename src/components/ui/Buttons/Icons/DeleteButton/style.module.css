@@ -1,1 +1,4 @@
 .delete-button-container {}
+.delete-button-container svg {
+    color: var(--text-color);
+}

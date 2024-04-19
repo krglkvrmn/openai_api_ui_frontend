@@ -80,7 +80,7 @@ function PromptLibraryRecord({prompt, promptSelectionCallback, promptDeleteHandl
                 <b className={styles.promptLibraryRecordTitle}>{prompt}</b>
             </div>
             <div className={styles.promptLibraryRecordControlsContainer}>
-                <DeleteButton onClick={promptDeleteHandler} mode="light" />
+                <DeleteButton onClick={promptDeleteHandler} />
             </div>
         </div>
     );
