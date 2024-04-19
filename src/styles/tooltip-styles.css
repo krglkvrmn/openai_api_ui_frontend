@@ -2,6 +2,9 @@
     from {
         opacity: 0;
     }
+    90% {
+        opacity: 0;
+    }
     to {
         opacity: 1;
     }
@@ -19,7 +22,10 @@
 [data-tooltip] {
     --tooltip-arrow-size: 12px;
     --tooltip-background-color: var(--secondary-color-dark);
-    --tooltip-transition-time: 0.2s;
+    --tooltip-delay-time: 0.9s;
+    --tooltip-animation-time: 0.1s;
+    --tooltip-transition-time: calc(var(--tooltip-delay-time) + var(--tooltip-animation-time));
+    /*Delay time (90%) + animation time (10%)*/
 
     position: relative;
 }
@@ -36,8 +42,8 @@
     padding: calc(var(--tooltip-arrow-size) / 2);
     text-align: center;
     border-radius: 0.5rem;
-    animation: tooltip-fade-out var(--tooltip-transition-time) ease-in;
-    border: 2px solid var(--divider-color);
+    animation: tooltip-fade-out var(--tooltip-animation-time) ease-in;
+    border: 2px solid var(--border-color);
     z-index: 0;
 }
 [data-tooltip-direction]::before {
@@ -47,11 +53,11 @@
     content: "";
     width: var(--tooltip-arrow-size);
     height: var(--tooltip-arrow-size);
-    background-color: var(--tooltip-background-color);
-    border-color: var(--divider-color);
+    border-color: var(--border-color);
     border-style: solid;
     border-width: 3px 0 0 3px;
-    animation: tooltip-fade-out var(--tooltip-transition-time) ease-out;
+    animation: tooltip-fade-out var(--tooltip-animation-time) ease-out;
+    background-image: linear-gradient(135deg, var(--tooltip-background-color) 50%, transparent 50% 100%);
 }
 [data-tooltip]:hover::after {
     display: block;
