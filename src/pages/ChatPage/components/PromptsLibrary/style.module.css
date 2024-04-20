@@ -1,11 +1,11 @@
 .prompt-library-container {
     display: flex;
+    padding: 1rem 0 1rem 0;
     height: 100%;
     flex-direction: column;
     overflow-y: scroll;
     scrollbar-width: thin;
     scrollbar-color: var(--background-color-active) transparent;
-    padding: 1rem 1rem 1rem 0;
 }
 
 .prompt-library-container h2 {
@@ -19,6 +19,9 @@
     border-width: 1px;
     padding: 0;
     margin: 1rem 0 1rem 0;
+}
+.prompt-library-records-list {
+
 }
 
 .no-prompts-message {

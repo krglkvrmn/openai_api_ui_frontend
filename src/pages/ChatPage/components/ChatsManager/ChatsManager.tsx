@@ -51,9 +51,7 @@ function useChats(): TuseChatsReturn {
     const navigate = useNavigate();
     const { data, isSuccess, isLoading, isError, refetch } = useQuery({
         queryKey: ['chats'],
-        queryFn: async () => {
-            return await getAllChatsRequest();
-        },
+        queryFn: getAllChatsRequest
     });
     const [defaultActiveChatIndex, setActiveChatIndex] = useActiveChatIndex();
     let activeChatIndex: number | null = defaultActiveChatIndex;
@@ -181,8 +179,8 @@ export default function ChatsManager() {
             <div className={styles.controlsDividerContainer}>
                 <hr/>
             </div>
-            <nav className={styles.chatHistoryRecordsContainer}>
-                <ElementOrLoader isLoading={isChatsLoading}>
+            <ElementOrLoader isLoading={isChatsLoading}>
+                <nav className={styles.chatHistoryRecordsContainer}>
                     {
                         isChatsError ?
                             <LoadingError errorText="An error occurred while loading chats" reloadAction={reloadChats} /> :
@@ -207,8 +205,8 @@ export default function ChatsManager() {
                                     </p> :
                                 null
                     }
-                </ElementOrLoader>
-            </nav>
+                </nav>
+            </ElementOrLoader>
         </div>
     )
 }

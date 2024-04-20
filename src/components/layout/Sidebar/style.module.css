@@ -1,20 +1,21 @@
 .sidebar-container {
     display: flex;
     height: 100vh;
-    width: 20vw;
     min-width: 15rem;
     max-width: 25rem;
     color: var(--text-color);
-    transition-duration: 0.25s;
     position: relative;
 }
 
 .sidebar-content {
     display: flex;
-    padding: 0.5rem 0 0.5rem 0.5rem;
     flex-direction: column;
+    box-sizing: border-box;
     justify-content: space-between;
+    height: 100%;
+    width: 100%;
     flex-grow: 1;
     overflow-x: clip;
     background-color: var(--background-color);
+    padding: 0.5rem;
 }

@@ -54,6 +54,7 @@
 .model-selector-popup:not([open]) {
     bottom: 50%;
     animation: popup-fade-out 0.1s ease;
+
 }
 
 .model-selection-button {

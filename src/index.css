@@ -7,13 +7,13 @@ body {
   -moz-osx-font-smoothing: grayscale;
 
   background-color: var(--background-color);
+  /*overflow-y: clip;*/
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
   monospace;
 }
-
 
 :root {
     --background-color: #121212;
