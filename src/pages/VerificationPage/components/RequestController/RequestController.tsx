@@ -75,6 +75,7 @@ export function RequestController() {
                     (
                         <>
                             <p><b>Your email:</b> {authState.user.email}</p>
+                            <br />
                             <VerificationRequestAction requestVerification={requestVerification}/>
                             {
                                 verificationError && <p className={styles.verificationError}>{verificationError}</p>
