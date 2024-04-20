@@ -3,9 +3,11 @@ import styles from "./style.module.css";
 import {CollapsableEdgeElement} from "../../ui/CollapsableEdgeElement/CollapsableEdgeElement.tsx";
 
 
-export function Sidebar({children, side}: { children?: React.ReactNode, side: "left" | "right" | "top" | "bottom" }) {
+export function Sidebar(
+    {children, side, isExpanded = false}:
+    {children?: React.ReactNode, side: "left" | "right" | "top" | "bottom", isExpanded?: boolean }) {
     return (
-        <CollapsableEdgeElement side={side}>
+        <CollapsableEdgeElement isExpanded={isExpanded} side={side}>
             <div className={styles.sidebarContainer}>
                 <div className={styles.sidebarContent}>
                     {children}

@@ -2,11 +2,11 @@ import React, {useMemo, useState} from "react";
 import {ExpandCollapseButton} from "../Buttons/Icons/ExpandCollapseButton/ExpandCollapseButton.tsx";
 import styles from "./style.module.css";
 
-export function CollapsableEdgeElement({children, side}: {
-    children: React.ReactNode,
-    side: "left" | "right" | "top" | "bottom"
-}) {
-    const [isHidden, setIsHidden] = useState<boolean>(false);
+export function CollapsableEdgeElement(
+    {children, side, isExpanded = false}:
+    {children: React.ReactNode, side: "left" | "right" | "top" | "bottom", isExpanded?: boolean }
+) {
+    const [isHidden, setIsHidden] = useState<boolean>(!isExpanded);
     const className = useMemo(() => {
         switch (side) {
             case "left":
@@ -25,6 +25,7 @@ export function CollapsableEdgeElement({children, side}: {
         <aside className={className}>
             <div className={styles.expandCollapseButtonContainer}>
                 <ExpandCollapseButton onClick={() => setIsHidden(prev => !prev)}
+                                      isOpened={isExpanded}
                                       side={side}/>
             </div>
             <div className={styles.collapsableEdgeElementContent}>
