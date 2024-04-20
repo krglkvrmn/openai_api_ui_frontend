@@ -1,5 +1,5 @@
-import { Navigate, Outlet } from "react-router-dom";
-import { useAuth } from "../../hooks/contextHooks.ts";
+import {Navigate, Outlet} from "react-router-dom";
+import {useAuth} from "../../hooks/contextHooks.ts";
 import React from "react";
 
 
