@@ -61,3 +61,18 @@ code {
     --border-color: #555555;
 
 }
+
+::-webkit-scrollbar {
+
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: white;
+}
+
+::-webkit-scrollbar-thumb:hover {
+}

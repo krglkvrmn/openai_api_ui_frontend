@@ -29,7 +29,6 @@
     min-height: 20px;
     max-height: 20em;
     overflow-y: scroll;
-    scrollbar-color: var(--background-color-active) transparent;
     border: none;
     resize: none;
 }

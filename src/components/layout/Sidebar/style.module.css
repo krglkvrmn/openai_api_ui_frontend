@@ -1,7 +1,7 @@
 .sidebar-container {
-    display: flex;
     height: 100vh;
     min-width: 15rem;
+    width: 20vw;
     max-width: 25rem;
     color: var(--text-color);
     position: relative;
@@ -15,7 +15,6 @@
     height: 100%;
     width: 100%;
     flex-grow: 1;
-    overflow-x: clip;
     background-color: var(--background-color);
     padding: 0.5rem;
 }

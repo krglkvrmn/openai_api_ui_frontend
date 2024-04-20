@@ -1,7 +1,9 @@
 .chat-history-container {
     display: flex;
     flex-direction: column;
+    box-sizing: border-box;
     height: 100%;
+    width: 100%;
     padding: 1rem 0.5rem 1rem 0.5rem;
     overflow-y: hidden;
     min-height: 0;
@@ -32,8 +34,6 @@
     height: 100%;
     margin-top: 1rem;
     overflow-y: scroll;
-    scrollbar-width: thin;
-    scrollbar-color: var(--background-color-active) transparent;
 }
 
 .no-chats-message {

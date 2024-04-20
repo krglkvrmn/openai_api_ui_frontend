@@ -31,8 +31,6 @@
     box-sizing: border-box;
     flex-direction: column;
     overflow-y: scroll;
-    scrollbar-width: thin;
-    scrollbar-color: var(--background-color-active) transparent;
 }
 
 .no-prompts-message {
