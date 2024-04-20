@@ -2,10 +2,8 @@
     display: flex;
     flex-direction: column;
     height: 100%;
-    overflow-y: scroll;
+    overflow-y: auto;
     overflow-wrap: anywhere;
-    scrollbar-width: thin;
-    scrollbar-color: var(--background-color-active) transparent;
     padding: 0 2rem;  /* Scrollbar spacing */
 }
 

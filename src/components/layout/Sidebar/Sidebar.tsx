@@ -5,11 +5,11 @@ import {CollapsableEdgeElement} from "../../ui/CollapsableEdgeElement/Collapsabl
 
 export function Sidebar(
     {children, side, isExpanded = false}:
-    {children?: React.ReactNode, side: "left" | "right" | "top" | "bottom", isExpanded?: boolean }) {
+    {children?: React.ReactNode, side: "left" | "right", isExpanded?: boolean }) {
     return (
         <CollapsableEdgeElement isExpanded={isExpanded} side={side}>
             <div className={styles.sidebarContainer}>
-                <div className={styles.sidebarContent}>
+                <div className={styles.sidebarContent} data-side={side}>
                     {children}
                 </div>
             </div>

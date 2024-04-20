@@ -1,27 +1,29 @@
 .prompt-library-container {
+    --right-sidebar-padding: 0.5rem;
+    --right-sidebar-padding-right: 1rem;
+
     display: flex;
     flex-direction: column;
     box-sizing: border-box;
-    padding: 1rem 0 1rem 0;
+    padding: var(--right-sidebar-padding) 0 var(--right-sidebar-padding) var(--right-sidebar-padding);
     height: 100%;
 }
 
 .prompt-library-container h2 {
     margin: 0;
     text-align: center;
+    padding-right: var(--right-sidebar-padding-right);
 }
 
 .prompt-library-container hr {
     border-color: var(--divider-color);
     border-radius: 1px;
     border-width: 1px;
-    padding: 0;
-    margin: 1rem 0 1rem 0;
+    margin: 1rem var(--right-sidebar-padding-right) 1rem 0;
 }
 .prompt-library-records-list-container {
     height: 100%;
     box-sizing: border-box;
-    padding: 0.5rem;
     overflow-y: hidden;
 }
 
@@ -30,7 +32,8 @@
     height: 100%;
     box-sizing: border-box;
     flex-direction: column;
-    overflow-y: scroll;
+    overflow-y: auto;
+    padding-right: var(--right-sidebar-padding-right);
 }
 
 .no-prompts-message {

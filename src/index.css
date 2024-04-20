@@ -11,6 +11,20 @@ body {
 
   background-color: var(--background-color);
 }
+div, textarea, nav {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+}
+::-webkit-scrollbar {
+    width: 6px;
+}
+::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 9999px;
+}
+::-webkit-scrollbar-track {
+    background: transparent;
+}
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
@@ -60,19 +74,4 @@ code {
     --divider-color: rgba(255, 255, 255, 0.12);
     --border-color: #555555;
 
-}
-
-::-webkit-scrollbar {
-
-}
-
-::-webkit-scrollbar-track {
-    background: #f1f1f1;
-}
-
-::-webkit-scrollbar-thumb {
-    background: white;
-}
-
-::-webkit-scrollbar-thumb:hover {
 }

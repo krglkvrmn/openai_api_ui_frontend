@@ -1,16 +1,19 @@
 .chat-history-container {
+    --left-sidebar-padding: 0.5rem;
+    --left-sidebar-padding-right: 1rem;
+
     display: flex;
     flex-direction: column;
     box-sizing: border-box;
     height: 100%;
     width: 100%;
-    padding: 1rem 0.5rem 1rem 0.5rem;
+    padding: var(--left-sidebar-padding) 0 var(--left-sidebar-padding) var(--left-sidebar-padding);
     overflow-y: hidden;
     min-height: 0;
 }
 
 .controls-divider-container {
-    margin-right: 0.5rem;
+    padding-right: var(--left-sidebar-padding-right);
 }
 
 .controls-divider-container hr {
@@ -22,6 +25,7 @@
     display: flex;
     justify-content: space-evenly;
     align-items: center;
+    padding-right: var(--left-sidebar-padding-right);
 }
 
 .control-buttons-container svg {
@@ -33,7 +37,8 @@
     flex-direction: column;
     height: 100%;
     margin-top: 1rem;
-    overflow-y: scroll;
+    overflow-y: auto;
+    padding-right: var(--left-sidebar-padding-right);
 }
 
 .no-chats-message {

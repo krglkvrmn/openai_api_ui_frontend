@@ -28,7 +28,7 @@
     line-height: 20px;
     min-height: 20px;
     max-height: 20em;
-    overflow-y: scroll;
+    overflow-y: auto;
     border: none;
     resize: none;
 }
@@ -37,5 +37,6 @@
     outline: none;
 }
 .prompt-container textarea::placeholder {
+    font-size: 1em;
     font-weight: 200;
 }
