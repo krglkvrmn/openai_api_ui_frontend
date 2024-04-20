@@ -47,6 +47,7 @@ export function useDialog(type: "modal" | "popup" = "modal", timeout?: number): 
 
     function closeDialog() {
         if (isOpened) {
+            dialogRef.current && dialogRef.current?.blur();   // Required for smooth fade-out transitions
             dialogRef.current && dialogRef.current?.close();
             setIsOpened(false);
         }

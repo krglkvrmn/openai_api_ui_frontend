@@ -3,7 +3,7 @@
 }
 @keyframes modal-fade-out {
     from {
-        opacity: 100%;
+        opacity: 1;
         display: flex;
     }
     to { opacity: 0 }
