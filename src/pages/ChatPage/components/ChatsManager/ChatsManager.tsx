@@ -184,21 +184,28 @@ export default function ChatsManager() {
             <nav className={styles.chatHistoryRecordsContainer}>
                 <ElementOrLoader isLoading={isChatsLoading}>
                     {
-                        isChatsError ? <LoadingError errorText="An error occurred while loading chats"
-                                                     reloadAction={reloadChats} /> :
+                        isChatsError ?
+                            <LoadingError errorText="An error occurred while loading chats" reloadAction={reloadChats} /> :
                             isChatsSuccess && chats !== undefined ?
-                                chats.map((chat, index) => {
-                                    return (
-                                        <ChatHistoryRecord key={index}
-                                                           title={chat.title}
-                                                           isActive={activeChatIndex === index}
-                                                           chatActivationHandler={() => activateChat(index)}
-                                                           chatDeleteHandler={() => deleteChat(index)}
-                                                           chatRenameHandler={(name: string) => {
-                                                               renameChat({chatIndex: index, name: name})
-                                                           }}/>
-                                    );
-                                }) : null
+                                chats.length > 0 ?
+                                    chats.map((chat, index) => {
+                                        return (
+                                            <ChatHistoryRecord key={index}
+                                                               title={chat.title}
+                                                               isActive={activeChatIndex === index}
+                                                               chatActivationHandler={() => activateChat(index)}
+                                                               chatDeleteHandler={() => deleteChat(index)}
+                                                               chatRenameHandler={(name: string) => {
+                                                                   renameChat({chatIndex: index, name: name})
+                                                               }}/>
+                                        );
+                                    }) :
+                                    <p className={styles.noChatsMessage}>
+                                        You do not have any saved chats yet
+                                        <br />
+                                        Submit a prompt to start a conversation
+                                    </p> :
+                                null
                     }
                 </ElementOrLoader>
             </nav>

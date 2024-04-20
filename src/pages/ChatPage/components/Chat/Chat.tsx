@@ -77,10 +77,8 @@ function useChat(chatId: ChatIdType): TuseChatReturn {
     const { data: queryData, refetch, isLoading, isError, isSuccess } = useQuery({
         queryKey: ['chats', chatId],
         queryFn: async ({ queryKey }) => {
-            // await new Promise((resolve, reject) => setTimeout(() => resolve(1), 100000));
             return await getChatRequest(queryKey[1] as number);
         },
-        // onError: () => navigate('/chat/new'),
         enabled: !isDefault
     });
     const data: ChatAny = queryData === undefined ? defaultChat : queryData;

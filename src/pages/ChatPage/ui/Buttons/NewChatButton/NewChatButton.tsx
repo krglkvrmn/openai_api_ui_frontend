@@ -7,7 +7,7 @@ export function NewChatButton({onClick}: { onClick?: React.MouseEventHandler }) 
     return (
         <div className={styles.newChatButtonContainer}
              data-tooltip="Create a new chat"
-             data-tooltip-direction="right"
+             data-tooltip-direction="bottom"
         >
             <IconButton Icon={IoMdAdd} onClick={onClick}/>
         </div>

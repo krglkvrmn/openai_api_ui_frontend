@@ -36,7 +36,7 @@ export function ValidationErrorsList({errors}: { errors: UserErrors }) {
 export function LoadingError({errorText, reloadAction}: {errorText: string, reloadAction: React.MouseEventHandler}) {
     return (
         <div className={styles.loadingErrorContainer}>
-            <p>{errorText}</p>
+            <p className={styles.loadingErrorText}>{errorText}</p>
             <ReloadButton onClick={reloadAction}/>
         </div>
     );

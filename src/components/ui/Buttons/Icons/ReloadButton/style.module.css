@@ -1,6 +1,17 @@
+@keyframes rotate-reload-button {
+    to {
+        rotate: 360deg;
+    }
+}
+
 .reload-button-container {
     margin: 0 0.5rem;
 }
 .reload-button-container svg {
-    width: 1.5rem;
+    color: var(--warning-color-light);
+    width: 2rem;
+}
+.reload-button-container svg:hover {
+    color: var(--warning-color);
+    animation: rotate-reload-button 0.5s ease;
 }

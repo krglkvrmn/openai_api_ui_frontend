@@ -4,6 +4,9 @@
 .expand-collapse-button-container svg {
     color: var(--text-color-secondary);
 }
+.expand-collapse-button-container svg:hover {
+    color: var(--text-color-secondary);
+}
 
 .collapsable-edge-element {
     transition-duration: 5s;

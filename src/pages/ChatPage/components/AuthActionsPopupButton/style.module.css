@@ -16,6 +16,9 @@
 .auth-actions-popup-trigger-button-container {
     position: relative;
 }
+.auth-actions-popup-trigger-button-container svg:hover {
+    color: var(--text-color-secondary);
+}
 
 
 .auth-actions-popup {
@@ -54,6 +57,7 @@
 }
 .auth-action-button:hover {
     background-color: var(--background-color-active);
+    cursor: pointer;
 }
 .auth-action-button span {
     margin: auto;

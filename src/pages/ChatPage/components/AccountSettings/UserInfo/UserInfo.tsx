@@ -28,11 +28,13 @@ export function UserInfo() {
                             userInfoQuery.isSuccess && userInfoQuery.data !== undefined ? (
                                 userInfoQuery.data.is_guest ?
                                     <div className={styles.guestInfoContainer}>
-                                        <b>You are logged in with a guest account</b>
+                                        <b className={styles.guestLoginHeader}>You are logged in with a guest account</b>
                                         <p>
                                         This account with all associated chats
                                         and API keys will be automatically deleted at
-                                            <b> {guestAccountExpirationDate?.toLocaleString('en-GB')}</b> or when logging out.
+                                            <b className={styles.guestExpiryDate}>
+                                               &nbsp;{guestAccountExpirationDate?.toLocaleString('en-GB')}
+                                            </b> or when logging out.
                                         </p>
                                         <p>
                                             If you want to persist your chats and API keys, consider other login options.

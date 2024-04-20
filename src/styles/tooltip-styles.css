@@ -38,6 +38,8 @@
     max-width: 20rem;
     width: max-content;
     height: max-content;
+    font-size: 14px;
+    font-weight: normal;
     background-color: var(--tooltip-background-color);
     padding: calc(var(--tooltip-arrow-size) / 2);
     text-align: center;

@@ -35,6 +35,7 @@
 }
 .model-selector-popup-trigger-button:hover {
     background-color: var(--background-color-active);
+    cursor: pointer;
 }
 .model-selector-popup {
     position: absolute;

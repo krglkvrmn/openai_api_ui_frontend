@@ -36,6 +36,10 @@
     scrollbar-color: var(--background-color-active) transparent;
 }
 
+.no-chats-message {
+    text-align: center;
+}
+
 .chat-history-record-container {
     display: flex;
     justify-content: space-between;

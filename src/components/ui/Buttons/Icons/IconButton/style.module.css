@@ -3,15 +3,16 @@
     padding: 0;
     border: 0;
     cursor: pointer;
-    color: var(--text-color);
 }
 
 .icon-button > svg {
     width: 2rem;
     height: auto;
-    transition: 0.5s ease;
+    color: var(--text-color);
 }
 
 .icon-button > svg:hover {
     transform: scale(1.1);
+    color: var(--text-color-secondary);
+    transition: color 0.5s ease;
 }

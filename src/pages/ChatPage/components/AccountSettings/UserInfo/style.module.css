@@ -5,3 +5,9 @@
 .guest-info-container {
     text-align: center;
 }
+.guest-login-header {
+    color: var(--info-color-light);
+}
+.guest-expiry-date {
+    color: var(--warning-color);
+}
