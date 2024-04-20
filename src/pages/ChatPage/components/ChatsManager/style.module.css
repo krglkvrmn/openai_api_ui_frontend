@@ -3,7 +3,7 @@
     flex-direction: column;
     height: 100%;
     padding: 1rem 0.5rem 1rem 0.5rem;
-    overflow-y: clip;
+    overflow-y: hidden;
     min-height: 0;
 }
 

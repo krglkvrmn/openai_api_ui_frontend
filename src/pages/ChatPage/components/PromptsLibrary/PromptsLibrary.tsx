@@ -19,6 +19,12 @@ type PromptLibraryRecordProps = {
     promptDeleteHandler?: () => void
 }
 
+type PromptLibraryRecordListProps = {
+    prompts: SystemPromptRead[],
+    setSystemPromptValue?: (prompt: string) => void,
+    deleteSystemPrompt?: (promptId: number) => void
+}
+
 type TuseSystemPromptsLibrary = {
     systemPromptsLibraryQuery: UseQueryResult<SystemPromptRead[]>,
     deleteSystemPrompt: (promptId: number) => void
@@ -58,22 +64,38 @@ export default function PromptsLibrary() {
         <div className={styles.promptLibraryContainer}>
             <h2 data-tooltip="This is a collection of most popular context prompts that you've sumbitted"
                 data-tooltip-direction="bottom">Prompt library</h2>
-            <hr />
-            <ElementOrLoader isLoading={systemPromptsLibraryQuery.isLoading}>
+            <hr/>
+                <ElementOrLoader isLoading={systemPromptsLibraryQuery.isLoading}>
+                    {
+                        systemPromptsLibraryQuery.isError ?
+                            <LoadingError errorText="An error occurred while loading a prompt library"
+                                          reloadAction={() => systemPromptsLibraryQuery.refetch()}/> :
+                            systemPromptsLibraryQuery.isSuccess ? (
+                                systemPromptsLibraryQuery.data.length > 0 ?
+                                    <PromptLibraryRecordList prompts={systemPromptsLibraryQuery.data}
+                                                             setSystemPromptValue={setSystemPromptValue}
+                                                             deleteSystemPrompt={deleteSystemPrompt}/> :
+                                    <p className={styles.noPromptsMessage}>You do not have any saved prompts yet</p>
+                            ) : null
+                    }
+                </ElementOrLoader>
+        </div>
+    );
+}
+
+function PromptLibraryRecordList({prompts, setSystemPromptValue, deleteSystemPrompt}: PromptLibraryRecordListProps) {
+    return (
+        <div className={styles.promptLibraryRecordsListContainer}>
+            <div className={styles.promptLibraryRecordsList}>
                 {
-                    systemPromptsLibraryQuery.isError ? <LoadingError errorText="An error occurred while loading a prompt library"
-                                                                      reloadAction={() => systemPromptsLibraryQuery.refetch()}/> :
-                    systemPromptsLibraryQuery.isSuccess ? (
-                        systemPromptsLibraryQuery.data.length > 0 ?
-                            systemPromptsLibraryQuery.data.map((prompt) => {
-                                return <PromptLibraryRecord key={prompt.id} prompt={prompt.content}
-                                                            promptSelectionCallback={funcClosureOrUndefined(setSystemPromptValue, prompt.content)}
-                                                            promptDeleteHandler={funcClosureOrUndefined(deleteSystemPrompt, prompt.id)}/>
-                            }):
-                            <p className={styles.noPromptsMessage}>You do not have any saved prompts yet</p>
-                    ) : null
+                    prompts.map((prompt) => {
+                        return <PromptLibraryRecord key={prompt.id} prompt={prompt.content}
+                                                    promptSelectionCallback={funcClosureOrUndefined(setSystemPromptValue, prompt.content)}
+                                                    promptDeleteHandler={funcClosureOrUndefined(deleteSystemPrompt, prompt.id)}/>
+                    })
+
                 }
-            </ElementOrLoader>
+            </div>
         </div>
     );
 }
