@@ -1,5 +1,6 @@
 .expand-collapse-button-container {
     position: absolute;
+    z-index: 1;
 }
 .expand-collapse-button-container svg {
     color: var(--text-color-secondary);
@@ -51,7 +52,6 @@
     left: 100%;
     top: 50%;
     translate: 0 -50%;
-    z-index: 1;
 }
 .collapsable-edge-element-left-collapsed {
     composes: collapsable-edge-element-horizontally-collapsed collapsable-edge-element-left;
@@ -64,7 +64,6 @@
     right: 100%;
     top: 50%;
     translate: 0 -50%;
-    z-index: 1;
 }
 .collapsable-edge-element-right-collapsed {
     composes: collapsable-edge-element-horizontally-collapsed collapsable-edge-element-right;
@@ -77,7 +76,6 @@
     top: 100%;
     left: 50%;
     translate: -50% 0;
-    z-index: 1;
 }
 .collapsable-edge-element-top-collapsed {
     composes: collapsable-edge-element-vertically-collapsed collapsable-edge-element-top;
@@ -91,7 +89,6 @@
     bottom: 100%;
     left: 50%;
     translate: -50% 0;
-    z-index: 1;
 }
 .collapsable-edge-element-bottom-collapsed {
     composes: collapsable-edge-element-vertically-collapsed collapsable-edge-element-bottom;
