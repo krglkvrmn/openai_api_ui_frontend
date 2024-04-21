@@ -14,16 +14,9 @@
 }
 .account-settings-modal[open] {
     display: flex;
-    visibility: visible;
-    opacity: 1;
-    transition: visibility 0s, opacity 0.25s ease;
 }
 .account-settings-modal:not([open]) {
     visibility: hidden;
-    opacity: 0;
-    bottom: 50%;
-    top: 50%;
-    transition: visibility 0s 0.2s, opacity 0.2s ease;
 }
 
 .account-settings-modal hr {

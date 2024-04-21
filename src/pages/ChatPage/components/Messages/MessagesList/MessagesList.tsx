@@ -8,8 +8,10 @@ import {MessageAny, MessageCreate, MessageRead} from "../../../../../types/dataT
 import {ElementOrLoader} from "../../../../../components/ui/Loaders/ElementOrLoader/ElementOrLoader.tsx";
 import {LoadingError} from "../../../../../components/ui/InfoDisplay/Errors/Errors.tsx";
 import styles from "./style.module.css";
-import {IconButton} from "../../../../../components/ui/Buttons/Icons/IconButton/IconButton.tsx";
-import {MdOutlineArrowCircleDown} from "react-icons/md";
+import {
+    ScrollToBottomButton
+} from "../../../../../components/ui/Buttons/Icons/ScrollToBottomButton/ScrollToBottomButton.tsx";
+import {scrollToBottom} from "../../../../../utils/ui.ts";
 
 
 function useMessageList(messages: MessageAny[]): UseQueryResult<MessageCreate>[] {
@@ -26,17 +28,6 @@ function useMessageList(messages: MessageAny[]): UseQueryResult<MessageCreate>[]
             },
         };
     }));
-}
-function scrollToBottom(containerRef: React.RefObject<HTMLElement>) {
-    containerRef?.current?.lastElementChild?.scrollIntoView();
-}
-
-function ScrollToBottomButton({containerRef}: {containerRef: React.RefObject<HTMLElement>}) {
-    return (
-        <div className={styles.scrollToBottomButtonContainer}>
-            <IconButton Icon={MdOutlineArrowCircleDown} onClick={() => scrollToBottom(containerRef)}/>
-        </div>
-    );
 }
 
 
