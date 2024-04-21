@@ -1,0 +1,11 @@
+.scroll-to-bottom-button-container {
+    position: absolute;
+    left: 50%;
+    translate: -50%;
+    bottom: 0;
+}
+.scroll-to-bottom-button-container svg {
+    color: var(--text-color);
+    border-radius: 9999px;
+    background-color: var(--background-color-modal);
+}
