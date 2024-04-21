@@ -36,7 +36,4 @@
 .prompt-container textarea:focus {
     outline: none;
 }
-.prompt-container textarea::placeholder {
-    font-size: 1em;
-    font-weight: 200;
-}
+

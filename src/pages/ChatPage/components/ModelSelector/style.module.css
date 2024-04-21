@@ -1,24 +1,3 @@
-@keyframes popup-fade-in {
-    from {
-        opacity: 0;
-        bottom: 50%;
-    }
-    to {
-        bottom: 150%;
-    }
-}
-@keyframes popup-fade-out {
-    from {
-        opacity: 100%;
-        bottom: 150%;
-        display: block;
-    }
-    to {
-        opacity: 0;
-        bottom: 50%;
-    }
-}
-
 .model-selector-container {
     width: 11rem;
     position: relative;
@@ -38,6 +17,7 @@
     cursor: pointer;
 }
 .model-selector-popup {
+    display: block;
     position: absolute;
     width: 100%;
     background-color: var(--background-color);
@@ -47,13 +27,16 @@
     border-radius: 1rem;
 }
 .model-selector-popup[open] {
-    display: block;
+    visibility: visible;
+    opacity: 1;
     bottom: 150%;
-    animation: popup-fade-in 0.25s ease;
+    transition: visibility 0s, opacity 0.25s ease, bottom 0.25s ease;
 }
 .model-selector-popup:not([open]) {
+    visibility: hidden;
+    opacity: 0;
     bottom: 50%;
-    animation: popup-fade-out 0.1s ease;
+    transition: visibility 0s 0.2s, opacity 0.2s ease, bottom 0.2s ease;
 
 }
 

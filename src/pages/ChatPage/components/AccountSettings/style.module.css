@@ -1,29 +1,25 @@
-@keyframes modal-fade-in {
-    from { opacity: 0 }
-}
-@keyframes modal-fade-out {
-    from {
-        opacity: 1;
-        display: flex;
-    }
-    to { opacity: 0 }
-}
-
 .account-settings-modal {
+    display: flex;
     flex-direction: column;
     align-items: center;
     border-radius: 1rem;
     width: 40rem;
+    overflow: visible;
     background-color: var(--background-color);
     border-color: var(--divider-color);
     color: var(--text-color-secondary);
 }
 .account-settings-modal[open] {
-    display: flex;
-    animation: modal-fade-in 0.25s ease;
+    visibility: visible;
+    opacity: 1;
+    transition: visibility 0s, opacity 0.25s ease;
 }
 .account-settings-modal:not([open]) {
-    animation: modal-fade-out 0.1s ease;
+    visibility: hidden;
+    opacity: 0;
+    bottom: 50%;
+    top: 50%;
+    transition: visibility 0s 0.2s, opacity 0.2s ease;
 }
 
 .account-settings-modal hr {

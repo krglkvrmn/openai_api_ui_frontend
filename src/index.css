@@ -21,6 +21,15 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
   monospace;
 }
+dialog button:focus {
+    outline: none;
+}
+
+::placeholder {
+    font-family: inherit;
+    font-size: 1em;
+    font-weight: 200;
+}
 
 :root {
     --background-color: #121212;
