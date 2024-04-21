@@ -33,7 +33,7 @@ export default function ChatApp() {
                 <ActiveChatIndexProvider>
                     <SystemPromptProvider>
                         <>
-                            <Sidebar isExpanded side="left">
+                            <Sidebar side="left">
                                 <ChatsManager/>
                                 <div className={styles.loginInfoDividerContainer}>
                                     <hr/>

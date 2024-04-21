@@ -1,13 +1,29 @@
+.messages-list-container {
+    position: relative;
+    height: 100%;
+}
 .messages-list {
     display: flex;
     flex-direction: column;
     height: 100%;
     overflow-y: auto;
     overflow-wrap: anywhere;
-    padding: 0 1rem;  /* Scrollbar spacing */
+    padding: 0 2rem;  /* Scrollbar spacing */
 }
 
 .messages-list-item-container {}
 .messages-list-item-container-loading {
     margin: auto;
+}
+
+.scroll-to-bottom-button-container {
+    position: absolute;
+    left: 50%;
+    translate: -50%;
+    bottom: 0;
+}
+.scroll-to-bottom-button-container svg {
+    color: var(--text-color);
+    border-radius: 9999px;
+    background-color: var(--background-color-modal);
 }

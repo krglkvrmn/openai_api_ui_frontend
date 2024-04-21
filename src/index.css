@@ -1,18 +1,22 @@
 html {
-    overscroll-behavior: none;
-    overflow: hidden;
+    overscroll-behavior-y: contain;
+    overscroll-behavior-x: none;
+    overflow-y: scroll;
+    box-sizing: border-box;
+    /*overflow: hidden;*/
 }
 body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-  'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-  sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 
-  background-color: var(--background-color);
-  overflow: hidden;
+    background-color: var(--background-color);
+    overscroll-behavior: contain;
+    /*overflow: hidden;*/
 }
+
 * {
     scrollbar-width: thin;
     scrollbar-color: rgba(255, 255, 255, 0.2) transparent;

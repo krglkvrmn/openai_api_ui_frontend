@@ -19,6 +19,8 @@
     }
 }
 
+
+
 [data-tooltip] {
     --tooltip-arrow-size: 12px;
     --tooltip-background-color: var(--info-color-dark);
@@ -120,3 +122,8 @@
     rotate: 225deg;
     z-index: 1;
 }
+/*@media screen and (max-width: 768px) {*/
+/*    [data-tooltip]:hover {*/
+/*        !*display: none;*!*/
+/*    }*/
+/*}*/

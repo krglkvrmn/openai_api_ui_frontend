@@ -22,8 +22,7 @@
     border: 2px solid var(--divider-color);
     border-radius: 1rem;
     min-width: 200px;
-    width: 100%;
-    /*margin: 0 1rem 1rem 1rem;*/
+    width: calc(100% - 2rem);  /* non-collapsable margin */
     margin-bottom: 1rem;
     justify-self: flex-end;
     gap: 1rem;
@@ -35,6 +34,11 @@
 }
 
 @media screen and (max-width: 400px) {
+    .chat-control-footer {
+        gap: 0.25rem;
+        padding: 0.25rem;
+
+    }
     .chat-control-footer svg {
         width: 1.5rem;
     }

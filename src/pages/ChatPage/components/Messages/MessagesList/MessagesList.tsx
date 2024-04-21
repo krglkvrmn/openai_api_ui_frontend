@@ -8,6 +8,8 @@ import {MessageAny, MessageCreate, MessageRead} from "../../../../../types/dataT
 import {ElementOrLoader} from "../../../../../components/ui/Loaders/ElementOrLoader/ElementOrLoader.tsx";
 import {LoadingError} from "../../../../../components/ui/InfoDisplay/Errors/Errors.tsx";
 import styles from "./style.module.css";
+import {IconButton} from "../../../../../components/ui/Buttons/Icons/IconButton/IconButton.tsx";
+import {MdOutlineArrowCircleDown} from "react-icons/md";
 
 
 function useMessageList(messages: MessageAny[]): UseQueryResult<MessageCreate>[] {
@@ -25,10 +27,21 @@ function useMessageList(messages: MessageAny[]): UseQueryResult<MessageCreate>[]
         };
     }));
 }
+function scrollToBottom(containerRef: React.RefObject<HTMLElement>) {
+    containerRef?.current?.lastElementChild?.scrollIntoView();
+}
+
+function ScrollToBottomButton({containerRef}: {containerRef: React.RefObject<HTMLElement>}) {
+    return (
+        <div className={styles.scrollToBottomButtonContainer}>
+            <IconButton Icon={MdOutlineArrowCircleDown} onClick={() => scrollToBottom(containerRef)}/>
+        </div>
+    );
+}
 
 
 export function MessagesList(
-    { messages}: { messages: (MessageAny | Signal<MessageCreate>)[] }
+    {messages}: { messages: (MessageAny | Signal<MessageCreate>)[] }
 ) {
     const staticMessages = messages.filter(message => !(message instanceof Signal)) as MessageAny[];
     // Dynamic messages are rendered separately because they should not be cached by useQueries
@@ -39,7 +52,7 @@ export function MessagesList(
     const messageListRef = useRef<HTMLDivElement | null>(null);
 
     useEffect(() => {
-        messageListRef?.current?.lastElementChild?.scrollIntoView();
+        scrollToBottom(messageListRef);
     }, [messages.length, isListLoaded]);
 
     function onScroll(event: React.UIEvent<HTMLElement>) {
@@ -50,31 +63,34 @@ export function MessagesList(
     }
 
     return (
-        <>
-        <div className={styles.messagesList} onScroll={onScroll} ref={messageListRef}>
-            {
-                messagesQueries.map((query, index) => {
-                    return <div key={index}
-                                className={query.isLoading ? styles.messagesListItemContainerLoading : styles.messagesListItemContainer}>
-                        <ElementOrLoader isLoading={query.isLoading}>
-                            {
+        <div className={styles.messagesListContainer}>
+            <div className={styles.messagesList} onScroll={onScroll} ref={messageListRef}>
+                {
+                    messagesQueries.map((query, index) => {
+                        return <div key={index}
+                                    className={query.isLoading ? styles.messagesListItemContainerLoading : styles.messagesListItemContainer}>
+                            <ElementOrLoader isLoading={query.isLoading}>
+                                {
 
-                                query.isError ?
-                                    <LoadingError errorText="An error occurred while loading a message"
-                                                  reloadAction={() => query.refetch()} /> :
-                                    query.isSuccess && query.data !== undefined && query.data.content !== undefined ?
-                                        <Message message={query.data}/> : null
-                            }
-                        </ElementOrLoader>
-                    </div>
-                })
-            }
+                                    query.isError ?
+                                        <LoadingError errorText="An error occurred while loading a message"
+                                                      reloadAction={() => query.refetch()} /> :
+                                        query.isSuccess && query.data !== undefined && query.data.content !== undefined ?
+                                            <Message message={query.data}/> : null
+                                }
+                            </ElementOrLoader>
+                        </div>
+                    })
+                }
+                {
+                    dynamicMessages.map((message, index) => {
+                        return <Message key={messagesQueries.length + index} message={message} autoscroll={isScrollSubscribed}/>
+                    })
+                }
+            </div>
             {
-                dynamicMessages.map((message, index) => {
-                    return <Message key={messagesQueries.length + index} message={message} autoscroll={isScrollSubscribed}/>
-                })
+                !isScrollSubscribed && <ScrollToBottomButton containerRef={messageListRef} />
             }
         </div>
-        </>
     );
 }
