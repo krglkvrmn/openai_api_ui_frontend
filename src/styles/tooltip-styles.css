@@ -122,8 +122,11 @@
     rotate: 225deg;
     z-index: 1;
 }
-/*@media screen and (max-width: 768px) {*/
-/*    [data-tooltip]:hover {*/
-/*        !*display: none;*!*/
-/*    }*/
-/*}*/
+@media screen and (max-width: 768px) {
+    [data-tooltip]:hover::after {
+        display: none;
+    }
+    [data-tooltip]:hover::before {
+        display: none;
+    }
+}

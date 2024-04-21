@@ -27,6 +27,7 @@
     justify-self: flex-end;
     gap: 1rem;
     background-color: var(--background-color);
+    z-index: 2;
 }
 
 .chat-control-footer svg {

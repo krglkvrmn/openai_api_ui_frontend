@@ -52,6 +52,7 @@
     left: 100%;
     top: 50%;
     translate: 0 -50%;
+    height: 100%;
 }
 .collapsable-edge-element-left-collapsed {
     composes: collapsable-edge-element-horizontally-collapsed collapsable-edge-element-left;
@@ -64,6 +65,7 @@
     right: 100%;
     top: 50%;
     translate: 0 -50%;
+    height: 100%;
 }
 .collapsable-edge-element-right-collapsed {
     composes: collapsable-edge-element-horizontally-collapsed collapsable-edge-element-right;
@@ -76,6 +78,7 @@
     top: 100%;
     left: 50%;
     translate: -50% 0;
+    width: 100%;
 }
 .collapsable-edge-element-top-collapsed {
     composes: collapsable-edge-element-vertically-collapsed collapsable-edge-element-top;
@@ -89,6 +92,7 @@
     bottom: 100%;
     left: 50%;
     translate: -50% 0;
+    width: 100%;
 }
 .collapsable-edge-element-bottom-collapsed {
     composes: collapsable-edge-element-vertically-collapsed collapsable-edge-element-bottom;
@@ -101,9 +105,7 @@
     .collapsable-edge-element-expanded {
         width: calc(100% - 2rem);  /* 2rem is a gap for a button */
     }
-    .collapsable-edge-element-expanded .expand-collapse-button-container {
-        display: flex;
-        justify-content: center;
+    .expand-collapse-button-container {
         background-color: var(--background-color-modal);
     }
     .expand-collapse-button-container:active {
@@ -114,36 +116,10 @@
         left: 0;
         z-index: 4;
     }
-    .collapsable-edge-element-left-expanded .expand-collapse-button-container {
-        height: 100%;
-    }
-    .collapsable-edge-element-left-expanded .expand-collapse-button-container div {
-        display: flex;
-        flex-direction: column;
-        height: 100%;
-        justify-content: center;
-    }
-    .collapsable-edge-element-left-expanded .expand-collapse-button-container button {
-        height: 100%;
-    }
     .collapsable-edge-element-right-expanded {
         position: absolute;
         right: 0;
         z-index: 3;
-    }
-    .collapsable-edge-element-right-expanded .expand-collapse-button-container {
-        flex-direction: column;
-        align-items: flex-end;
-        height: 100%;
-    }
-    .collapsable-edge-element-right-expanded .expand-collapse-button-container div {
-        display: flex;
-        flex-direction: column;
-        height: 100%;
-        justify-content: center;
-    }
-    .collapsable-edge-element-right-expanded .expand-collapse-button-container button {
-        height: 100%;
     }
     .collapsable-edge-element-top-expanded {
         position: relative;
@@ -152,20 +128,10 @@
         translate: -50%;
         z-index: 1;
     }
-    .collapsable-edge-element-top-expanded .expand-collapse-button-container {
-        flex-direction: row;
-        align-items: center;
-        width: unset;
-        height: unset;
-    }
     .collapsable-edge-element-bottom-expanded {
         bottom: 0;
         left: 50%;
         translate: -50%;
         z-index: 2;
-    }
-    .collapsable-edge-element-bottom-expanded .expand-collapse-button-container {
-        flex-direction: row;
-        align-items: center;
     }
 }

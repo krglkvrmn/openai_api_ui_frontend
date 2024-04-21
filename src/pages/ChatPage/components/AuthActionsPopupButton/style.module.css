@@ -11,7 +11,7 @@
     flex-direction: column;
     width: 200px;
     height: 100px;
-    transform: translate(-70%, -100%);
+    transform: translate(-82%, -100%);
     background-color: var(--background-color-modal);
     border-color: var(--divider-color);
     border-width: 2px;

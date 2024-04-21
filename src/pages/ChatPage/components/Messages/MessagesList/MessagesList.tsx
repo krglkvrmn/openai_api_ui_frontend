@@ -80,7 +80,7 @@ export function MessagesList(
                 }
             </div>
             {
-                !isScrollSubscribed && <ScrollToBottomButton containerRef={messageListRef} />
+                !isScrollSubscribed && messages.length > 0 && <ScrollToBottomButton containerRef={messageListRef} />
             }
         </div>
     );

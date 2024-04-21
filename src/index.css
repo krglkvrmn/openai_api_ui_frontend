@@ -3,7 +3,6 @@ html {
     overscroll-behavior-x: none;
     overflow-y: scroll;
     box-sizing: border-box;
-    /*overflow: hidden;*/
 }
 body {
     margin: 0;
@@ -14,7 +13,6 @@ body {
 
     background-color: var(--background-color);
     overscroll-behavior: contain;
-    /*overflow: hidden;*/
 }
 
 * {
@@ -79,4 +77,9 @@ dialog button:focus {
     --divider-color: rgba(255, 255, 255, 0.12);
     --border-color: #555555;
 
+}
+
+button {
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
 }
