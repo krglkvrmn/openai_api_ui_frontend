@@ -44,6 +44,7 @@ export function MessagesList(
 
     useEffect(() => {
         scrollToBottom(messageListRef);
+        setIsScrollSubscribed(true);
     }, [messages.length, isListLoaded]);
 
     function onScroll(event: React.UIEvent<HTMLElement>) {
