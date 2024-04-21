@@ -17,8 +17,8 @@ type APIKeysListPropsType = {
 function APIKeyRecord({ token, keyDeleteHandler }: APIKeyRecordPropsType) {
     return (
         <div className={styles.apiKeyRecordContainer}>
-            <b className={styles.apiLeyRecordRepr}>{token}</b>
-            <DeleteButton onClick={keyDeleteHandler} mode="dark" />
+            <b className={styles.apiKeyRecordRepr}>{token}</b>
+            <DeleteButton onClick={keyDeleteHandler}/>
         </div>
     );
 }

@@ -7,6 +7,13 @@
     position: relative;
 }
 
+@media screen and (max-width: 768px) {
+    .sidebar-container {
+        width: 100%;
+        max-width: unset;
+    }
+}
+
 .sidebar-content {
     --sidebar-padding: 0.5rem;
 

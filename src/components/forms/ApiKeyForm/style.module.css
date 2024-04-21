@@ -10,7 +10,6 @@
     border: 2px var(--divider-color) solid;
     background-color: var(--background-color);
     color: var(--text-color-secondary);
-    width: 100%;
     border-radius: 1rem;
     align-items: center;
 }

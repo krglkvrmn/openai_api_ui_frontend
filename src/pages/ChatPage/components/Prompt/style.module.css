@@ -22,7 +22,6 @@
     font-size: 1rem;
     background-color: transparent;
     color: var(--text-color);
-    min-width: 100px;
     padding: 0 0.55rem 0 0;
     box-sizing: border-box;
     line-height: 20px;
@@ -37,3 +36,8 @@
     outline: none;
 }
 
+@media screen and (max-width: 600px) {
+    .prompt-container textarea {
+        font-size: 0.8rem;
+    }
+}

@@ -1,13 +1,23 @@
+@media screen and (max-width: 768px) {
+    .account-settings-modal::backdrop {
+    }
+}
+
 .account-settings-modal {
     display: flex;
+    box-sizing: border-box;
     flex-direction: column;
     align-items: center;
     border-radius: 1rem;
+    min-width: 20rem;
     width: 40rem;
     overflow: visible;
     background-color: var(--background-color);
     border-color: var(--divider-color);
     color: var(--text-color-secondary);
+}
+.account-settings-modal::backdrop {
+    background-color: rgba(0, 0, 0, 0.8);
 }
 .account-settings-modal[open] {
     visibility: visible;

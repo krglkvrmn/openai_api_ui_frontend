@@ -1,4 +1,5 @@
-.api-keys-controller-container {}
+.api-keys-controller-container {
+}
 
 .api-keys-list {}
 
@@ -7,11 +8,15 @@
     align-items: center;
 }
 
-.api-ley-record-repr {
+.api-key-record-repr {
     font-size: 18px;
 }
 
 .api-key-record-container svg {
     width: 1.2rem;
     margin-left: 1rem;
+}
+
+.no-keys-message {
+    text-align: center;
 }

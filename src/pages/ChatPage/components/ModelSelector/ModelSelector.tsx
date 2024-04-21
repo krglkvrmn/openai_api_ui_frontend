@@ -2,7 +2,11 @@ import styles from "./style.module.css";
 import {useDialog} from "../../../../hooks/useDialog.ts";
 
 
-const modelOptions = ['gpt-3.5-turbo', 'gpt-4']
+const modelOptions = ['gpt-3.5-turbo', 'gpt-4'];
+const modelOptionsDisplayMap = new Map([
+    ['gpt-3.5-turbo', 'GPT-3.5'],
+    ['gpt-4', 'GPT-4'],
+])
 
 
 type ModelSelectorProps = {
@@ -17,7 +21,7 @@ export default function ModelSelector({activeModel, modelSwitchHandler}: ModelSe
             <div className={styles.modelSelectorPopupTriggerButtonContainer}>
                 <button onClick={isOpened ? closeDialog : openDialog}
                         className={styles.modelSelectorPopupTriggerButton}>
-                    {activeModel?.toUpperCase()}
+                    { activeModel && modelOptionsDisplayMap.get(activeModel)}
 
                 </button>
             </div>
@@ -29,7 +33,7 @@ export default function ModelSelector({activeModel, modelSwitchHandler}: ModelSe
                                     modelSwitchHandler && modelSwitchHandler(model);
                                     closeDialog();
                                 }}>
-                            {model.toUpperCase()}
+                            {modelOptionsDisplayMap.get(model)}
                         </button>
                     ))
                 }

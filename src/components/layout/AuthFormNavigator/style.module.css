@@ -1,18 +1,10 @@
 .auth-form-nav-container {
     display: flex;
+    flex-wrap: wrap;
     margin-top: 1rem;
+    justify-content: space-around;
 }
 
 .auth-form-nav-container a {
     color: var(--primary-color-dark);
 }
-
-.auth-form-nav-container-single-item {
-    composes: auth-form-nav-container;
-    justify-content: center;
-}
-.auth-form-nav-container-multiple-items {
-    composes: auth-form-nav-container;
-    justify-content: space-between;
-}
-

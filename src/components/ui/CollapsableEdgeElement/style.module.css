@@ -95,3 +95,63 @@
 .collapsable-edge-element-bottom-expanded {
     composes: collapsable-edge-element-vertically-expanded collapsable-edge-element-bottom;
 }
+
+@media screen and (max-width: 768px) {
+    .collapsable-edge-element-expanded {
+        width: calc(100% - 2rem);  /* 2rem is a gap for a button */
+    }
+    .collapsable-edge-element-expanded .expand-collapse-button-container {
+        display: flex;
+        justify-content: center;
+        background-color: var(--background-color-modal);
+    }
+    .expand-collapse-button-container:active {
+        filter: brightness(110%);
+    }
+    .collapsable-edge-element-left-expanded {
+        position: absolute;
+        left: 0;
+        z-index: 4;
+    }
+    .collapsable-edge-element-left-expanded .expand-collapse-button-container {
+        flex-direction: column;
+        align-items: flex-start;
+        height: 100%;
+    }
+    .collapsable-edge-element-left-expanded .expand-collapse-button-container button {
+        height: 100%;
+    }
+    .collapsable-edge-element-right-expanded {
+        position: absolute;
+        right: 0;
+        z-index: 3;
+    }
+    .collapsable-edge-element-right-expanded .expand-collapse-button-container {
+        flex-direction: column;
+        align-items: flex-end;
+        height: 100%;
+    }
+    .collapsable-edge-element-top-expanded {
+        position: relative;
+        top: 0;
+        left: 50%;
+        translate: -50%;
+        z-index: 1;
+    }
+    .collapsable-edge-element-top-expanded .expand-collapse-button-container {
+        flex-direction: row;
+        align-items: center;
+        width: unset;
+        height: unset;
+    }
+    .collapsable-edge-element-bottom-expanded {
+        bottom: 0;
+        left: 50%;
+        translate: -50%;
+        z-index: 2;
+    }
+    .collapsable-edge-element-bottom-expanded .expand-collapse-button-container {
+        flex-direction: row;
+        align-items: center;
+    }
+}

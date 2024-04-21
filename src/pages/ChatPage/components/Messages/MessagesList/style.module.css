@@ -4,7 +4,7 @@
     height: 100%;
     overflow-y: auto;
     overflow-wrap: anywhere;
-    padding: 0 2rem;  /* Scrollbar spacing */
+    padding: 0 1rem;  /* Scrollbar spacing */
 }
 
 .messages-list-item-container {}

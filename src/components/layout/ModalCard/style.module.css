@@ -10,6 +10,7 @@
     align-self: center;
     box-sizing: border-box;
     padding: 1rem;
+    min-width: 270px;
     width: 25rem;
     min-height: 10rem;
     max-height: 50rem;
@@ -36,4 +37,10 @@
     composes: modal-card-base;
     border: 0;
     box-shadow: none;
+}
+
+@media screen and (max-width: 26rem) {
+    .modal-card-base {
+        width: 95%;
+    }
 }

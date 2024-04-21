@@ -16,11 +16,14 @@
 .chat-control-footer {
     display: flex;
     align-items: flex-end;
+    box-sizing: border-box;
     padding: 0.5rem;
     align-self: center;
     border: 2px solid var(--divider-color);
     border-radius: 1rem;
+    min-width: 200px;
     width: 100%;
+    /*margin: 0 1rem 1rem 1rem;*/
     margin-bottom: 1rem;
     justify-self: flex-end;
     gap: 1rem;
@@ -29,4 +32,10 @@
 
 .chat-control-footer svg {
     width: 2rem;
+}
+
+@media screen and (max-width: 400px) {
+    .chat-control-footer svg {
+        width: 1.5rem;
+    }
 }

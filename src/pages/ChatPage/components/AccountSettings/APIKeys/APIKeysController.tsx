@@ -19,7 +19,11 @@ export function APIKeysController() {
                             isEmpty ?
                                 <>
                                     <APIKeyForm keySaveHandler={saveApiKey} />
-                                    <p>You don't have any saved API keys. Submit it to the field above to save it to your profile</p>
+                                    <p className={styles.noKeysMessage}>
+                                        You don't have any saved API keys
+                                        <br />
+                                        Submit it to the field above to save it to your profile
+                                    </p>
                                 </> :
                                 <APIKeysList apiKeys={apiKeys} keyDeleteHandler={deleteApiKey}/>
                         ) : null

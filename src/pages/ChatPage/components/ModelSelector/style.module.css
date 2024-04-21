@@ -1,5 +1,5 @@
 .model-selector-container {
-    width: 11rem;
+    width: max-content;
     position: relative;
 }
 .model-selector-popup-trigger-button-container {}
@@ -11,7 +11,9 @@
     font-size: 1.1rem;
     border-radius: 0.5rem;
     border: 0;
+    white-space: nowrap;
 }
+
 .model-selector-popup-trigger-button:hover {
     background-color: var(--background-color-active);
     cursor: pointer;
@@ -19,7 +21,7 @@
 .model-selector-popup {
     display: block;
     position: absolute;
-    width: 100%;
+    width: max-content;
     background-color: var(--background-color);
     border-color: var(--divider-color);
     border-width: 2px;
@@ -51,4 +53,12 @@
 }
 .model-selection-button:hover {
     background-color: var(--background-color-active);
+}
+@media screen and (max-width: 400px) {
+    .model-selector-popup-trigger-button {
+        font-size: 0.8rem;
+    }
+    .model-selector-popup .model-selection-button {
+        font-size: 0.8rem;
+    }
 }
