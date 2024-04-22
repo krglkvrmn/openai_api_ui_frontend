@@ -8,7 +8,7 @@ import {optimisticQueryUpdateConstructor} from "../../../../utils/optimisticUpda
 import {SystemPromptRead} from "../../../../types/dataTypes.ts";
 import styles from "./style.module.css";
 import {DeleteButton} from "../../../../components/ui/Buttons/Icons/DeleteButton/DeleteButton.tsx";
-import {useSystemPrompt} from "../../../../hooks/contextHooks.ts";
+import {useCollapsableEdgeElement, useSystemPrompt} from "../../../../hooks/contextHooks.ts";
 import {ElementOrLoader} from "../../../../components/ui/Loaders/ElementOrLoader/ElementOrLoader.tsx";
 import {LoadingError} from "../../../../components/ui/InfoDisplay/Errors/Errors.tsx";
 
@@ -60,6 +60,7 @@ function useSystemPromptsLibrary(): TuseSystemPromptsLibrary {
 export default function PromptsLibrary() {
     const setSystemPromptValue = useSystemPrompt()[1];
     const { systemPromptsLibraryQuery, deleteSystemPrompt } = useSystemPromptsLibrary();
+
     return (
         <div className={styles.promptLibraryContainer}>
             <h2 data-tooltip="This is a collection of most popular context prompts that you've sumbitted"
@@ -101,9 +102,14 @@ function PromptLibraryRecordList({prompts, setSystemPromptValue, deleteSystemPro
 }
 
 function PromptLibraryRecord({prompt, promptSelectionCallback, promptDeleteHandler}: PromptLibraryRecordProps) {
+    const setIsHidden = useCollapsableEdgeElement()[1];
+    function onSystemPromptSelect() {
+        window.innerWidth < 768 && setIsHidden(true);
+        promptSelectionCallback && promptSelectionCallback();
+    }
     return (
         <div className={styles.promptLibraryRecordContainer}>
-            <div className={styles.promptLibraryRecordTitleContainer} onClick={promptSelectionCallback}>
+            <div className={styles.promptLibraryRecordTitleContainer} onClick={onSystemPromptSelect}>
                 <b className={styles.promptLibraryRecordTitle}>{prompt}</b>
             </div>
             <div className={styles.promptLibraryRecordControlsContainer}>

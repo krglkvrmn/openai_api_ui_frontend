@@ -47,7 +47,7 @@ export default function ChatApp() {
                             <main className={styles.chatContent}>
                             {
                                     !isSavedKeyExists &&
-                                    <CollapsableEdgeElement side="top">
+                                    <CollapsableEdgeElement side="top" isExpanded>
                                         <div className={styles.chatApiKeyFormHeader}>
                                             <APIKeyForm keySaveHandler={saveApiKey}/>
                                         </div>
