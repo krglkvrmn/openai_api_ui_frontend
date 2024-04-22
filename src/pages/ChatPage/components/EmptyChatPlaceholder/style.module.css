@@ -1,0 +1,14 @@
+.empty-chat-placeholder {
+    color: var(--text-color);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-y: auto;
+    padding: 0 4rem;
+}
+
+@media screen and (max-width: 768px) {
+    .empty-chat-placeholder {
+        font-size: 0.75rem;
+    }
+}

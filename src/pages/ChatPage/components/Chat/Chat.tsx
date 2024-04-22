@@ -28,6 +28,7 @@ import {APIKeyErrors} from "../../ui/Errors/APIKeyErrors.tsx";
 import {RegenerateMessageButton} from "../../ui/Buttons/RegenerateMessageButton/RegenerateMessageButton.tsx";
 import {AbortMessageGenerationButton} from "../../ui/Buttons/AbortMessageGenerationButton/AbortMessageGenerationButton.tsx";
 import styles from "./style.module.css";
+import {EmptyChatPlaceholder} from "../EmptyChatPlaceholder/EmptyChatPlaceholder.tsx";
 
 
 type TuseChatReturn = {
@@ -275,14 +276,17 @@ export default function Chat() {
                 <APIKeyErrors apiKeysErrorType={streamingState.value.error} />
             </div>
             <div className={styles.chatContainer}>
-                <ElementOrLoader isLoading={isChatLoading}>
-                    {
-                        isChatError ?
-                            <LoadingError errorText="An error occurred while loading a chat" reloadAction={reloadChat}/> :
-                            <MessagesList messages={messages}/>
-                    }
-                </ElementOrLoader>
-
+                {
+                    messages.length === 0 ?
+                        <EmptyChatPlaceholder /> :
+                        <ElementOrLoader isLoading={isChatLoading}>
+                            {
+                                isChatError ?
+                                    <LoadingError errorText="An error occurred while loading a chat" reloadAction={reloadChat}/> :
+                                    <MessagesList messages={messages}/>
+                            }
+                        </ElementOrLoader>
+                }
             </div>
             <div className={styles.chatControlFooter}>
                 <ModelSelector activeModel={data.model}
@@ -304,4 +308,3 @@ export default function Chat() {
         </ChatContext.Provider>
     )
 }
-

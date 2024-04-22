@@ -1,0 +1,46 @@
+.tutorial-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.tutorial-container svg {
+    width: 1.5rem;
+    height: auto;
+    display: inline-block;
+}
+
+.tutorial-steps-list {
+    padding: 0;
+}
+
+.tutorial-steps-list-item {
+    padding: 1rem 0;
+}
+.tutorial-steps-list-item * {
+    vertical-align: middle;
+}
+.icon-explain-container {
+    display: flex;
+    align-items: center;
+}
+
+.tutorial-container a {
+    color: var(--primary-color-light);
+    vertical-align: unset;
+}
+
+.text-pc {
+    color: var(--primary-color);
+    vertical-align: unset;
+}
+.text-wc {
+    color: var(--warning-color);
+    vertical-align: unset;
+}
+
+@media screen and (max-width: 768px) {
+    .tutorial-container svg {
+        width: 1rem;
+    }
+}
