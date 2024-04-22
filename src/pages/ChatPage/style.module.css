@@ -1,7 +1,3 @@
-body {
-    overscroll-behavior: none;
-}
-
 .chat-app-page-wrapper {
     height: 100vh;
     background-color: var(--background-color-modal);

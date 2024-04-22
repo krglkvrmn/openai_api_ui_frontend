@@ -1,7 +1,6 @@
 .api-key-errors-container {
-    margin-top: 1.5rem;
+    margin: 1.5rem 2rem 0 2rem;
 }
-
 
 .chat-container {
     display: flex;
