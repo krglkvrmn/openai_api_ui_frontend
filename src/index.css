@@ -2,6 +2,7 @@ html {
     overscroll-behavior-y: contain;
     overscroll-behavior-x: none;
     overflow-y: scroll;
+    overflow-x: hidden;
     box-sizing: border-box;
 }
 body {
