@@ -2,9 +2,14 @@ import React, {useMemo, useState} from "react";
 import {ExpandCollapseButton} from "../Buttons/Icons/ExpandCollapseButton/ExpandCollapseButton.tsx";
 import styles from "./style.module.css";
 
+type CollapsableEdgeElementContextValue = [
+    boolean, React.Dispatch<React.SetStateAction<boolean>>
+] | null;
+export const CollapsableEdgeElementContext = React.createContext<CollapsableEdgeElementContextValue>(null);
+
 export function CollapsableEdgeElement(
     {children, side, isExpanded = false}:
-    {children: React.ReactNode, side: "left" | "right" | "top" | "bottom", isExpanded?: boolean }
+    {children: React.ReactNode, side: "left" | "right" | "top" | "bottom", isExpanded?: boolean}
 ) {
     const [isHidden, setIsHidden] = useState<boolean>(!isExpanded);
     const className = useMemo(() => {
@@ -25,11 +30,13 @@ export function CollapsableEdgeElement(
         <aside className={className}>
             <div className={styles.expandCollapseButtonContainer}>
                 <ExpandCollapseButton onClick={() => setIsHidden(prev => !prev)}
-                                      isOpened={isExpanded}
+                                      isOpened={!isHidden}
                                       side={side}/>
             </div>
             <div className={styles.collapsableEdgeElementContent}>
-                {children}
+                <CollapsableEdgeElementContext.Provider value={[isHidden, setIsHidden]}>
+                    {children}
+                </CollapsableEdgeElementContext.Provider>
             </div>
         </aside>
     );

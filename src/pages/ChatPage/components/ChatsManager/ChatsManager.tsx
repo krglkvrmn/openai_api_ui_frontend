@@ -5,7 +5,7 @@ import {useMutation, useQuery} from "react-query";
 import {deleteChatRequest, getAllChatsRequest, updateChatRequest} from "../../../../services/backendAPI.ts";
 import {optimisticQueryUpdateConstructor} from "../../../../utils/optimisticUpdates.ts";
 import {useNavigate, useParams} from "react-router-dom";
-import {useActiveChatIndex} from "../../../../hooks/contextHooks.ts";
+import {useActiveChatIndex, useCollapsableEdgeElement} from "../../../../hooks/contextHooks.ts";
 import {ChatInfoRead} from "../../../../types/dataTypes.ts";
 import {parseChatId} from "../../../../utils/stringparsers.ts";
 import styles from "./style.module.css";
@@ -47,6 +47,7 @@ export type TuseChatsReturn = {
 
 
 function useChats(): TuseChatsReturn {
+    const setIsHidden = useCollapsableEdgeElement()[1];
     const queryParams = useParams();
     const navigate = useNavigate();
     const { data, isSuccess, isLoading, isError, refetch } = useQuery({
@@ -73,10 +74,11 @@ function useChats(): TuseChatsReturn {
     function activateChat(chatIndex: number | null): void {
         setActiveChatIndex(chatIndex);
         if (chatIndex === null) {
-            navigate('/chat/new')
+            navigate('/chat/new');
         } else if (isSuccess) {
-            navigate(`/chat/${data[chatIndex].id}`)
+            navigate(`/chat/${data[chatIndex].id}`);
         }
+        window.innerWidth < 768 && setIsHidden(true);   // Close sidebar if mobile version
     }
 
     const deleteChatOptimisticConfig = optimisticQueryUpdateConstructor({

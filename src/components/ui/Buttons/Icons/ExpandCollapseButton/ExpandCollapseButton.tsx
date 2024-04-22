@@ -10,8 +10,8 @@ import styles from "./style.module.css";
 import {IconButton} from "../IconButton/IconButton.tsx";
 
 export function ExpandCollapseButton(
-    {side, onClick, isOpened = false}:
-    { side: "left" | "right" | "top" | "bottom", onClick?: React.MouseEventHandler, isOpened?: boolean}
+    {side, onClick, isOpened = false, autonomous = true}:
+    { side: "left" | "right" | "top" | "bottom", onClick?: React.MouseEventHandler, isOpened?: boolean, autonomous?: boolean}
 ) {
     const [toggleState, setToggleState] = useState<boolean>(!isOpened);
     let CloseIcon: IconType;
@@ -48,7 +48,7 @@ export function ExpandCollapseButton(
     return (
         <div className={styles.expandCollapseButtonContainer}>
             {
-                toggleState ?
+                (autonomous && !isOpened) || (!autonomous && toggleState) ?
                     <IconButton Icon={OpenIcon} onClick={clickHandler}/> :
                     <IconButton Icon={CloseIcon} onClick={clickHandler}/>
             }
