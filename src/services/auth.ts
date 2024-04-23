@@ -73,7 +73,9 @@ export async function refresh(): Promise<undefined> {
 }
 
 export async function getCurrentUser(): Promise<UserSchema> {
-    const response = await axios.get(BACKEND_ORIGIN + '/users/me', {withCredentials: true});
+    const requestGenerator = () =>
+        axios.get(BACKEND_ORIGIN + '/users/me', { withCredentials: true });
+    const response = await refreshRetryOnUnauthorized(requestGenerator);
     return {
         ...response.data,
         username: response.data.email.split('@')[0],
