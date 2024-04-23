@@ -9,6 +9,8 @@ import {FormInfo} from "../../../../components/ui/InfoDisplay/Info/Info.tsx";
 import styles from "./style.module.css";
 import {parseVerificationRequestError} from "../../../../utils/errorsParsers.ts";
 import FormError from "../../../../components/ui/InfoDisplay/Errors/Errors.tsx";
+import {AuthFormNavigator} from "../../../../components/layout/AuthFormNavigator/AuthFormNavigator.tsx";
+import globalStyles from "../../../../styles/global-styles.module.css";
 
 
 function VerificationRequestAction(
@@ -56,8 +58,9 @@ function VerificationRequestAction(
 
 
 export function RequestController() {
-    const {isAuthenticated, authState, authDispatchers, verificationError} = useAuth();
-    const {requestVerification} = authDispatchers;
+    const {isAuthenticated, authState, authDispatchers, verificationError, dispatchersStatuses} = useAuth();
+    const {requestVerification, logOut} = authDispatchers;
+    const isLoggingOut = dispatchersStatuses.logOut === "loading";
     const location = useLocation();
 
     return (
@@ -84,6 +87,13 @@ export function RequestController() {
                     ) :
                     <p>You are not logged in. <Link to='/login'>Log in</Link> to validate your email</p>
             }
+            {isLoggingOut && <div className={styles.spacer}></div>}
+            <ElementOrLoader isLoading={isLoggingOut}>
+                <AuthFormNavigator>
+                    <span className={`${styles.logoutLink} ${globalStyles.navLink}`}
+                          onClick={logOut}>Log out</span>
+                </AuthFormNavigator>
+            </ElementOrLoader>
         </div>
     );
 }

@@ -11,6 +11,7 @@ export function ChatTutorial() {
                 <ul className={styles.tutorialStepsList}>
                     <li className={styles.tutorialStepsListItem}>
                         <span>Acquire an <a href="https://platform.openai.com/api-keys"
+                                            target="_blank"
                                             className="href">OpenAI API key</a></span>
                     </li>
                     <li className={styles.tutorialStepsListItem}>

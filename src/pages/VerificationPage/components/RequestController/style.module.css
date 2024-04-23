@@ -6,3 +6,13 @@
 .counter-text {
     text-align: center;
 }
+.logout-link {
+    cursor: pointer;
+    text-decoration: underline;
+    font-size: 1rem;
+}
+.spacer {
+    width: 100%;
+    height: 100%;
+    margin-top: 1rem;
+}
