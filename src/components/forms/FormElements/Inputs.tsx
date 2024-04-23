@@ -32,6 +32,7 @@ export function PasswordInput(props: React.InputHTMLAttributes<HTMLInputElement>
 export function RepeatPasswordInput(props: React.InputHTMLAttributes<HTMLInputElement>) {
     const defaultAttributes = {
         name: "reppassword",
+        autoComplete: "new-password",
         placeholder: "Repeat password"
     };
     const inputProps = {...defaultAttributes, ...props}

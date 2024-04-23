@@ -70,7 +70,7 @@ export default function Message(
     useSignalEffect(() => {
         isMessageSignal ? message.value :  message;  // Subscribe an effect to signal change
         if (autoscroll) {
-            messageContainerRef?.current?.scrollIntoView()
+            messageContainerRef?.current?.scrollIntoView(false);
         }
     });
     return (
