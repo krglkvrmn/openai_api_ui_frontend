@@ -1,6 +1,7 @@
 .tutorial-container {
     display: flex;
     flex-direction: column;
+    justify-content: center;
     align-items: center;
     height: 100%;
 }
@@ -12,7 +13,6 @@
 }
 
 .tutorial-steps-list-container {
-    height: 100%;
     overflow-y: auto;
 
 }
