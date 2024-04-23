@@ -21,6 +21,7 @@ export function SwitchPromptTypeButton(
     }
     return (
         <div className={styles.switchPromptButtonContainer}
+             data-prompt-type={activePromptType}
              data-tooltip={tooltip}
              data-tooltip-direction="top" >
             {

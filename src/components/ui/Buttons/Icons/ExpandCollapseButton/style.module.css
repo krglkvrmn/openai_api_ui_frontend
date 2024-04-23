@@ -10,8 +10,18 @@
     height: 100%;
 }
 
-.expand-collapse-button-container svg {
+
+
+.expand-collapse-button-container[data-side][data-opened] svg {
     color: var(--text-color-secondary);
+    transition: scale 0.2s linear;
+}
+
+.expand-collapse-button-container[data-side="left"][data-opened=false] svg,
+.expand-collapse-button-container[data-side="right"][data-opened=true] svg,
+.expand-collapse-button-container[data-side="top"][data-opened=false] svg,
+.expand-collapse-button-container[data-side="bottom"][data-opened=true] svg {
+    scale: -100% -100%;
 }
 
 @media screen and (max-width: 768px) {

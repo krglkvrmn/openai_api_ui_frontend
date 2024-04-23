@@ -1,4 +1,17 @@
-.switch-prompt-button-container { }
+.switch-prompt-button-container {}
 .switch-prompt-button-container svg {
     color: var(--text-color);
+}
+
+@keyframes spin {
+    from {
+        rotate: 0deg;
+    }
+    to {
+        rotate: 360deg;
+    }
+
+}
+.switch-prompt-button-container[data-prompt-type="system"] svg:hover {
+    animation: spin 2s linear infinite;
 }

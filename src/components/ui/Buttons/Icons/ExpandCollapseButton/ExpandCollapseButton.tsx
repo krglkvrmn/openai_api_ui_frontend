@@ -1,9 +1,7 @@
 import React, {useState} from "react";
 import {IconType} from "react-icons";
 import {
-    MdOutlineKeyboardArrowDown,
     MdOutlineKeyboardArrowLeft,
-    MdOutlineKeyboardArrowRight,
     MdOutlineKeyboardArrowUp
 } from "react-icons/md";
 import styles from "./style.module.css";
@@ -14,26 +12,17 @@ export function ExpandCollapseButton(
     { side: "left" | "right" | "top" | "bottom", onClick?: React.MouseEventHandler, isOpened?: boolean, autonomous?: boolean}
 ) {
     const [toggleState, setToggleState] = useState<boolean>(!isOpened);
-    let CloseIcon: IconType;
-    let OpenIcon: IconType;
+    let Icon: IconType;
 
     switch (side) {
         case "left":
-            CloseIcon = MdOutlineKeyboardArrowLeft;
-            OpenIcon = MdOutlineKeyboardArrowRight;
-            break;
+            Icon = MdOutlineKeyboardArrowLeft; break;
         case "right":
-            CloseIcon = MdOutlineKeyboardArrowRight;
-            OpenIcon = MdOutlineKeyboardArrowLeft;
-            break;
+            Icon = MdOutlineKeyboardArrowLeft; break;
         case "top":
-            CloseIcon = MdOutlineKeyboardArrowUp;
-            OpenIcon = MdOutlineKeyboardArrowDown;
-            break;
+            Icon = MdOutlineKeyboardArrowUp; break;
         case "bottom":
-            CloseIcon = MdOutlineKeyboardArrowDown;
-            OpenIcon = MdOutlineKeyboardArrowUp;
-            break;
+            Icon = MdOutlineKeyboardArrowUp; break;
         default:
             throw new Error(`Unknown side: ${side}`)
 
@@ -46,12 +35,10 @@ export function ExpandCollapseButton(
     }
 
     return (
-        <div className={styles.expandCollapseButtonContainer}>
-            {
-                (autonomous && !isOpened) || (!autonomous && toggleState) ?
-                    <IconButton Icon={OpenIcon} onClick={clickHandler}/> :
-                    <IconButton Icon={CloseIcon} onClick={clickHandler}/>
-            }
+        <div className={styles.expandCollapseButtonContainer}
+             data-opened={(autonomous && isOpened) || (!autonomous && !toggleState)}
+             data-side={side}>
+            <IconButton Icon={Icon} onClick={clickHandler}/>
         </div>
     );
 }
