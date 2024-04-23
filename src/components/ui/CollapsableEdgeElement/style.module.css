@@ -16,6 +16,7 @@
 .collapsable-edge-element-content {
     display: flex;
     justify-content: center;
+    height: 100%;
 }
 
 .collapsable-edge-element-vertical {composes: collapsable-edge-element}

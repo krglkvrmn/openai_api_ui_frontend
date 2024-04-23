@@ -14,6 +14,8 @@ body {
 
     background-color: var(--background-color);
     overscroll-behavior: contain;
+    height: 100dvh;
+    width: 100dvw;
 }
 
 * {
