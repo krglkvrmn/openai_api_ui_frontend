@@ -1,6 +1,17 @@
+
 .verification-container {
     display: flex;
     flex-direction: column;
     justify-content: center;
     flex-grow: 1;
+}
+
+.logout-link {
+    cursor: pointer;
+    text-decoration: underline;
+}
+.spacer {
+    width: 100%;
+    height: 100%;
+    margin-top: 1rem;
 }
