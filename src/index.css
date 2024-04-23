@@ -4,6 +4,8 @@ html {
     overflow-y: scroll;
     overflow-x: hidden;
     box-sizing: border-box;
+    height: 100dvh;
+    width: 100dvw;
 }
 body {
     margin: 0;
@@ -14,8 +16,8 @@ body {
 
     background-color: var(--background-color);
     overscroll-behavior: contain;
-    height: 100dvh;
-    width: 100dvw;
+    height: 100%;
+    width: 100%;
 }
 
 * {
