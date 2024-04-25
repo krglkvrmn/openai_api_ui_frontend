@@ -1,6 +1,5 @@
 import {useQueries, UseQueryResult} from "react-query";
 import {getMessageRequest} from "../../../../../services/backendAPI.ts";
-import Message from "../Message/Message.tsx";
 import React, {useContext, useEffect, useRef, useState} from "react";
 import {ChatContext} from "../../Chat/Chat.tsx";
 import {Signal} from "@preact/signals-core";
@@ -12,6 +11,7 @@ import {
     ScrollToBottomButton
 } from "../../../../../components/ui/Buttons/Icons/ScrollToBottomButton/ScrollToBottomButton.tsx";
 import {scrollToBottom} from "../../../../../utils/ui.ts";
+import {Message} from "../Message/Message.tsx";
 
 
 function useMessageList(messages: MessageAny[]): UseQueryResult<MessageCreate>[] {
@@ -79,6 +79,7 @@ export function MessagesList(
                     messagesQueries.map((query, index) => {
                         return <div key={index}
                                     className={query.isLoading ? styles.messagesListItemContainerLoading : styles.messagesListItemContainer}>
+
                             <ElementOrLoader isLoading={query.isLoading}>
                                 {
 
@@ -94,7 +95,8 @@ export function MessagesList(
                 }
                 {
                     dynamicMessages.map((message, index) => {
-                        return <Message key={messagesQueries.length + index} message={message} onUpdate={onMessageUpdate}/>
+                        return <Message key={messagesQueries.length + index} message={message} onUpdate={onMessageUpdate}/>;
+
                     })
                 }
             </div>

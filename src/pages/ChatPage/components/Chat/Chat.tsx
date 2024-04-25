@@ -8,7 +8,6 @@ import {
 } from "../../../../services/backendAPI.ts";
 import ModelSelector from "../ModelSelector/ModelSelector.tsx";
 import {optimisticQueryUpdateConstructor} from "../../../../utils/optimisticUpdates.ts";
-import {MessagesList} from "../Messages/MessagesList/MessagesList.tsx";
 import React, {useEffect, useState} from "react";
 import {StreamingStateType, useStreamingMessage} from "../../../../services/messageStreaming.ts";
 import {useLocation, useNavigate, useParams} from "react-router-dom";
@@ -35,7 +34,12 @@ import {
     AbortMessageGenerationButton
 } from "../../ui/Buttons/AbortMessageGenerationButton/AbortMessageGenerationButton.tsx";
 import styles from "./style.module.css";
-import {EmptyChatPlaceholder} from "../EmptyChatPlaceholder/EmptyChatPlaceholder.tsx";
+import {lazyLoad} from "../../../../utils/lazyLoading.ts";
+import {ComponentLoadSuspense} from "../../../../components/hoc/ComponentLoadSuspense.tsx";
+
+
+const EmptyChatPlaceholder = lazyLoad(import('../EmptyChatPlaceholder/EmptyChatPlaceholder.tsx'), 'EmptyChatPlaceholder');
+const MessagesList = lazyLoad(import('../Messages/MessagesList/MessagesList.tsx'), 'MessagesList');
 
 
 type TuseChatReturn = {
@@ -272,10 +276,9 @@ function useChat(chatId: ChatIdType): TuseChatReturn {
 
 }
 
-
 export const ChatContext = React.createContext<ChatAny | null>(null);
 
-export default function Chat() {
+export function Chat() {
     const queryParams = useParams();
     const chatId = parseChatId(queryParams.chatId);
     const { data, streamingMessage, streamingState, isChatLoading, isChatError, dispatchers } = useChat(chatId);
@@ -292,12 +295,16 @@ export default function Chat() {
             <div className={styles.chatContainer}>
                 {
                     messages.length === 0 && !isChatLoading ?
-                        <EmptyChatPlaceholder /> :
+                        <ComponentLoadSuspense width="100%" height="100%">
+                            <EmptyChatPlaceholder />
+                        </ComponentLoadSuspense> :
                         <ElementOrLoader isLoading={isChatLoading}>
                             {
                                 isChatError ?
                                     <LoadingError errorText="An error occurred while loading a chat" reloadAction={reloadChat}/> :
-                                    <MessagesList messages={messages}/>
+                                    <ComponentLoadSuspense width="100%" height="100%">
+                                        <MessagesList messages={messages}/>
+                                    </ComponentLoadSuspense>
                             }
                         </ElementOrLoader>
                 }

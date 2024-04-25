@@ -5,9 +5,7 @@ import styles from "./style.module.css";
 export function ElementOrLoader({isLoading, children}: {isLoading: boolean, children: React.ReactNode}) {
     return (
         <div className={styles.loadableElementContainer}>
-            {
-                isLoading ? <Spinner /> : children
-            }
+            { isLoading ? <Spinner /> : children }
         </div>
     );
 }

@@ -122,7 +122,7 @@ export function useStreamingMessage(identifier: number | null): TuseModelStreami
                         content: eventContent,
                         role: eventAuthor
                     } = eventData.choices[0].delta as CompletionEventDeltaType;
-                    const isFinish = eventData.choices[0].finish_reason !== null;
+                    const isFinish = eventData.choices[0].finish_reason !== undefined;
                     streamingMessage.value = {
                         ...streamingMessage.value,
                         content: streamingMessage.value.content + (eventContent !== undefined ? eventContent : ""),
@@ -135,6 +135,7 @@ export function useStreamingMessage(identifier: number | null): TuseModelStreami
                         resolve(streamingMessage.value);
                     }
                 } catch (error) {
+                    streamingState.value = {status: "error"};
                     reject(eventData);
                 }
             }

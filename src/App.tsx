@@ -9,7 +9,7 @@ import {queryClient} from "./queryClient.ts";
 import {RequireVerification} from "./components/hoc/RequireVerification.tsx";
 import {VerificationPage} from "./pages/VerificationPage/VerificationPage.tsx";
 import {lazyLoad} from "./utils/lazyLoading.ts";
-import {Suspense} from "react";
+import {ComponentLoadSuspense} from "./components/hoc/ComponentLoadSuspense.tsx";
 import {ReactQueryDevtools} from "react-query/devtools";
 
 const ChatPage = lazyLoad(import('./pages/ChatPage/ChatPage.tsx'), 'ChatPage');
@@ -21,24 +21,24 @@ function App() {
       <BrowserRouter>
         <AuthProvider>
           <Routes>
-            <Route path="/verification" element={<Suspense><VerificationPage /></Suspense>} />
+            <Route path="/verification" element={<ComponentLoadSuspense><VerificationPage /></ComponentLoadSuspense>} />
             <Route path="/" element={<RequireAuth />}>
               <Route path="/" element={<Navigate to="/chat"/>} />
               <Route path="/" element={<RequireVerification />}>
                 <Route path="/chat" element={<Navigate to="/chat/new" />}/>
-                <Route path="/chat/:chatId" element={<Suspense><ChatPage /></Suspense>}/>
+                <Route path="/chat/:chatId" element={<ComponentLoadSuspense><ChatPage /></ComponentLoadSuspense>}/>
               </Route>
             </Route>
             <Route path="/" element={<RequireNoAuth />}>
-              <Route path='/register' element={<Suspense><RegisterPage /></Suspense>}/>
-              <Route path='/login' element={<Suspense><LoginPage /></Suspense>}/>
-              <Route path='/forgot-password' element={<Suspense><ForgotPasswordPage /></Suspense>}/>
+              <Route path='/register' element={<ComponentLoadSuspense><RegisterPage /></ComponentLoadSuspense>}/>
+              <Route path='/login' element={<ComponentLoadSuspense><LoginPage /></ComponentLoadSuspense>}/>
+              <Route path='/forgot-password' element={<ComponentLoadSuspense><ForgotPasswordPage /></ComponentLoadSuspense>}/>
             </Route>
             <Route path='*' element={<Navigate to="/" />}/>
           </Routes>
         </AuthProvider>
       </BrowserRouter>
-      {/*{ import.meta.env.DEV && <ReactQueryDevtools initialIsOpen={false} /> }*/}
+      { import.meta.env.DEV && <ReactQueryDevtools initialIsOpen={false} /> }
     </QueryClientProvider>
   );
 }

@@ -170,7 +170,7 @@ function useEditableContentRef(editedValueCallback?: (value: string) => void): T
     return [isEditing, contentRef, onEditStart, onEditEnd];
 }
 
-export default function ChatsManager() {
+export function ChatsManager() {
     const { chats, activeChatIndex, isChatsLoading, isChatsSuccess, isChatsError, dispatchers } = useChats();
     const { activateChat, deleteChat, renameChat, reloadChats } = dispatchers;
     return (

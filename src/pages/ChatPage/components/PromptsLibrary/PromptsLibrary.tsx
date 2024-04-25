@@ -57,7 +57,7 @@ function useSystemPromptsLibrary(): TuseSystemPromptsLibrary {
 }
 
 
-export default function PromptsLibrary() {
+export function PromptsLibrary() {
     const setSystemPromptValue = useSystemPrompt()[1];
     const { systemPromptsLibraryQuery, deleteSystemPrompt } = useSystemPromptsLibrary();
 

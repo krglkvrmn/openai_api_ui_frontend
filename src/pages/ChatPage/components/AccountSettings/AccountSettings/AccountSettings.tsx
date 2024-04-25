@@ -1,14 +1,22 @@
-import {UserInfo} from "../UserInfo/UserInfo.tsx";
-import {APIKeysController} from "../APIKeys/APIKeysController.tsx";
 import styles from "./style.module.css";
+import {lazyLoad} from "../../../../../utils/lazyLoading.ts";
+import {ComponentLoadSuspense} from "../../../../../components/hoc/ComponentLoadSuspense.tsx";
+
+
+const UserInfo = lazyLoad(import('../UserInfo/UserInfo.tsx'), 'UserInfo');
+const APIKeysController = lazyLoad(import('../APIKeys/APIKeysController.tsx'), 'APIKeysController');
 
 export function AccountSettings() {
     return (
         <div className={styles.accountSettingsContainer}>
             <h3>Account information</h3>
-            <UserInfo/>
+            <ComponentLoadSuspense width="100%" height="100%">
+                <UserInfo/>
+            </ComponentLoadSuspense>
             <h3>Your API keys</h3>
-            <APIKeysController/>
+            <ComponentLoadSuspense width="100%" height="100%">
+                <APIKeysController/>
+            </ComponentLoadSuspense>
         </div>
     );
 }

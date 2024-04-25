@@ -56,7 +56,7 @@ const authorsMapper = new Map([
     ["user", "You"], ["assistant", "ChatGPT"],
 ])
 
-export default function Message(
+export function Message(
     {message, onUpdate}:
     {message: MessageCreate | Signal<MessageCreate>, onUpdate?: () => void}
     ) {
