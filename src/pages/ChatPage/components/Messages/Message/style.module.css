@@ -49,7 +49,9 @@
 
 .message-author {
     color: var(--text-color);
+    font-size: 1.1rem;
 }
+
 
 .message-content {
     text-wrap: normal;
