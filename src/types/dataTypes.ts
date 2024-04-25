@@ -50,7 +50,7 @@ export type ChatFullRead = ChatRead & {
 export type ChatFullCreate = ChatBase & {
     messages: MessageCreate[]
 }
-export type ChatFullStream = ChatFullCreate;
+export type ChatFullStream = ChatFullCreate & {id: ChatIdType};
 
 export type ChatDefault = ChatBase & {
     id: null,

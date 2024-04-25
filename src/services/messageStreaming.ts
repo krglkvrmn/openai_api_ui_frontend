@@ -4,7 +4,7 @@ import axios, {isAxiosError} from "axios";
 import {UUID} from "crypto";
 import {refreshRetryOnUnauthorized} from "./auth";
 import {useOneTimeMemo} from "../hooks/useOneTimeMemo";
-import {ChatFullStream, MessageAuthor, MessageCreate} from "../types/dataTypes";
+import {ChatAny, ChatFullStream, MessageAuthor, MessageCreate} from "../types/dataTypes";
 import {BACKEND_ORIGIN} from "../configuration/config.ts";
 import {APIKeyErrorType} from "../types/errorTypes.ts";
 
@@ -39,7 +39,7 @@ export type StreamingStateType = {
 
 type TuseModelStreamingMessageReturn = {
     streamingMessage: Signal<MessageCreate>,
-    streamMessage: (chat: ChatFullStream) => Promise<MessageCreate | undefined>,
+    streamMessage: (chat: ChatFullStream & ChatAny) => Promise<MessageCreate | undefined>,
     streamingState: Signal<StreamingStateType>,
     reset: () => void,
     abort: () => void
@@ -85,7 +85,7 @@ export function useStreamingMessage(identifier: number | null): TuseModelStreami
     const streamingMessage = useOneTimeMemo(() => signal(streamingMessageDefault), [identifier]);
     const streamingState = useOneTimeMemo(() => signal(streamingStateDefault), [identifier]);
 
-    async function streamMessage(chat: ChatFullStream): Promise<MessageCreate | undefined> {
+    async function streamMessage(chat: ChatFullStream & ChatAny): Promise<MessageCreate | undefined> {
         const { location, error} = await requestStreamingCompletion(
             {chat, token: localApiKey.value, debug: import.meta.env.VITE_CHAT_DEBUG_MODE_ENABLED }
         );

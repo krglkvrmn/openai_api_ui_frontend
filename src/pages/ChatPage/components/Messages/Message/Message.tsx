@@ -57,8 +57,8 @@ const authorsMapper = new Map([
 ])
 
 export default function Message(
-    {message, autoscroll}:
-    {message: MessageCreate | Signal<MessageCreate>, autoscroll?: boolean}
+    {message, onUpdate}:
+    {message: MessageCreate | Signal<MessageCreate>, onUpdate?: () => void}
     ) {
     const messageContainerRef: React.RefObject<HTMLDivElement> = useRef(null);
     const isMessageSignal = message instanceof Signal;
@@ -68,10 +68,8 @@ export default function Message(
     ]
     const hrAuthor = authorsMapper.get(author);
     useSignalEffect(() => {
-        isMessageSignal ? message.value :  message;  // Subscribe an effect to signal change
-        if (autoscroll) {
-            messageContainerRef?.current?.scrollIntoView(false);
-        }
+        isMessageSignal ? message.value : message;  // Subscribe an effect to signal change
+        onUpdate && onUpdate();
     });
     return (
         <div className={styles[`${author}MessageContainer`]} ref={messageContainerRef}>

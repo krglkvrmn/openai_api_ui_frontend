@@ -47,16 +47,34 @@ export function MessagesList(
         setIsScrollSubscribed(true);
     }, [messages.length, isListLoaded]);
 
-    function onScroll(event: React.UIEvent<HTMLElement>) {
-        const isScrollSubscribedNew = event.currentTarget.scrollHeight - event.currentTarget.scrollTop === event.currentTarget.clientHeight;
-        if (isScrollSubscribedNew !== isScrollSubscribed) {
-            setIsScrollSubscribed(isScrollSubscribedNew)
+    function getOnScroll() {
+        let prevScrollTop = 0;
+        function onScroll(event: React.UIEvent<HTMLElement>) {
+            if (prevScrollTop > event.currentTarget.scrollTop) {
+                setIsScrollSubscribed(false);
+            } else {
+                const isScrollEnd = Math.abs(event.currentTarget.scrollHeight - event.currentTarget.clientHeight - event.currentTarget.scrollTop) <= 1;
+                if (isScrollEnd) {
+                    setIsScrollSubscribed(true);
+                }
+            }
+            prevScrollTop = event.currentTarget.scrollTop;
+        }
+        return onScroll;
+    }
+
+    function onMessageUpdate() {
+        if (messageListRef.current) {
+            const isScrollRequired = messageListRef.current.scrollTop + messageListRef.current.clientHeight < messageListRef.current.scrollHeight;
+            if (isScrollSubscribed && isScrollRequired) {
+                scrollToBottom(messageListRef);
+            }
         }
     }
 
     return (
         <div className={styles.messagesListContainer}>
-            <div className={styles.messagesList} onScroll={onScroll} ref={messageListRef}>
+            <div className={styles.messagesList} onScroll={getOnScroll()} ref={messageListRef}>
                 {
                     messagesQueries.map((query, index) => {
                         return <div key={index}
@@ -76,7 +94,7 @@ export function MessagesList(
                 }
                 {
                     dynamicMessages.map((message, index) => {
-                        return <Message key={messagesQueries.length + index} message={message} autoscroll={isScrollSubscribed}/>
+                        return <Message key={messagesQueries.length + index} message={message} onUpdate={onMessageUpdate}/>
                     })
                 }
             </div>
