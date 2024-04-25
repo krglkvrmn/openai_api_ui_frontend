@@ -31,7 +31,15 @@ type CompletionEventDeltaType = {
     content?: string
 }
 
-export type StreamingStatusType = "ready" | "generating" | "complete" | "abort" | "error";
+/*
+    ready - idle state when no generation happens
+    awaiting - user posted a message, but streaming haven't started yet
+    generating - message streaming in ongoing
+    complete - message streaming finished successfully
+    abort - message streaming was interrupted by user
+    error - message streaming was interrupted by an error
+ */
+export type StreamingStatusType = "ready" | "awaiting" | "generating" | "complete" | "abort" | "error";
 export type StreamingStateType = {
     status: StreamingStatusType,
     error?: APIKeyErrorType

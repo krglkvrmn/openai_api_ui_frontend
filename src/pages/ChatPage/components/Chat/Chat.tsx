@@ -129,10 +129,12 @@ function useChat(chatId: ChatIdType): TuseChatReturn {
                     author: mutateData.author, content: mutateData.text
                 }], created_at: new Date()}
             });
+            streamingState.value = {...streamingState.value, status: "awaiting" }
             return prevDefaultChat;
         },
         sideEffectsRecover: (sideEffectsPrevState: ChatDefault | undefined): void => {
             if (sideEffectsPrevState !== undefined) {
+                streamingState.value = { ...streamingState.value, status: "ready" };
                 setDefaultChat(sideEffectsPrevState);
             }
         }
@@ -149,7 +151,9 @@ function useChat(chatId: ChatIdType): TuseChatReturn {
                     author: mutateData.author, content: mutateData.text, created_at: new Date()}]};
             }
             throw new Error('State is not loaded yet');
-        }
+        },
+        sideEffectsUpdate: () => {streamingState.value = {...streamingState.value, status: "awaiting" }},
+        sideEffectsRecover: () => {streamingState.value = {...streamingState.value, status: "ready" }},
     });
 
     const switchModelMutation = useMutation({
@@ -299,7 +303,7 @@ export default function Chat() {
                                 active={streamingState.value.status !== "generating"} />
 
                 {
-                    !["generating", "complete"].includes(streamingState.value.status) &&
+                    !["generating", "complete", "awaiting"].includes(streamingState.value.status) &&
                     data.messages.length > 0 && data.messages[data.messages.length - 1].author === "user" &&
                     <RegenerateMessageButton onClick={generateResponse} />
                 }
