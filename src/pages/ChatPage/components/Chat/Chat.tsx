@@ -63,7 +63,6 @@ function createDefaultChat(): ChatDefault {
     }
 }
 
-
 function useChat(chatId: ChatIdType): TuseChatReturn {
     const isDefault = chatId === null;
 
@@ -176,26 +175,28 @@ function useChat(chatId: ChatIdType): TuseChatReturn {
         onError: createChatOptimisticConfig.onError,
         onSuccess: async (resp: ChatFullRead | undefined, variables): Promise<void> => {
             if (resp !== undefined) {
+                const newMessage = { author: resp.messages[0].author, content: variables.text };
                 queryClient.setQueryData(['chats', resp.id], {
-                    ...resp, messages: [{author: resp.messages[0].author, content: variables.text}]
+                    ...resp, messages: [newMessage]
                 });
+                queryClient.setQueryData(['chats', resp.id, "messages", 0], newMessage);
             }
         },
         onSettled: async (resp: ChatFullRead | undefined, _error, variables): Promise<void> => {
             if (resp !== undefined) {
+                const newMessage = { author: resp.messages[0].author, content: variables.text };
                 switch (resp.messages[0].author) {
                     case 'user':
-                        await stream({
-                            ...resp, messages: [{author: resp.messages[0].author, content: variables.text}]
-                        }, false); break;
+                        await stream({ ...resp, messages: [newMessage] }, false); break;
                     case 'system':
-                        await queryClient.invalidateQueries(['prompts'], {exact: true}); break;
+                        await queryClient.invalidateQueries(['prompts'], {exact: true});
+                        break;
                 }
                 await queryClient.invalidateQueries(['chats'], {exact: true});
                 setActiveChatIndex(0);
                 navigate(`/chat/${resp.id}`, { state: streamingState.value });
                 setDefaultChat(createDefaultChat());
-                resetStreamingMessage();
+                setTimeout(resetStreamingMessage, 0);
             }
         }
     });
@@ -218,9 +219,11 @@ function useChat(chatId: ChatIdType): TuseChatReturn {
             const savedMessage = await addMessage({
                 chatId: chat.id, author: finalMessage.author, text: finalMessage.content
             });
+            // Update states manually to avoid UI reloading
             queryClient.setQueryData(['chats', chat.id], {
                 ...completeChat, messages: [...completeChat.messages, savedMessage]
             });
+            queryClient.setQueryData(['chats', chat.id, "messages", completeChat.messages.length], savedMessage);
         } catch (error) {
             reset = false;
         } finally {
@@ -296,8 +299,8 @@ export default function Chat() {
                                 active={streamingState.value.status !== "generating"} />
 
                 {
-                    streamingState.value.status !== "generating" && data.messages.length > 0 &&
-                    data.messages[data.messages.length - 1].author === "user" &&
+                    !["generating", "complete"].includes(streamingState.value.status) &&
+                    data.messages.length > 0 && data.messages[data.messages.length - 1].author === "user" &&
                     <RegenerateMessageButton onClick={generateResponse} />
                 }
                 {

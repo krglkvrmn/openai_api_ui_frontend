@@ -23,7 +23,6 @@ function useMessageList(messages: MessageAny[]): UseQueryResult<MessageCreate>[]
                 if ('content' in message || !('id' in message)) {
                     return message as MessageCreate;
                 }
-                // await new Promise((resolve, reject) => setTimeout(() => resolve(1), 100000));
                 return await getMessageRequest((message as MessageRead).id);
             },
         };
@@ -38,7 +37,7 @@ export function MessagesList(
     // Dynamic messages are rendered separately because they should not be cached by useQueries
     const dynamicMessages = messages.filter(message => message instanceof Signal) as Signal<MessageCreate>[];
     const messagesQueries = useMessageList(staticMessages);
-    const [isScrollSubscribed, setIsScrollSubscribed] = useState<boolean>(false);
+    const [isScrollSubscribed, setIsScrollSubscribed] = useState<boolean>(true);
     const isListLoaded = messagesQueries.every(query => query.isFetched);
     const messageListRef = useRef<HTMLDivElement | null>(null);
 
@@ -53,7 +52,9 @@ export function MessagesList(
             if (prevScrollTop > event.currentTarget.scrollTop) {
                 setIsScrollSubscribed(false);
             } else {
-                const isScrollEnd = Math.abs(event.currentTarget.scrollHeight - event.currentTarget.clientHeight - event.currentTarget.scrollTop) <= 1;
+                const isScrollEnd = Math.abs(
+                    event.currentTarget.scrollHeight - event.currentTarget.clientHeight - event.currentTarget.scrollTop
+                ) <= 1;
                 if (isScrollEnd) {
                     setIsScrollSubscribed(true);
                 }
@@ -71,7 +72,6 @@ export function MessagesList(
             }
         }
     }
-
     return (
         <div className={styles.messagesListContainer}>
             <div className={styles.messagesList} onScroll={getOnScroll()} ref={messageListRef}>
