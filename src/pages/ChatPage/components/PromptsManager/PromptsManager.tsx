@@ -5,12 +5,14 @@ import {PromptType} from "../../../../types/types.ts";
 import {SwitchPromptTypeButton} from "../../ui/Buttons/SwitchPromptTypeButton/SwitchPromptTypeButton.tsx";
 import {SystemPrompt, UserPrompt} from "../Prompt/Prompt.tsx";
 import styles from "./style.module.css";
+import {useSignalState} from "../../../../hooks/useSignalState.ts";
 
 export function PromptsManager(
     {promptSubmitHandler, allowPromptSelection, active}:
     { promptSubmitHandler: (text: string, author: MessageAuthor) => void, allowPromptSelection: boolean, active?: boolean }
 ) {
     const [systemPromptValue, setSystemPromptValue] = useSystemPrompt();
+    const [userPromptValue, setUserPromptValue] = useSignalState<string>("");
     const [activePromptType, setActivePromptType] = useState<PromptType>("user");
 
     useEffect(() => {
@@ -25,7 +27,12 @@ export function PromptsManager(
             }
             {
                 (activePromptType === "user" || !allowPromptSelection) &&
-                    <UserPrompt submitHandler={prompt => promptSubmitHandler(prompt, 'user')}
+                    <UserPrompt promptValue={userPromptValue}
+                                promptValueChangeHandler={setUserPromptValue}
+                                submitHandler={prompt => {
+                                    promptSubmitHandler(prompt, 'user');
+                                    setUserPromptValue('');
+                                }}
                                 active={active} />
             }
             {
