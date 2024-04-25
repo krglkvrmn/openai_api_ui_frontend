@@ -2,6 +2,7 @@ import {useState} from "react";
 import {IoIosCopy, IoMdCheckmarkCircleOutline} from "react-icons/io";
 import {IconButton} from "../../../../../components/ui/Buttons/Icons/IconButton/IconButton.tsx";
 import styles from "./style.module.css";
+import {devConsole} from "../../../../../utils/devConsole.ts";
 
 export function CopyToClipboardButton({text}: { text: string }) {
     const [isCopied, setIsCopied] = useState<boolean>(false);
@@ -12,7 +13,7 @@ export function CopyToClipboardButton({text}: { text: string }) {
             setIsCopied(true);
             setTimeout(() => setIsCopied(false), 1000);
         } catch (error) {
-            console.error("An error occurred while copying text to clipboard:", error);
+            devConsole.error("An error occurred while copying text to clipboard:", error);
         }
     }
 

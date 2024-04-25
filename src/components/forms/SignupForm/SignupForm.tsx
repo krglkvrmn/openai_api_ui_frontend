@@ -9,6 +9,7 @@ import FormError, {ValidationErrorsList} from "../../ui/InfoDisplay/Errors/Error
 import commonFormStyles from "../common-form-styles.module.css";
 import {FormSubmitButton} from "../../ui/Buttons/Generic/FormSubmitButton/FormSubmitButton.tsx";
 import {ElementOrLoader} from "../../ui/Loaders/ElementOrLoader/ElementOrLoader.tsx";
+import {devConsole} from "../../../utils/devConsole.ts";
 
 type TuseSignupFormReturn = {
     validationErrors: UserErrors,
@@ -36,7 +37,7 @@ function useSignupForm(): TuseSignupFormReturn {
                 await logIn({username: data.email, password: data.password});
                 navigate('/verification', {state: 'just_registered'})
             } catch (error) {
-                console.error('Error while signing up:', error)
+                devConsole.error('Error while signing up:', error)
                 throw error;
             }
         }

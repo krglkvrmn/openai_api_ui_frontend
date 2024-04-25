@@ -2,6 +2,7 @@ import React, {useRef} from "react"
 import {Signal} from "@preact/signals-react";
 import styles from "./style.module.css";
 import {PromptSubmitButton} from "../../ui/Buttons/PromptSubmitButton/PromptSubmitButton.tsx";
+import {devConsole} from "../../../../utils/devConsole.ts";
 
 
 type PromptSubmitHandler = (text: string) => void;
@@ -114,7 +115,7 @@ function usePromptInputSubmitRef(
             return;
         }
         if (promptInputRef.current.value.length === 0) {
-            console.error('Cannot submit an empty prompt');
+            devConsole.error('Cannot submit an empty prompt');
             return;
         }
         onSubmitSideEffect !== undefined && onSubmitSideEffect(promptInputRef);

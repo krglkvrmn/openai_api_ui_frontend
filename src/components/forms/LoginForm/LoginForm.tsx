@@ -8,6 +8,7 @@ import FormError, {ValidationErrorsList} from "../../ui/InfoDisplay/Errors/Error
 import commonFormStyles from "../common-form-styles.module.css";
 import {FormSubmitButton} from "../../ui/Buttons/Generic/FormSubmitButton/FormSubmitButton.tsx";
 import {ElementOrLoader} from "../../ui/Loaders/ElementOrLoader/ElementOrLoader.tsx";
+import {devConsole} from "../../../utils/devConsole.ts";
 
 
 type TuseLoginFormReturn = {
@@ -35,7 +36,7 @@ function useLoginForm(): TuseLoginFormReturn {
                 await logIn(data);
                 navigate('/');
             } catch (error) {
-                console.error('Error while logging in:', error);
+                devConsole.error('Error while logging in:', error);
                 throw error;
             } finally {
                 setIsCalledInternally(false);

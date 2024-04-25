@@ -1,6 +1,11 @@
 import {Signal} from "@preact/signals-react";
 import {useMutation, useQuery} from "react-query";
-import {createMessageRequest, createNewChatRequest, getChatRequest, updateChatRequest} from "../../../../services/backendAPI.ts";
+import {
+    createMessageRequest,
+    createNewChatRequest,
+    getChatRequest,
+    updateChatRequest
+} from "../../../../services/backendAPI.ts";
 import ModelSelector from "../ModelSelector/ModelSelector.tsx";
 import {optimisticQueryUpdateConstructor} from "../../../../utils/optimisticUpdates.ts";
 import {MessagesList} from "../Messages/MessagesList/MessagesList.tsx";
@@ -26,7 +31,9 @@ import {ElementOrLoader} from "../../../../components/ui/Loaders/ElementOrLoader
 import {LoadingError} from "../../../../components/ui/InfoDisplay/Errors/Errors.tsx";
 import {APIKeyErrors} from "../../ui/Errors/APIKeyErrors.tsx";
 import {RegenerateMessageButton} from "../../ui/Buttons/RegenerateMessageButton/RegenerateMessageButton.tsx";
-import {AbortMessageGenerationButton} from "../../ui/Buttons/AbortMessageGenerationButton/AbortMessageGenerationButton.tsx";
+import {
+    AbortMessageGenerationButton
+} from "../../ui/Buttons/AbortMessageGenerationButton/AbortMessageGenerationButton.tsx";
 import styles from "./style.module.css";
 import {EmptyChatPlaceholder} from "../EmptyChatPlaceholder/EmptyChatPlaceholder.tsx";
 
@@ -284,7 +291,7 @@ export default function Chat() {
             </div>
             <div className={styles.chatContainer}>
                 {
-                    messages.length === 0 ?
+                    messages.length === 0 && !isChatLoading ?
                         <EmptyChatPlaceholder /> :
                         <ElementOrLoader isLoading={isChatLoading}>
                             {

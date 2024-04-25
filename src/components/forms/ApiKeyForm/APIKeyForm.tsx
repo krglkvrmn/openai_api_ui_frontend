@@ -8,6 +8,7 @@ import {ValidationErrorsList} from "../../ui/InfoDisplay/Errors/Errors.tsx";
 import {ElementOrLoader} from "../../ui/Loaders/ElementOrLoader/ElementOrLoader.tsx";
 import {APIKeyInput} from "../FormElements/Inputs.tsx";
 import {APIKeySubmitButton} from "../../../pages/ChatPage/ui/Buttons/APIKeySubmitButton/APIKeySubmitButton.tsx";
+import {devConsole} from "../../../utils/devConsole.ts";
 
 
 const validators: ValidatorType[] = [
@@ -25,7 +26,7 @@ export function APIKeyForm({keySaveHandler}: {keySaveHandler: (apiToken: string)
                 await keySaveHandler(formData.api_key);
                 setLocalApiKey("");
             } catch (error) {
-                console.error('Error while saving an API key:', error);
+                devConsole.error('Error while saving an API key:', error);
                 throw error;
             } finally {
                 setIsLoading(false);

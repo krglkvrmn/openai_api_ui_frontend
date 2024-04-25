@@ -8,6 +8,7 @@ import FormError, {ValidationErrorsList} from "../../ui/InfoDisplay/Errors/Error
 import commonFormStyles from "../common-form-styles.module.css";
 import {FormSubmitButton} from "../../ui/Buttons/Generic/FormSubmitButton/FormSubmitButton.tsx";
 import {ElementOrLoader} from "../../ui/Loaders/ElementOrLoader/ElementOrLoader.tsx";
+import {devConsole} from "../../../utils/devConsole.ts";
 
 
 type TuseForgotPasswordFormReturn = {
@@ -33,7 +34,7 @@ function useForgotPasswordForm(): TuseForgotPasswordFormReturn {
                 await requestPasswordReset(formData.username);
                 navigate('/login', { state: 'password-reset-request' });
             } catch (error) {
-                console.error('Error while requesting password reset:', error);
+                devConsole.error('Error while requesting password reset:', error);
                 throw error;
             } finally {
                 setIsLoading(false);

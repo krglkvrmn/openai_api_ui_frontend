@@ -7,6 +7,7 @@ import {useOneTimeMemo} from "../hooks/useOneTimeMemo";
 import {ChatAny, ChatFullStream, MessageAuthor, MessageCreate} from "../types/dataTypes";
 import {BACKEND_ORIGIN} from "../configuration/config.ts";
 import {APIKeyErrorType} from "../types/errorTypes.ts";
+import {devConsole} from "../utils/devConsole.ts";
 
 
 type RequestStreamingCompletionParamsType = {
@@ -116,26 +117,29 @@ export function useStreamingMessage(identifier: number | null): TuseModelStreami
                     eventSource.close();
                     reject(event);
                 }
-
-                const {
-                    content: eventContent,
-                    role: eventAuthor
-                } = eventData.choices[0].delta as CompletionEventDeltaType;
-                const isFinish = eventData.choices[0].finish_reason === "stop";
-                streamingMessage.value = {
-                    ...streamingMessage.value,
-                    content: streamingMessage.value.content + (eventContent !== undefined ? eventContent : ""),
-                    author: eventAuthor !== undefined ? eventAuthor : streamingMessage.value.author,
-                    created_at: isFinish ? new Date() : undefined
-                }
-                if (isFinish) {
-                    streamingState.value = {...streamingState.value, status: "complete"};
-                    eventSource.close();
-                    resolve(streamingMessage.value);
+                try {
+                    const {
+                        content: eventContent,
+                        role: eventAuthor
+                    } = eventData.choices[0].delta as CompletionEventDeltaType;
+                    const isFinish = eventData.choices[0].finish_reason !== null;
+                    streamingMessage.value = {
+                        ...streamingMessage.value,
+                        content: streamingMessage.value.content + (eventContent !== undefined ? eventContent : ""),
+                        author: eventAuthor !== undefined ? eventAuthor : streamingMessage.value.author,
+                        created_at: isFinish ? new Date() : undefined
+                    }
+                    if (isFinish) {
+                        streamingState.value = {...streamingState.value, status: "complete"};
+                        eventSource.close();
+                        resolve(streamingMessage.value);
+                    }
+                } catch (error) {
+                    reject(eventData);
                 }
             }
             eventSource.onerror = (errorEvent: Event): void => {
-                console.log(errorEvent);
+                devConsole.error(errorEvent);
                 eventSource.close();
                 reject(errorEvent);
             }

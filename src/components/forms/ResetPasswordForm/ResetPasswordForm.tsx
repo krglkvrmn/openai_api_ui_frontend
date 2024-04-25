@@ -10,6 +10,7 @@ import FormError, {ValidationErrorsList} from "../../ui/InfoDisplay/Errors/Error
 import {ElementOrLoader} from "../../ui/Loaders/ElementOrLoader/ElementOrLoader.tsx";
 import {FormSubmitButton} from "../../ui/Buttons/Generic/FormSubmitButton/FormSubmitButton.tsx";
 import styles from "./style.module.css";
+import {devConsole} from "../../../utils/devConsole.ts";
 
 
 type TuseResetPasswordFormReturn = {
@@ -36,7 +37,7 @@ function useResetPasswordForm(): TuseResetPasswordFormReturn {
                 setIsLoading(true);
                 await resetPassword({token: formData.token, password: formData.password});
             } catch (error) {
-                console.error('Error while resetting password:', error);
+                devConsole.error('Error while resetting password:', error);
                 throw error;
             } finally {
                 setIsLoading(false);
