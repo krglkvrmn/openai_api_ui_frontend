@@ -82,7 +82,7 @@ function BasePrompt(
     }
 
     function onKeyDown(event: React.KeyboardEvent<HTMLTextAreaElement>) {
-        if (onSubmit !== undefined && event.key === 'Enter' && active) {
+        if (onSubmit !== undefined && (event.ctrlKey || event.metaKey) && event.key === 'Enter' && active) {
             event.preventDefault();
             submitHandler();
         }
