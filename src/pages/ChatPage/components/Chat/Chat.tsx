@@ -125,12 +125,12 @@ function useChat(chatId: ChatIdType): TuseChatReturn {
     const switchModelOptimisticConfig = optimisticQueryUpdateConstructor({
         queryKey: ['chats', chatId],
         stateUpdate: (mutateData: { chatId: ChatIdType, newModel: string }, prevChat: ChatAny | undefined): ChatAny => {
+            if (chatId === null) {
+                const newDefaultChat = {...defaultChat, model: mutateData.newModel};
+                setDefaultChat(prev => ({...prev, model: mutateData.newModel}));
+                return newDefaultChat;
+            }
             if (prevChat !== undefined) {
-                if (chatId === null) {
-                    const newDefaultChat = {...defaultChat, model: mutateData.newModel};
-                    setDefaultChat(prev => ({...prev, model: mutateData.newModel}));
-                    return newDefaultChat;
-                }
                 return {...prevChat, model: mutateData.newModel};
             } else {
                 return {...data, model: mutateData.newModel}
@@ -145,7 +145,9 @@ function useChat(chatId: ChatIdType): TuseChatReturn {
                     author: mutateData.author, content: mutateData.text
                 }], created_at: new Date()}
             });
-            streamingState.value = {...streamingState.value, status: "awaiting" }
+            if (mutateData.author === "user") {
+                streamingState.value = {...streamingState.value, status: "awaiting" }
+            }
             return prevDefaultChat;
         },
         sideEffectsRecover: (sideEffectsPrevState: ChatDefault | undefined): void => {
@@ -244,11 +246,11 @@ function useChat(chatId: ChatIdType): TuseChatReturn {
                 ...completeChat, messages: [...completeChat.messages, savedMessage]
             });
             queryClient.setQueryData(['chats', chat.id, "messages", completeChat.messages.length], savedMessage);
-            await queryClient.invalidateQueries(['chats'], {exact: true});  // Update generated chat name
         } catch (error) {
             reset = false;
         } finally {
             reset && resetStreamingMessage();
+            await queryClient.invalidateQueries(['chats'], {exact: true});  // Update generated chat name
         }
     }
 
