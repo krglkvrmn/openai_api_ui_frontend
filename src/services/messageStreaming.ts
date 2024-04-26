@@ -70,7 +70,7 @@ async function requestStreamingCompletion(
     }
     const requestGenerator = () =>
         axios.post(
-            BACKEND_ORIGIN + `/api/v1/ai/requestStreamingCompletion?debug=${debug}`,
+            BACKEND_ORIGIN + `/api/v1/ai/requestStreamingCompletion/chat/${chat.id}?debug=${debug}`,
             requestBody,
             { withCredentials: true, headers: {'Content-Type': 'application/json', ...additionalHeaders}}
         );
@@ -122,7 +122,7 @@ export function useStreamingMessage(identifier: number | null): TuseModelStreami
                         content: eventContent,
                         role: eventAuthor
                     } = eventData.choices[0].delta as CompletionEventDeltaType;
-                    const isFinish = eventData.choices[0].finish_reason !== undefined;
+                    const isFinish = Boolean(eventData.choices[0].finish_reason);
                     streamingMessage.value = {
                         ...streamingMessage.value,
                         content: streamingMessage.value.content + (eventContent !== undefined ? eventContent : ""),

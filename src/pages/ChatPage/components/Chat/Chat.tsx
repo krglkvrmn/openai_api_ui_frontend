@@ -92,7 +92,7 @@ function useChat(chatId: ChatIdType): TuseChatReturn {
         },
         enabled: !isDefault
     });
-    const data: ChatAny = queryData === undefined ? defaultChat : queryData;
+    const data: ChatAny = queryData === undefined || queryData.id === null ? defaultChat : queryData;
 
    async function switchModel(
         { chatId, newModel }:
@@ -126,11 +126,16 @@ function useChat(chatId: ChatIdType): TuseChatReturn {
         queryKey: ['chats', chatId],
         stateUpdate: (mutateData: { chatId: ChatIdType, newModel: string }, prevChat: ChatAny | undefined): ChatAny => {
             if (prevChat !== undefined) {
+                if (chatId === null) {
+                    const newDefaultChat = {...defaultChat, model: mutateData.newModel};
+                    setDefaultChat(prev => ({...prev, model: mutateData.newModel}));
+                    return newDefaultChat;
+                }
                 return {...prevChat, model: mutateData.newModel};
             } else {
                 return {...data, model: mutateData.newModel}
             }
-        }
+        },
     })
     const createChatOptimisticConfig = optimisticQueryUpdateConstructor({
         sideEffectsUpdate: (mutateData: { author: MessageAuthor, text: string }): ChatDefault => {
@@ -239,6 +244,7 @@ function useChat(chatId: ChatIdType): TuseChatReturn {
                 ...completeChat, messages: [...completeChat.messages, savedMessage]
             });
             queryClient.setQueryData(['chats', chat.id, "messages", completeChat.messages.length], savedMessage);
+            await queryClient.invalidateQueries(['chats'], {exact: true});  // Update generated chat name
         } catch (error) {
             reset = false;
         } finally {
