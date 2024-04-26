@@ -119,7 +119,7 @@ export function AuthProvider({ children }: {children: React.ReactElement}) {
         mutationFn: logout,
         onMutate: () => setLogOutError(null),
         onSuccess: async () => {
-            await queryClient.invalidateQueries('authData')
+            await queryClient.invalidateQueries('authData');
         },
         onError: error => setLogOutError(parseLogOutError(error))
     });
@@ -196,7 +196,9 @@ export function AuthProvider({ children }: {children: React.ReactElement}) {
         setGuestLogInError(null);
         try {
             await signUpMutation.mutateAsync({email: username, password: password, is_guest: true});
+            signUpMutation.reset();
             await logInMutation.mutateAsync({username, password});
+            logInMutation.reset();
         } catch (error) {
             setGuestLogInError("An error occurred while logging as a guest");
             setLogInError(null);
