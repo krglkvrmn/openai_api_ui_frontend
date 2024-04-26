@@ -115,7 +115,7 @@ export function useStreamingMessage(identifier: number | null): TuseModelStreami
                 if ('error' in eventData) {
                     streamingState.value = {status: "error", error: eventData.error.code};
                     eventSource.close();
-                    reject(event);
+                    reject(eventData);
                 }
                 try {
                     const {
@@ -135,7 +135,7 @@ export function useStreamingMessage(identifier: number | null): TuseModelStreami
                         resolve(streamingMessage.value);
                     }
                 } catch (error) {
-                    streamingState.value = {status: "error"};
+                    streamingState.value = {...streamingState.value, status: "error"};
                     reject(eventData);
                 }
             }

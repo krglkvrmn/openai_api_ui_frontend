@@ -248,6 +248,7 @@ function useChat(chatId: ChatIdType): TuseChatReturn {
             queryClient.setQueryData(['chats', chat.id, "messages", completeChat.messages.length], savedMessage);
         } catch (error) {
             reset = false;
+            await queryClient.invalidateQueries(['chats', chat.id], {exact: true});  // Update generated chat name
         } finally {
             reset && resetStreamingMessage();
             await queryClient.invalidateQueries(['chats'], {exact: true});  // Update generated chat name
