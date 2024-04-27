@@ -17,6 +17,7 @@
     min-width: 10rem;
     max-width: 60rem;
     height: 100%;
+    overflow-x: scroll;
 }
 
 
