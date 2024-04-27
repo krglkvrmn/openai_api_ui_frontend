@@ -65,10 +65,12 @@
 }
 [data-tooltip]:hover::after {
     display: block;
+    z-index: 9998;
     animation: tooltip-fade-in var(--tooltip-transition-time) ease-out;
 }
 [data-tooltip]:hover::before {
     display: block;
+    z-index: 9999;
     animation: tooltip-fade-in var(--tooltip-transition-time) ease-in;
 }
 [data-tooltip-direction="left"]:after {

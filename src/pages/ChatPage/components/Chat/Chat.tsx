@@ -68,7 +68,7 @@ function assembleChat(chat: ChatAny): ChatFullStream {
 function createDefaultChat(): ChatDefault {
     return {
         id: null,
-        model: "gpt-3.5-turbo",
+        model: "gpt-4-turbo",
         title: "New chat",
         messages: []
     }

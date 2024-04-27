@@ -1,12 +1,14 @@
 import styles from "./style.module.css";
 import {useDialog} from "../../../../hooks/useDialog.ts";
+import {InfoButton} from "../../../../components/ui/Buttons/Icons/InfoButton/InfoButton.tsx";
+import React from "react";
 
 
-const modelOptions = ['gpt-3.5-turbo', 'gpt-4'];
-const modelOptionsDisplayMap = new Map([
-    ['gpt-3.5-turbo', 'GPT-3.5'],
-    ['gpt-4', 'GPT-4'],
-])
+const availableModels = new Map([
+    ["gpt-3.5-turbo", {modelName: "GPT-3.5-TURBO", priceTag: "💰", contextSize: "16K", speed: "⚡⚡⚡", quality: "Medium"}],
+    ["gpt-4-turbo", {modelName: "GPT-4-TURBO", priceTag: "💰💰", contextSize: "128K", speed: "⚡⚡", quality: "Very good"}],
+    ["gpt-4", {modelName: "GPT-4", priceTag: "💰💰💰", contextSize: "8K", speed: "⚡", quality: "Best"}]
+]);
 
 
 type ModelSelectorProps = {
@@ -16,27 +18,69 @@ type ModelSelectorProps = {
 
 export default function ModelSelector({activeModel, modelSwitchHandler}: ModelSelectorProps) {
     const { isOpened, dialogRef, openDialog, closeDialog } = useDialog("popup");
+    const [tableVisible, setTableVisible] = React.useState<boolean>(false);
+
     return (
         <div className={styles.modelSelectorContainer}>
             <div className={styles.modelSelectorPopupTriggerButtonContainer}>
                 <button onClick={isOpened ? closeDialog : openDialog}
                         className={styles.modelSelectorPopupTriggerButton}>
-                    { activeModel && modelOptionsDisplayMap.get(activeModel)}
+                    { activeModel && availableModels.get(activeModel)?.modelName}
 
                 </button>
             </div>
             <dialog ref={dialogRef} className={styles.modelSelectorPopup}>
-                {
-                    modelOptions.map((model, index) => (
-                        <button key={index} className={styles.modelSelectionButton}
-                                onClick={() => {
-                                    modelSwitchHandler && modelSwitchHandler(model);
-                                    closeDialog();
-                                }}>
-                            {modelOptionsDisplayMap.get(model)}
-                        </button>
-                    ))
-                }
+                <table className={styles.modelInfoTable}>
+                    {
+                        tableVisible &&
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>Price</th>
+                                    <th>Speed</th>
+                                    <th>Context size</th>
+                                    <th>Quality</th>
+                                </tr>
+                            </thead>
+                    }
+                    <tbody>
+                    {
+                        Array(...availableModels.keys()).map((model, index) => (
+                            <tr>
+                                <th>
+                                    <button key={index} className={styles.modelSelectionButton}
+                                            onClick={() => {
+                                                modelSwitchHandler && modelSwitchHandler(model);
+                                                closeDialog();
+                                            }}>
+                                        {availableModels.get(model)?.modelName}
+                                    </button>
+                                </th>
+                                {
+                                    tableVisible &&
+                                        <>
+                                            <td className={styles.priceCell}>
+                                                {availableModels.get(model)?.priceTag}
+                                            </td>
+                                            <td className={styles.speedCell}>
+                                                {availableModels.get(model)?.speed}
+                                            </td>
+                                            <td className={styles.contextCell}>
+                                                {availableModels.get(model)?.contextSize}
+                                            </td>
+                                            <td className={styles.qualityCell}>
+                                                {availableModels.get(model)?.quality}
+                                            </td>
+                                        </>
+                                }
+                            </tr>
+                        ))
+                    }
+                    </tbody>
+                </table>
+                <InfoButton onClick={() =>
+                    setTimeout(() => setTableVisible(prev => !prev), 0) // Avoid popup collapsing
+                }/>
             </dialog>
         </div>
 

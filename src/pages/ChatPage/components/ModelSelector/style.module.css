@@ -19,9 +19,10 @@
     cursor: pointer;
 }
 .model-selector-popup {
-    display: block;
+    display: flex;
+    align-items: center;
     position: absolute;
-    width: max-content;
+    width: min-content;
     background-color: var(--background-color);
     border-color: var(--divider-color);
     border-width: 2px;
@@ -39,13 +40,13 @@
     opacity: 0;
     bottom: 50%;
     transition: visibility 0s 0.2s, opacity 0.2s ease, bottom 0.2s ease;
-
 }
 
 .model-selection-button {
     width: 100%;
     padding: 0.5rem 0.25rem;
     border: 0;
+    white-space: nowrap;
     border-radius: 0.5rem;
     background-color: transparent;
     color: var(--text-color-secondary);
@@ -53,6 +54,9 @@
 }
 .model-selection-button:hover {
     background-color: var(--background-color-active);
+}
+.model-selector-popup button svg {
+    color: rgba(255, 255, 255, 0.2);
 }
 @media screen and (max-width: 400px) {
     .model-selector-popup-trigger-button {
@@ -62,3 +66,26 @@
         font-size: 0.8rem;
     }
 }
+
+
+.model-info-table {
+    color: var(--text-color-secondary);
+    border-collapse: collapse;
+}
+.model-info-table th, .model-info-table td {
+    box-sizing: border-box;
+    padding: 0 1rem;
+    white-space: nowrap;
+    text-align: center;
+}
+.model-info-table thead th {
+    color: var(--text-color-secondary);
+    font-weight: 50;
+    font-size: 12px;
+    white-space: nowrap;
+}
+
+.price-cell, .speed-cell {}
+.speed-cell {}
+.context-cell {}
+.quality-cell {}
