@@ -46,7 +46,7 @@ export default function ModelSelector({activeModel, modelSwitchHandler}: ModelSe
                     <tbody>
                     {
                         Array(...availableModels.keys()).map((model, index) => (
-                            <tr>
+                            <tr key={index}>
                                 <th>
                                     <button key={index} className={styles.modelSelectionButton}
                                             onClick={() => {
