@@ -7,7 +7,8 @@ import React from "react";
 const availableModels = new Map([
     ["gpt-3.5-turbo", {modelName: "GPT-3.5-TURBO", priceTag: "💰", contextSize: "16K", speed: "⚡⚡⚡", quality: "Medium"}],
     ["gpt-4-turbo", {modelName: "GPT-4-TURBO", priceTag: "💰💰", contextSize: "128K", speed: "⚡⚡", quality: "Very good"}],
-    ["gpt-4", {modelName: "GPT-4", priceTag: "💰💰💰", contextSize: "8K", speed: "⚡", quality: "Best"}]
+    ["gpt-4", {modelName: "GPT-4", priceTag: "💰💰💰", contextSize: "8K", speed: "⚡", quality: "Best"}],
+    ["gpt-4o", {modelName: "GPT-4o", priceTag: "💰", contextSize: "128K", speed: "⚡⚡⚡", quality: "Very good"}],
 ]);
 
 
