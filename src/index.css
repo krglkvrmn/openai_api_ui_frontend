@@ -44,6 +44,7 @@ dialog button:focus {
     --background-color-modal: #282828;
     --background-color-text-field: #262626;
     --background-color-active: rgba(255, 255, 255, 0.05);
+    --background-active-background-blend: rgba(30, 30, 30);
 
     --text-color: #fff;
     --text-color-secondary: rgba(255, 255, 255, 0.7);

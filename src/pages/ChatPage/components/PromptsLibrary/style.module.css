@@ -44,6 +44,8 @@
     display: flex;
     justify-content: space-between;
     border-radius: 1rem;
+    z-index: 1;
+    position: relative;
 }
 .prompt-library-record-container:hover {
     background-color: rgba(255, 255, 255, 0.05);
@@ -51,17 +53,26 @@
 
 .prompt-library-record-title-container {
     overflow-x: hidden;
-    padding: 1rem;
+    padding: 0.75rem 1rem;
     flex-grow: 1;
 }
 
 .prompt-library-record-title {
+    font-size: 14px;
 }
 
 .prompt-library-record-controls-container {
     display: none;
+    position: absolute;
     align-items: center;
     padding: 0 0.5rem;
+    right: 0;
+    top: 50%;
+    translate: 0 -50%;
+    height: 100%;
+    border-radius: 0 1rem 1rem 0;
+    z-index: 0;
+    background-color: var(--background-active-background-blend);
 }
 
 /* Buttons sizes */
@@ -72,4 +83,5 @@
 
 .prompt-library-record-container:hover .prompt-library-record-controls-container {
     display: flex;
+    z-index: 2;
 }

@@ -49,6 +49,8 @@
     display: flex;
     justify-content: space-between;
     border-radius: 1rem;
+    z-index: 1;
+    position: relative;
 }
 .chat-history-record-container-active {
     composes: chat-history-record-container;
@@ -60,17 +62,26 @@
 
 .chat-history-record-title-container {
     overflow-x: hidden;
-    padding: 1rem;
+    padding: 0.75rem 1rem;
     flex-grow: 1;
 }
 
 .chat-history-record-title {
+    font-size: 14px;
 }
 
 .chat-history-record-controls-container {
     display: none;
+    position: absolute;
+    right: 0;
+    top: 50%;
+    translate: 0 -50%;
+    height: 100%;
+    border-radius: 0 1rem 1rem 0;
     align-items: center;
     padding: 0 0.5rem;
+    z-index: 0;
+    background-color: var(--background-active-background-blend);
 }
 
 /* Buttons sizes */
@@ -81,4 +92,5 @@
 
 .chat-history-record-container:hover .chat-history-record-controls-container {
     display: flex;
+    z-index: 2;
 }

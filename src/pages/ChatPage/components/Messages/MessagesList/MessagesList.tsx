@@ -49,15 +49,13 @@ export function MessagesList(
     function getOnScroll() {
         let prevScrollTop = 0;
         function onScroll(event: React.UIEvent<HTMLElement>) {
-            if (prevScrollTop > event.currentTarget.scrollTop) {
+            const isScrollEnd = Math.abs(
+                event.currentTarget.scrollHeight - event.currentTarget.clientHeight - event.currentTarget.scrollTop
+            ) <= 1;
+            if (!isScrollEnd && prevScrollTop > event.currentTarget.scrollTop) {
                 setIsScrollSubscribed(false);
-            } else {
-                const isScrollEnd = Math.abs(
-                    event.currentTarget.scrollHeight - event.currentTarget.clientHeight - event.currentTarget.scrollTop
-                ) <= 1;
-                if (isScrollEnd) {
-                    setIsScrollSubscribed(true);
-                }
+            } else if (isScrollEnd) {
+                setIsScrollSubscribed(true);
             }
             prevScrollTop = event.currentTarget.scrollTop;
         }
