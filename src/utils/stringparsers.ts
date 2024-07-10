@@ -8,3 +8,13 @@ export function parseChatId(chatId: number | string | null | undefined): number 
             return null;
     }
 }
+
+export function castStringsToDates(obj: any): any {
+    if ("created_at" in obj && typeof obj.created_at === "string") {
+        obj.created_at = new Date(obj.created_at);
+    }
+    if ("last_updated" in obj && typeof obj.last_updated === "string") {
+        obj.last_updated = new Date(obj.last_updated);
+    }
+    return obj;
+}

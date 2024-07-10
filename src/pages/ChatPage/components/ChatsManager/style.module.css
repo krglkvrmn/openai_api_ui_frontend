@@ -36,9 +36,22 @@
     display: flex;
     flex-direction: column;
     height: 100%;
-    margin-top: 1rem;
+    margin-top: 0;
     overflow-y: auto;
     padding-right: var(--left-sidebar-padding-right);
+}
+.chat-history-rel-date-group {
+
+}
+.chat-history-rel-date-label {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+    background-color: var(--background-color);
+    z-index: 3;
+    margin: 0;
+    padding: 1rem 0 0.5rem 0;
+    color: var(--text-color-disabled);
 }
 
 .no-chats-message {

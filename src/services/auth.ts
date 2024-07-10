@@ -2,6 +2,8 @@ import {UUID} from "crypto";
 import axios, {AxiosResponse} from "axios";
 import {BACKEND_ORIGIN} from "../configuration/config.ts";
 
+import {castStringsToDates} from "../utils/stringparsers.ts";
+
 export type SignupFormDataType = {
     email: string,
     password: string,
@@ -49,7 +51,7 @@ export async function signup(formData: SignupFormDataType): Promise<SignupRespon
         headers: {'Content-Type': 'application/json'},
         withCredentials: true
     })
-    return response.data;
+    return castStringsToDates(response.data) as SignupResponse;
 }
 
 export async function login(formData: LoginFormDataType): Promise<LoginResponse> {
@@ -59,12 +61,12 @@ export async function login(formData: LoginFormDataType): Promise<LoginResponse>
             withCredentials: true
         },
     )
-    return response.data;
+    return castStringsToDates(response.data) as LoginResponse;
 }
 
 export async function logout(): Promise<LogoutResponse> {
     const response = await axios.post(BACKEND_ORIGIN + '/auth/jwt/logout', {}, {withCredentials: true});
-    return response.data;
+    return castStringsToDates(response.data) as LogoutResponse;
 }
 
 export async function refresh(): Promise<undefined> {
@@ -101,21 +103,21 @@ export async function verifyEmail(token: string): Promise<VerifyResponse> {
     const requestGenerator = () =>
         axios.post(BACKEND_ORIGIN + '/auth/verify', { token }, { withCredentials: true });
     const response = await refreshRetryOnUnauthorized(requestGenerator);
-    return response.data;
+    return castStringsToDates(response.data) as VerifyResponse;
 }
 
 export async function requestPasswordReset(email: string): Promise<ResponseDetails> {
     const response = await axios.post(
         BACKEND_ORIGIN + '/auth/forgot-password', { email }, { withCredentials: true }
     );
-    return response.data;
+    return castStringsToDates(response.data) as ResponseDetails;
 }
 
 export async function resetPassword({token, password}: {token: string, password: string}): Promise<ResponseDetails> {
     const response = await axios.post(
         BACKEND_ORIGIN + '/auth/reset-password', { token, password }, { withCredentials: true }
     );
-    return response.data;
+    return castStringsToDates(response.data) as ResponseDetails;
 }
 
 export async function refreshRetryOnUnauthorized(

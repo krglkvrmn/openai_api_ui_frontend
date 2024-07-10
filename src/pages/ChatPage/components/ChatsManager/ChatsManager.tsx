@@ -6,7 +6,7 @@ import {deleteChatRequest, getAllChatsRequest, updateChatRequest} from "../../..
 import {optimisticQueryUpdateConstructor} from "../../../../utils/optimisticUpdates.ts";
 import {useNavigate, useParams} from "react-router-dom";
 import {useActiveChatIndex, useCollapsableEdgeElement} from "../../../../hooks/contextHooks.ts";
-import {ChatInfoRead} from "../../../../types/dataTypes.ts";
+import {ChatInfoRead, ChatRead} from "../../../../types/dataTypes.ts";
 import {parseChatId} from "../../../../utils/stringparsers.ts";
 import styles from "./style.module.css";
 import {DeleteButton} from "../../../../components/ui/Buttons/Icons/DeleteButton/DeleteButton.tsx";
@@ -15,6 +15,7 @@ import {EditButton} from "../../../../components/ui/Buttons/Icons/EditButton/Edi
 import {NewChatButton} from "../../ui/Buttons/NewChatButton/NewChatButton.tsx";
 import {ElementOrLoader} from "../../../../components/ui/Loaders/ElementOrLoader/ElementOrLoader.tsx";
 import {LoadingError} from "../../../../components/ui/InfoDisplay/Errors/Errors.tsx";
+import {getRelativeTimeString} from "../../../../utils/time.ts";
 
 
 type ChatHistoryRecordPropsType = {
@@ -173,6 +174,8 @@ function useEditableContentRef(editedValueCallback?: (value: string) => void): T
 export function ChatsManager() {
     const { chats, activeChatIndex, isChatsLoading, isChatsSuccess, isChatsError, dispatchers } = useChats();
     const { activateChat, deleteChat, renameChat, reloadChats } = dispatchers;
+    const chatsGroupedByDate = (chats === undefined ?
+        [["", []]] : Object.entries(groupChatsByRelativeTime(chats))) as [string, ChatRead[]][];
     return (
         <div className={styles.chatHistoryContainer}>
             <div className={styles.controlButtonsContainer}>
@@ -188,16 +191,29 @@ export function ChatsManager() {
                             <LoadingError errorText="An error occurred while loading chats" reloadAction={reloadChats} /> :
                             isChatsSuccess && chats !== undefined ?
                                 chats.length > 0 ?
-                                    chats.map((chat, index) => {
+                                    chatsGroupedByDate.map(([relTime, chatsGroup], groupIndex) => {
+                                        const baseIndex = chatsGroupedByDate.reduce((result, currentItem, currentIndex) => {
+                                            return result + Number(currentIndex < groupIndex) * currentItem[1].length;
+                                        }, 0);
                                         return (
-                                            <ChatHistoryRecord key={index}
-                                                               title={chat.title}
-                                                               isActive={activeChatIndex === index}
-                                                               chatActivationHandler={() => activateChat(index)}
-                                                               chatDeleteHandler={() => deleteChat(index)}
-                                                               chatRenameHandler={(name: string) => {
-                                                                   renameChat({chatIndex: index, name: name})
-                                                               }}/>
+                                            <div key={groupIndex} className={styles.chatHistoryRelDateGroup}>
+                                                <p className={styles.chatHistoryRelDateLabel}>{relTime}</p>
+                                                {
+                                                    chatsGroup.map((chat, index) => {
+                                                        const globalChatIndex = baseIndex + index;
+                                                        return (
+                                                            <ChatHistoryRecord key={globalChatIndex}
+                                                                               title={chat.title}
+                                                                               isActive={activeChatIndex === globalChatIndex}
+                                                                               chatActivationHandler={() => activateChat(globalChatIndex)}
+                                                                               chatDeleteHandler={() => deleteChat(globalChatIndex)}
+                                                                               chatRenameHandler={(name: string) => {
+                                                                                   renameChat({chatIndex: globalChatIndex, name: name})
+                                                                               }}/>
+                                                        );
+                                                    })
+                                                }
+                                            </div>
                                         );
                                     }) :
                                     <p className={styles.noChatsMessage}>
@@ -212,6 +228,7 @@ export function ChatsManager() {
         </div>
     )
 }
+
 
 function ChatHistoryRecord(
     { title, isActive, chatActivationHandler, chatDeleteHandler, chatRenameHandler }: ChatHistoryRecordPropsType
@@ -242,6 +259,18 @@ function ChatHistoryRecord(
             </div>
         </div>
     )
+}
+
+
+function groupChatsByRelativeTime(chats: ChatInfoRead[]): Record<string, ChatInfoRead[]> {
+    return chats.reduce((result: Record<string, ChatInfoRead[]>, currentItem) => {
+        const key = getRelativeTimeString(currentItem.last_updated) || "";
+        if (!result[key]) {
+            result[key] = [];
+        }
+        result[key].push(currentItem);
+        return result;
+    }, {});
 }
 
 
