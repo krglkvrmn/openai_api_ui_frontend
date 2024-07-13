@@ -27,6 +27,7 @@
     visibility: visible;
     opacity: 1;
     transition: visibility 0s ease, opacity 0.25s ease;
+    z-index: 10;
 }
 
 
