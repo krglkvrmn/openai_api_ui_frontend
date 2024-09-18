@@ -9,6 +9,9 @@ const availableModels = new Map([
     ["gpt-4-turbo", {modelName: "GPT-4-TURBO", priceTag: "💰💰", contextSize: "128K", speed: "⚡⚡", quality: "Very good"}],
     ["gpt-4", {modelName: "GPT-4", priceTag: "💰💰💰", contextSize: "8K", speed: "⚡", quality: "Best"}],
     ["gpt-4o", {modelName: "GPT-4o", priceTag: "💰", contextSize: "128K", speed: "⚡⚡⚡", quality: "Very good"}],
+    ["gpt-4o-mini", {modelName: "GPT-4o-mini", priceTag: "💰", contextSize: "128K", speed: "⚡⚡⚡", quality: "❓"}],
+    ["o1-preview", {modelName: "o1", priceTag: "💰💰💰", contextSize: "128K", speed: "⚡⚡", quality: "❓"}],
+    ["o1-mini", {modelName: "o1-mini", priceTag: "💰", contextSize: "128K", speed: "⚡⚡⚡", quality: "❓"}],
 ]);
 
 
