@@ -1,11 +1,12 @@
 html {
-    overscroll-behavior-y: none;
+    overscroll-behavior-y: contain;
     overscroll-behavior-x: none;
     overflow-y: scroll;
     overflow-x: hidden;
     box-sizing: border-box;
     height: 100dvh;
     width: 100dvw;
+    background-color: var(--background-color);
 }
 body {
     margin: 0;
@@ -39,7 +40,7 @@ dialog button:focus {
     font-weight: 200;
 }
 
-.theme-dark {
+[data-theme="theme-dark"] {
     --background-color: #121212;
     --background-color-modal: #282828;
     --background-color-text-field: #262626;
@@ -84,7 +85,7 @@ dialog button:focus {
     --border-color: #555555;
 }
 
-.theme-light {
+[data-theme="theme-light"] {
     --background-color: #f6f6f6;
     --background-color-modal: #f2f2f2;
     --background-color-text-field: #e6e6e6;

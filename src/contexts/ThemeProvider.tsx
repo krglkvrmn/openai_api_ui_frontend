@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import {useLocalStorage} from "../hooks/useLocalStorage.ts";
 
 
@@ -12,7 +12,8 @@ type ThemeContextValue = {
 export const ThemeContext = React.createContext<ThemeContextValue>(null);
 
 export function ThemeProvider({ children }: {children: React.ReactNode}) {
-    const [theme, setTheme] = useLocalStorage<ThemeType>('__chat_app_theme', 'theme-light');
+    const preferredTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'theme-dark' : 'theme-light';
+    const [theme, setTheme] = useLocalStorage<ThemeType>('__chat_app_theme', preferredTheme);
 
     const toggleTheme = () => {
         if (theme === "theme-light") {
@@ -22,11 +23,17 @@ export function ThemeProvider({ children }: {children: React.ReactNode}) {
         }
     }
 
+    useEffect(() => {
+        if (theme === "theme-dark") {
+            document.documentElement.setAttribute("data-theme", "theme-dark");
+        } else if (theme === "theme-light") {
+            document.documentElement.setAttribute("data-theme", "theme-light");
+        }
+    }, [theme])
+
     return (
         <ThemeContext.Provider value={{ theme, toggleTheme }}>
-            <div id="theme-wrapper" className={theme}>
-                {children}
-            </div>
+            {children}
         </ThemeContext.Provider>
     );
 }

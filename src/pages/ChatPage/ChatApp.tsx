@@ -51,7 +51,7 @@ export default function ChatApp() {
                                     <ComponentLoadSuspense width="100%" height="100%">
                                         <LoginInfo/>
                                     </ComponentLoadSuspense>
-                                    <div>
+                                    <div className={styles.actionsContainer}>
                                         <AuthActionsPopupTriggerButton onAccountSettingsClick={openDialog}
                                                                        onLogoutClick={logOut}/>
                                         <ThemeSwitchButton />
