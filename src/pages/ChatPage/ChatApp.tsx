@@ -11,6 +11,10 @@ import {LocalAPIKeyProvider} from "./contexts/LocalAPIKeyProvider.tsx";
 import {lazyLoad} from "../../utils/lazyLoading.ts";
 import {Suspense} from "react";
 import {ComponentLoadSuspense} from "../../components/hoc/ComponentLoadSuspense.tsx";
+import {
+    FloatingThemeSwitchButton,
+    ThemeSwitchButton
+} from "../../components/ui/Buttons/Icons/ThemeSwitchButton/ThemeSwitchButton.tsx";
 
 const AccountSettingsModal = lazyLoad(import('./components/AccountSettings/AccountSettingsModal.tsx'), 'AccountSettingsModal');
 const ChatsManager = lazyLoad(import('./components/ChatsManager/ChatsManager.tsx'), 'ChatsManager');
@@ -25,7 +29,7 @@ export default function ChatApp() {
     const { authDispatchers } = useAuth();
     const { logOut } = authDispatchers;
 
-    const { apiKeys, isEmpty: isApiKeysEmpty, dispatchers } = useAPIKeys();
+    const { apiKeys, isEmpty: isApiKeysEmpty, isLoading: isApiKeysLoading, dispatchers } = useAPIKeys();
     const { saveApiKey } = dispatchers;
 
     const { dialogRef, openDialog, closeDialog } = useDialog("modal");
@@ -47,14 +51,18 @@ export default function ChatApp() {
                                     <ComponentLoadSuspense width="100%" height="100%">
                                         <LoginInfo/>
                                     </ComponentLoadSuspense>
-                                    <AuthActionsPopupTriggerButton onAccountSettingsClick={openDialog}
-                                                                   onLogoutClick={logOut}/>
+                                    <div>
+                                        <AuthActionsPopupTriggerButton onAccountSettingsClick={openDialog}
+                                                                       onLogoutClick={logOut}/>
+                                        <ThemeSwitchButton />
+                                    </div>
                                 </div>
                             </Sidebar>
+                            <FloatingThemeSwitchButton />
                             <main className={styles.chatContent}>
                             {
-                                    !isSavedKeyExists &&
-                                    <CollapsableEdgeElement side="top" isExpanded>
+                                    !isSavedKeyExists && !isApiKeysLoading &&
+                                    <CollapsableEdgeElement side="top">
                                         <div className={styles.chatApiKeyFormHeader}>
                                             <Suspense>
                                                 <APIKeyForm keySaveHandler={saveApiKey}/>

@@ -23,7 +23,7 @@
 
 .control-buttons-container {
     display: flex;
-    justify-content: space-evenly;
+    justify-content: space-around;
     align-items: center;
     padding-right: var(--left-sidebar-padding-right);
 }

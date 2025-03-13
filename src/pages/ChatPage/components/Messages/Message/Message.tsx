@@ -7,6 +7,8 @@ import React, {useRef} from "react";
 import {useSignalEffect} from "@preact/signals-react";
 import styles from "./style.module.css";
 import {twilight} from "react-syntax-highlighter/dist/cjs/styles/prism";
+import {useTheme} from "../../../../../hooks/contextHooks.ts";
+import {oneLight} from "react-syntax-highlighter/dist/esm/styles/prism";
 
 
 function CodeBlockComponent({
@@ -14,6 +16,7 @@ function CodeBlockComponent({
     className = '',
     ...rest
 }: any) {
+    const { theme } = useTheme();
     const match = /language-(\w+)/.exec(className || '');
     const language = match ? match[1] : undefined;
 
@@ -21,6 +24,7 @@ function CodeBlockComponent({
         rest.inline = rest.inline.toString();
     }
     const cleanedChildren = String(children).replace(/\n$/, '');
+    const syntaxHighlighterStyle = theme === "theme-light" ? oneLight : twilight;
 
     return language ? (
             <div className={styles.highlightedCodeContainer}>
@@ -28,15 +32,11 @@ function CodeBlockComponent({
                     <span>{language}</span>
                     <CopyToClipboardButton text={cleanedChildren} />
                 </div>
-                <SyntaxHighlighter style={twilight}
+                <SyntaxHighlighter style={syntaxHighlighterStyle}
                                    customStyle={{
-                                       marginTop: 0,
+                                       margin: 0,
                                        borderRadius: "0 0 1rem 1rem",
-                                       borderTopWidth: 0,
-                                       borderBottomWidth: "2px",
-                                       borderLeftWidth: "2px",
-                                       borderRightWidth: "2px",
-                                       borderColor: "rgb(84, 84, 84)"
+                                       border: 0,
                                     }}
                                    language={language}
                                    PreTag="div"

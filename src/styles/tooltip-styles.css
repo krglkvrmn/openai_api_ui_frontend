@@ -23,7 +23,7 @@
 
 [data-tooltip] {
     --tooltip-arrow-size: 12px;
-    --tooltip-background-color: var(--info-color-dark);
+    --tooltip-background-color: var(--background-color-modal);
     --tooltip-delay-time: 0.9s;
     --tooltip-animation-time: 0.1s;
     --tooltip-transition-time: calc(var(--tooltip-delay-time) + var(--tooltip-animation-time));

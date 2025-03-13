@@ -1,5 +1,5 @@
 html {
-    overscroll-behavior-y: contain;
+    overscroll-behavior-y: none;
     overscroll-behavior-x: none;
     overflow-y: scroll;
     overflow-x: hidden;
@@ -39,7 +39,7 @@ dialog button:focus {
     font-weight: 200;
 }
 
-:root {
+.theme-dark {
     --background-color: #121212;
     --background-color-modal: #282828;
     --background-color-text-field: #262626;
@@ -82,7 +82,51 @@ dialog button:focus {
 
     --divider-color: rgba(255, 255, 255, 0.12);
     --border-color: #555555;
+}
 
+.theme-light {
+    --background-color: #f6f6f6;
+    --background-color-modal: #f2f2f2;
+    --background-color-text-field: #e6e6e6;
+    --background-color-active: rgba(0, 0, 0, 0.05);
+    --background-active-background-blend: rgba(242, 242, 242);
+
+    --text-color: #000;
+    --text-color-secondary: rgba(0, 0, 0, 0.8);
+    --text-color-disabled: rgba(0, 0, 0, 0.5);
+
+    --primary-color: #1976d2;
+    --primary-color-light: #63a4ff;
+    --primary-color-dark: #004ba0;
+    --primary-color-contrast: #fff;
+
+    --secondary-color: #8e24aa;
+    --secondary-color-light: #c158dc;
+    --secondary-color-dark: #5c007a;
+    --secondary-color-contrast: #000;
+
+    --error-color: #f44336;
+    --error-color-light: #ff7961;
+    --error-color-dark: #ba000d;
+    --error-color-contrast: #000;
+
+    --warning-color: #ff9800;
+    --warning-color-light: #ffc947;
+    --warning-color-dark: #c66900;
+    --warning-color-contrast: #000;
+
+    --info-color: #0288d1;
+    --info-color-light: #5eb8ff;
+    --info-color-dark: #005b9f;
+    --info-color-contrast: #000;
+
+    --success-color: #2e7d32;
+    --success-color-light: #60ad5e;
+    --success-color-dark: #005005;
+    --success-color-contrast: #000;
+
+    --divider-color: rgba(0, 0, 0, 0.20);
+    --border-color: #cccccc;
 }
 
 button {

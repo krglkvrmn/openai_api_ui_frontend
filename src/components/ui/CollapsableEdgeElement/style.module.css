@@ -11,6 +11,7 @@
 
 .collapsable-edge-element {
     position: relative;
+    z-index: 10;
 }
 
 .collapsable-edge-element-content {

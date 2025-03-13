@@ -18,7 +18,12 @@
     composes: message-container;
 }
 
-.highlighted-code-container {}
+.highlighted-code-container {
+    border-color: var(--border-color);
+    border-width: 2px;
+    border-style: solid;
+    border-radius: 1rem 1rem;
+}
 
 .code-actions-container {
     display: flex;
@@ -26,16 +31,10 @@
     box-sizing: border-box;
     align-items: center;
     padding: 1rem;
-    background-color: #1a1818;
-    color: var(--text-color);
     border-radius: 1rem 1rem 0 0;
+    background-color: var(--background-color-active);
+    color: var(--text-color);
     height: 2.5rem;
-    border-left-width: 2px;
-    border-top-width: 2px;
-    border-right-width: 2px;
-    border-bottom-width: 0;
-    border-color: rgb(84, 84, 84);
-    border-style: solid;
 }
 
 .code-actions-container span {

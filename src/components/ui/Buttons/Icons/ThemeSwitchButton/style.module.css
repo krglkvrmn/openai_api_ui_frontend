@@ -1,0 +1,11 @@
+.theme-switch-button-container {}
+
+.theme-switch-button-container svg {
+    height: 1.5rem;
+}
+.floating-theme-switch-button-container {
+    position: absolute;
+    z-index: 0;
+    bottom: 1rem;
+    left: 1rem;
+}
