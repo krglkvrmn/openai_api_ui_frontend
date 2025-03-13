@@ -6,6 +6,6 @@
 .floating-theme-switch-button-container {
     position: absolute;
     z-index: 0;
-    bottom: 1rem;
+    top: 1rem;
     left: 1rem;
 }

@@ -11,7 +11,6 @@
 
 .collapsable-edge-element {
     position: relative;
-    z-index: 10;
 }
 
 .collapsable-edge-element-content {
@@ -22,8 +21,14 @@
 
 .collapsable-edge-element-vertical {composes: collapsable-edge-element}
 .collapsable-edge-element-horizontal {composes: collapsable-edge-element}
-.collapsable-edge-element-collapsed {composes: collapsable-edge-element}
-.collapsable-edge-element-expanded {composes: collapsable-edge-element}
+.collapsable-edge-element-collapsed {
+    composes: collapsable-edge-element;
+    z-index: 0;
+}
+.collapsable-edge-element-expanded {
+    composes: collapsable-edge-element;
+    z-index: 50;
+}
 .collapsable-edge-element-left {composes: collapsable-edge-element-horizontal}
 .collapsable-edge-element-right {composes: collapsable-edge-element-horizontal}
 .collapsable-edge-element-top {composes: collapsable-edge-element-vertical}
